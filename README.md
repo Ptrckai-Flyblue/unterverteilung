@@ -5,6 +5,8 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 
 **Direkt öffnen:** https://ptrckai-flyblue.github.io/unterverteilung/
 
+- Start mit drei Wegen: geführt aufbauen, Beispiel ansehen, frei bauen
+- Geführter Aufbau eines Lichtkreises Schritt für Schritt, Weg des Stroms hervorheben
 - Geräte auf Hutschienen einrasten, Leitungen mit echten Aderfarben verbinden
 - Strom-Simulation, Fehler auslösen (FI, LS, Überlast), Spannungsprüfer
 - Sofortige Fehlerprüfung mit Begründung

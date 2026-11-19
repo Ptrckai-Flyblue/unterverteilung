@@ -4,27 +4,30 @@
 <meta charset="utf-8" data-k>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" data-k>
 <title data-k>Unterverteilung – Baukasten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" data-k>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-k>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" data-k>
 <style data-k>
-:root{--bg:#f2f2f7;--card:#fff;--txt:#1c1c1e;--sub:#6e6e73;--acc:#0a84ff;--red:#ff3b30;--orange:#ff9f0a;--green:#34c759;--line:#e5e5ea}
+:root{--bg:#F6F1E9;--card:#FFFDF9;--txt:#1A1A1A;--sub:#6B655C;--acc:#1A1A1A;--red:#B4472C;--orange:#C98A1B;--green:#2F9E57;--line:#E6DFD2;--sand:#EAE2D3}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;color:var(--txt);background:var(--bg);-webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%}
-#bar{position:fixed;top:0;left:0;right:0;height:58px;padding:0 10px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.08);z-index:20;overflow-x:auto;scrollbar-width:none}
+html,body{margin:0;height:100%;overflow:hidden;font-family:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:var(--txt);background:var(--bg);-webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%}
+#bar{position:fixed;top:0;left:0;right:0;height:58px;padding:0 10px;display:flex;align-items:center;gap:6px;background:rgba(246,241,233,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(26,26,26,.08);z-index:20;overflow-x:auto;scrollbar-width:none}
 #bar::-webkit-scrollbar{display:none}
-#bar .ttl{font-weight:700;font-size:16px;margin:0 8px 0 4px;white-space:nowrap;display:flex;align-items:center;gap:8px}
-#bar .ttl i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#ffd60a,#ff9f0a);font-style:normal;font-size:15px}
+#bar .ttl{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:0 8px 0 4px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+#bar .ttl i{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#1A1A1A;color:#F6F1E9;font-style:normal;font-size:15px}
 .sp{flex:1}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;padding:0 13px;border:0;border-radius:10px;background:#ececf0;color:var(--txt);font-family:inherit;font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 14px;border:0;border-radius:20px;background:#EAE2D3;color:var(--txt);font-family:inherit;font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer;flex:none}
 .btn:active{transform:scale(.97)}
-.btn.pri{background:var(--acc);color:#fff}
-.btn.red{background:#ffe5e3;color:#d70015}
+.btn.pri{background:var(--acc);color:#F6F1E9}
+.btn.red{background:#F6E3DC;color:#9A3A22}
 .btn.sq{width:38px;padding:0;font-size:18px}
 .btn svg{width:17px;height:17px}
 @media (max-width:820px){#bar .ttl span{display:none}}
 @media (max-width:899px){.zb{display:none!important}}
 .btn:disabled{opacity:.4}
-.btn.on{background:#5e5ce6;color:#fff}
+.btn.on{background:#1A1A1A;color:#fff}
 #chk.err svg,#chk.warn svg{display:none}
-#chk.ok{background:#e3f6e8;color:#1b7a35}#chk.err{background:#ffe5e3;color:#d70015}#chk.warn{background:#fff2db;color:#a15c00}
+#chk.ok{background:#E2F0E6;color:#23784A}#chk.err{background:#F6E3DC;color:#9A3A22}#chk.warn{background:#F7EBD3;color:#8A5A0B}
 #meter{position:fixed;left:12px;top:70px;z-index:16;background:#1c1c1e;color:#fff;border-radius:16px;padding:14px 16px;width:min(300px,calc(100% - 24px));box-shadow:0 10px 30px rgba(0,0,0,.25);display:none}
 #meter .v{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0}
 #meter .t{font-size:13.5px;line-height:1.4;color:#d1d1d6}
@@ -42,12 +45,12 @@ select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:ima
 @media (max-width:600px){.grid2{grid-template-columns:1fr}}
 .grid2 label,.dedit label{font-size:13px;color:var(--sub);display:block}
 .xrow{display:flex;gap:6px;align-items:center;margin:6px 0}.xrow input{min-width:0}
-.qa{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.qa button{border:0;background:#f2f2f7;border-radius:8px;padding:7px 10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.qa{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.qa button{border:0;background:#EFE8DC;border-radius:8px;padding:7px 10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
 .paper{max-width:860px;margin:16px auto 40px;background:#fff;border-radius:6px;padding:34px 38px;box-shadow:0 4px 20px rgba(0,0,0,.08);color:#1c1c1e;font-size:13px;line-height:1.45}
 .paper h1{font-size:21px;margin:0 0 2px}.paper h2{font-size:15px;margin:22px 0 8px;padding-bottom:4px;border-bottom:2px solid #1c1c1e}
 .paper .meta{color:#6e6e73;font-size:12px;margin-bottom:14px}
 .paper table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
-.paper th{background:#f2f2f7;text-align:left;font-weight:700;padding:6px 7px;border:1px solid #d1d1d6}
+.paper th{background:#EFE8DC;text-align:left;font-weight:700;padding:6px 7px;border:1px solid #d1d1d6}
 .paper td{padding:5px 7px;border:1px solid #d1d1d6;vertical-align:top}
 .paper .kv td:first-child{width:28%;color:#6e6e73}
 .paper .tw{overflow-x:auto}
@@ -66,18 +69,34 @@ select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:ima
 }
 #stage{position:fixed;top:58px;left:0;right:0;bottom:0}
 #svg{width:100%;height:100%;touch-action:none;display:block}
-#empty{position:fixed;left:50%;top:50%;transform:translate(-50%,-40%);background:#fff;border-radius:20px;padding:26px 28px;box-shadow:0 10px 40px rgba(0,0,0,.1);text-align:center;max-width:380px;width:calc(100% - 40px);z-index:5}
-#empty h2{margin:0 0 6px;font-size:20px}
+#empty{position:fixed;left:50%;top:50%;transform:translate(-50%,-45%);background:#FFFDF9;border-radius:22px;padding:26px 24px 18px;box-shadow:0 10px 40px rgba(60,45,20,.12);max-width:440px;width:calc(100% - 32px);z-index:5}
+#empty h2{margin:0 0 4px;font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:24px}
 #empty p{margin:0 0 18px;color:var(--sub);font-size:15px;line-height:1.45}
-#empty .btn{margin:4px}
+.way{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;background:#F3EDE2;border-radius:16px;padding:14px 16px;margin:8px 0;font:inherit;color:inherit;cursor:pointer}
+.way:active{transform:scale(.99)}.way b{display:block;font-size:16px}.way span{font-size:13.5px;color:var(--sub);line-height:1.35;display:block;margin-top:2px}
+.way i{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;background:#1A1A1A;color:#F6F1E9;font-style:normal;font-weight:800}
+.way.pri{background:#1A1A1A;color:#F6F1E9}.way.pri span{color:#D9D1C2}.way.pri i{background:#F6F1E9;color:#1A1A1A}
+.mrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer}.mrow:active{background:#F3EDE2}
+.mrow b{display:block;font-size:15.5px}.mrow span{display:block;font-size:13px;color:var(--sub);margin-top:2px}.mrow .ch{margin-left:auto;color:#A39A8A;font-size:20px}
+#guide{position:fixed;left:12px;top:70px;z-index:17;background:#FFFDF9;border-radius:18px;padding:14px 16px 12px;width:min(420px,calc(100% - 24px));box-shadow:0 10px 34px rgba(60,45,20,.18);display:none;border:2px solid #1A1A1A}
+#guide .st{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--sub);text-transform:uppercase}
+#guide .gt{font-size:17px;font-weight:800;margin:4px 0 4px;line-height:1.3}
+#guide .ge{font-size:14px;line-height:1.45;color:#3B362E}
+#guide .gn{font-size:13.5px;line-height:1.4;color:#9A3A22;background:#F8E8E1;border-radius:10px;padding:8px 10px;margin-top:8px}
+#guide .bar2{height:5px;background:#EAE2D3;border-radius:3px;margin:8px 0 2px;overflow:hidden}#guide .bar2 i{display:block;height:100%;background:#1A1A1A;border-radius:3px}
+#guide .actions{margin-top:10px}#guide .btn{height:36px;font-size:13.5px}
+body.guiding #toasts{top:auto;bottom:16px}
+@keyframes pulse{0%{r:9;opacity:1}100%{r:22;opacity:0}}
+.gpulse{fill:none;stroke:#1A1A1A;stroke-width:3;animation:pulse 1.3s ease-out infinite}
+.steplbl{pointer-events:none}
 /* Palette */
-#pal{position:fixed;top:58px;left:0;bottom:0;width:310px;max-width:88%;background:#fff;z-index:18;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 30px rgba(0,0,0,.12);overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:30px}
+#pal{position:fixed;top:58px;left:0;bottom:0;width:320px;max-width:88%;background:#FFFDF9;z-index:18;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 30px rgba(0,0,0,.12);overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:30px}
 #pal.open{transform:none}
 #pal .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 4px}
 #pal .hd b{font-size:18px}
 .cat{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin:16px 16px 4px;font-weight:700}
 .prow{display:flex;gap:12px;align-items:center;padding:8px 16px;cursor:pointer}
-.prow:active{background:#f2f2f7}
+.prow:active{background:#EFE8DC}
 .prow .ic{width:46px;height:46px;flex:none;display:grid;place-items:center;background:#f5f5f7;border-radius:10px}
 .prow b{font-size:15px;display:block;font-weight:600}
 .prow span{font-size:12.5px;color:var(--sub)}
@@ -85,13 +104,13 @@ select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:ima
 .legend div{display:flex;align-items:center;gap:10px;padding:4px 0}
 .legend i{width:34px;height:6px;border-radius:3px;flex:none}
 /* Panel */
-#panel{position:fixed;z-index:15;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 -6px 30px rgba(0,0,0,.14);display:none;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 22px;-webkit-user-select:text;user-select:text}
+#panel{position:fixed;z-index:15;background:rgba(255,253,249,.98);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 -6px 30px rgba(0,0,0,.14);display:none;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 22px;-webkit-user-select:text;user-select:text}
 @media (min-width:900px){#panel{top:70px;right:12px;width:360px;max-height:calc(100% - 84px);border-radius:18px}}
 @media (max-width:899px){#panel{left:0;right:0;bottom:0;max-height:47%;border-radius:18px 18px 0 0}}
 .ph{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
 .pt{font-size:18px;font-weight:700}
 .ps{font-size:14px;margin-top:3px;font-weight:600}
-.ps.ok{color:#248a3d}.ps.red{color:#d70015}.ps.sub{color:var(--sub)}.ps.org{color:#c93400}
+.ps.ok{color:#23784A}.ps.red{color:#9A3A22}.ps.sub{color:var(--sub)}.ps.org{color:#9A3A22}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
 .row .l{display:flex;flex-direction:column}
 .row .l small{color:var(--sub);font-size:12.5px;margin-top:2px}
@@ -110,28 +129,28 @@ input.txt{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1px sol
 .seg button{flex:1;border:0;background:transparent;padding:8px 9px;border-radius:8px;font-weight:600;font-size:13.5px;font-family:inherit;color:var(--txt);cursor:pointer;white-space:nowrap}
 .seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.16)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:flex;align-items:center;gap:7px;border:2px solid transparent;background:#f2f2f7;border-radius:10px;padding:7px 10px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--txt)}
+.chip{display:flex;align-items:center;gap:7px;border:2px solid transparent;background:#EFE8DC;border-radius:10px;padding:7px 10px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--txt)}
 .chip.on{border-color:var(--acc);background:#fff}
 .chip i{width:22px;height:8px;border-radius:4px}
 .expl p{margin:8px 0;font-size:15px;line-height:1.5}
 .expl ul{margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.5;color:#3a3a3c}
 .expl li{margin:4px 0}
 details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;color:var(--acc)}
-.alert{background:#fff2f0;border-radius:12px;padding:11px 13px;margin:10px 0;font-size:14px;line-height:1.45;color:#a50011}
-.alert.o{background:#fff6e5;color:#8a4b00}
+.alert{background:#F8E8E1;border-radius:12px;padding:11px 13px;margin:10px 0;font-size:14px;line-height:1.45;color:#8A2F18}
+.alert.o{background:#F7EED9;color:#7A510C}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 /* Toasts */
 #toasts{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:40;display:flex;flex-direction:column;gap:8px;width:min(560px,calc(100% - 24px));pointer-events:none}
 .toast{pointer-events:auto;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.16);padding:12px 40px 12px 14px;font-size:14.5px;line-height:1.45;border-left:5px solid var(--acc);position:relative;animation:tin .25s ease}
 .toast.err{border-left-color:var(--red)}.toast.warn{border-left-color:var(--orange)}.toast.ok{border-left-color:var(--green)}
-.toast.danger{background:#d70015;color:#fff;border-left-color:#7a000c}
+.toast.danger{background:#9A3A22;color:#fff;border-left-color:#7a000c}
 .toast b{display:block;margin-bottom:2px}
 .toast .x{position:absolute;right:6px;top:6px;border:0;background:transparent;font-size:18px;width:30px;height:30px;cursor:pointer;color:inherit;opacity:.6}
 @keyframes tin{from{opacity:0;transform:translateY(-8px)}}
 @media (min-width:900px){body.pp #toasts{left:calc((100% - 380px)/2);width:min(520px,calc(100% - 420px))}}
 /* Modal */
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.28);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
-#modal .sheet{background:#fff;border-radius:20px;max-width:580px;width:100%;max-height:86%;overflow:auto;-webkit-overflow-scrolling:touch;padding:20px 22px 22px;-webkit-user-select:text;user-select:text}
+#modal .sheet{background:#FFFDF9;border-radius:20px;max-width:580px;width:100%;max-height:86%;overflow:auto;-webkit-overflow-scrolling:touch;padding:20px 22px 22px;-webkit-user-select:text;user-select:text}
 #modal h2{margin:0;font-size:20px}
 #modal .mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .res{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.45;cursor:pointer}
@@ -148,6 +167,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
 .glow{fill:none;stroke:#ffd60a;stroke-width:11;opacity:.38;pointer-events:none;stroke-linecap:round}
 .dot{fill:#fff;stroke:#636366;stroke-width:1.6}
 .dot.live{fill:#ffd60a;stroke:#b38600}
+.dim{opacity:.18;transition:opacity .2s}
 .dot.pend{fill:var(--acc);stroke:#fff;stroke-width:2.5}
 .tl{font-size:8.5px;fill:#48484a;font-weight:700;text-anchor:middle;pointer-events:none}
 .lbl{font-size:10px;fill:#6e6e73;text-anchor:middle;pointer-events:none;font-weight:600}
@@ -158,21 +178,15 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
   <div class="ttl"><i>⚡</i><span>Unterverteilung</span></div>
   <button class="btn pri" data-act="pal"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>Bauteile</button>
   <button class="btn" data-act="check" id="chk"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Prüfen</span></button>
-  <button class="btn" data-act="meas" id="measBtn">Messen</button>
   <button class="btn" data-act="undo" id="undoBtn" disabled>↶ Zurück</button>
   <button class="btn" data-act="doc">Doku</button>
-  <button class="btn" data-act="share">Teilen</button>
-  <button class="btn" data-act="project">Projekt</button>
   <div class="sp"></div>
-  <button class="btn sq zb" data-act="zout" aria-label="Verkleinern" title="Verkleinern">−</button>
-  <button class="btn sq zb" data-act="zin" aria-label="Vergrößern" title="Vergrößern">+</button>
-  <button class="btn" data-act="fit">Einpassen</button>
-  <button class="btn" data-act="help">Hilfe</button>
+  <button class="btn" data-act="more">Mehr …</button>
 </header>
 <main id="stage" data-k>
   <svg id="svg" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.1" fill="#c9c9cf"/></pattern>
+      <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.1" fill="#D6CCBB"/></pattern>
       <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e8ec"/><stop offset=".5" stop-color="#b4b4ba"/><stop offset="1" stop-color="#dcdce0"/></linearGradient>
       <pattern id="pestripe" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#34a853"/><rect width="5" height="10" fill="#f5d10a"/></pattern>
       <radialGradient id="bulb"><stop offset="0" stop-color="#fff7c2"/><stop offset=".6" stop-color="#ffd60a"/><stop offset="1" stop-color="#ffb300"/></radialGradient>
@@ -182,20 +196,22 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
     <g id="world">
       <rect x="-30000" y="-30000" width="60000" height="60000" fill="url(#grid)"/>
       <g id="lEnc"></g><g id="lDev"></g><g id="lWire"></g><g id="lTerm"></g>
-      <path id="temp" fill="none" stroke="#0a84ff" stroke-width="3" stroke-dasharray="6 6" pointer-events="none"/>
+      <path id="temp" fill="none" stroke="#1A1A1A" stroke-width="3" stroke-dasharray="6 6" pointer-events="none"/>
     </g>
   </svg>
 </main>
 <div id="empty" data-k>
-  <h2>Leere Fläche</h2>
-  <p>Füge Bauteile hinzu und verbinde sie – oder lade einen fertigen, korrekten Beispielaufbau zum Anschauen.</p>
-  <button class="btn pri" data-act="example">Beispiel laden</button>
-  <button class="btn" data-act="pal">Bauteile</button>
+  <h2>Wie möchtest du starten?</h2>
+  <p>Vom Hausanschluss bis zur Lampe – sieh dir an, wie der Strom fließt.</p>
+  <button class="way pri" data-act="guide"><i>1</i><div><b>Geführt aufbauen</b><span>Schritt für Schritt einen Lichtkreis verdrahten – jeder Schritt mit Erklärung.</span></div></button>
+  <button class="way" data-act="example"><i>2</i><div><b>Beispiel ansehen</b><span>Ein fertiger Lichtkreis. Antippen, schalten, Fehler ausprobieren.</span></div></button>
+  <button class="way" data-act="free"><i>3</i><div><b>Frei bauen</b><span>Leere Fläche, Bauteile selbst wählen und verbinden.</span></div></button>
 </div>
 <aside id="pal" data-k></aside>
 <section id="panel" data-k></section>
 <div id="toasts" data-k></div>
 <div id="meter" data-k></div>
+<div id="guide" data-k></div>
 <div id="docv" data-k></div>
 <datalist id="roomlist" data-k></datalist>
 <div id="modal" data-k><div class="sheet" id="sheet"></div></div>
@@ -225,94 +241,94 @@ function railBody(w,fill='#fafafa',stroke='#b9b9be'){
   <rect x="1.5" y="1.5" width="${w-3}" height="21" rx="3" fill="#e6e6eb"/><rect x="1.5" y="${DH-22.5}" width="${w-3}" height="21" rx="3" fill="#e6e6eb"/>`;
 }
 function tLabels(d,w,h,fill){const ty=TYPES[d.type];return ty.terms.map(t=>t.label?`<text class="tl" x="${t.fx*w}" y="${t.side==='top'?34:h-27}"${fill?` style="fill:${fill}"`:''}>${t.label}</text>`:'').join('');}
-function lever(d,x,y,w,h){const on=!!d.on;return `<g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="${x-6}" y="${y-5}" width="${w+12}" height="${h+10}" fill="transparent"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${on?'#34c759':'#c7c7cc'}"/><rect x="${x+2}" y="${on?y+2:y+h/2}" width="${w-4}" height="${h/2-2}" rx="2" fill="#fff" opacity=".35"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" pointer-events="none">${on?'I':'0'}</text></g>`;}
-function tripMark(d,w){return d.tripped?`<circle cx="${w-1}" cy="1" r="9" fill="#ff3b30" stroke="#fff" stroke-width="1.5"/><text x="${w-1}" y="5.5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">!</text>`:'';}
-function olMark(d,w){return OL[d.id+'#']?`<rect x="2" y="24" width="${w-4}" height="12" rx="3" fill="#ff9f0a"/><text x="${w/2}" y="33" text-anchor="middle" font-size="8" font-weight="800" fill="#fff">${w>30?'ÜBERLAST':'ÜL'}</text>`:'';}
+function lever(d,x,y,w,h){const on=!!d.on;return `<g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="${x-6}" y="${y-5}" width="${w+12}" height="${h+10}" fill="transparent"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${on?'#2F9E57':'#c7c7cc'}"/><rect x="${x+2}" y="${on?y+2:y+h/2}" width="${w-4}" height="${h/2-2}" rx="2" fill="#fff" opacity=".35"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" pointer-events="none">${on?'I':'0'}</text></g>`;}
+function tripMark(d,w){return d.tripped?`<circle cx="${w-1}" cy="1" r="9" fill="#B4472C" stroke="#fff" stroke-width="1.5"/><text x="${w-1}" y="5.5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">!</text>`:'';}
+function olMark(d,w){return OL[d.id+'#']?`<rect x="2" y="24" width="${w-4}" height="12" rx="3" fill="#C98A1B"/><text x="${w/2}" y="33" text-anchor="middle" font-size="8" font-weight="800" fill="#fff">${w>30?'ÜBERLAST':'ÜL'}</text>`:'';}
 function devLabel(d,w){return d.label?`<text class="lbl" x="${w/2}" y="${DH+14}">${esc(d.label)}</text>`:'';}
 function cLabel(d,w,y,fill='#3a3a3c'){return `<text x="${w/2}" y="${y}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${fill}" pointer-events="none">${esc(d.label||TYPES[d.type].name)}</text>`;}
 
 /* ---------- Bauteiltypen ---------- */
 const TYPES={
- hak:{cat:0,name:'Hausanschlusskasten',sub:'HAK · 3 × NH 63 A · PEN',w:220,h:200,
+ hak:{cat:0,name:'Hausanschluss (HAK)',sub:'Hier kommt der Strom ins Haus',w:220,h:200,
   terms:[T('L1','L1','L1','top',.2),T('L2','L2','L2','top',.4),T('L3','L3','L3','top',.6),T('PEN','PEN','PEN','top',.8)],
   draw(d,{w,h}){let s=`<path d="M110 200 L110 248" stroke="#1c1c1e" stroke-width="12" stroke-linecap="round"/><text x="110" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#3a3a3c">Netz 400/230 V (Erdkabel)</text>
    <rect x="0" y="0" width="${w}" height="${h}" rx="10" fill="#3a3a3c" filter="url(#sh)"/><rect x="2" y="2" width="${w-4}" height="22" rx="8" fill="#5a5a5e"/>`;
-   s+=['L1','L2','L3'].map((p,i)=>{const x=24+i*62, ok=d.fuses[i];return `<rect x="${x}" y="46" width="48" height="84" rx="6" fill="${ok?'#ece5d6':'#d9cfc0'}" stroke="#9e937d"/><rect x="${x+14}" y="40" width="20" height="8" rx="2" fill="#b0b0b5"/><rect x="${x+14}" y="128" width="20" height="8" rx="2" fill="#b0b0b5"/><text x="${x+24}" y="84" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4f3a">63 A</text><text x="${x+24}" y="99" text-anchor="middle" font-size="9" font-weight="700" fill="#7d725c">gG · ${p}</text>${ok?'':`<path d="M${x+6} 54 L${x+42} 122 M${x+42} 54 L${x+6} 122" stroke="#ff3b30" stroke-width="4" stroke-linecap="round"/>`}`;}).join('');
+   s+=['L1','L2','L3'].map((p,i)=>{const x=24+i*62, ok=d.fuses[i];return `<rect x="${x}" y="46" width="48" height="84" rx="6" fill="${ok?'#ece5d6':'#d9cfc0'}" stroke="#9e937d"/><rect x="${x+14}" y="40" width="20" height="8" rx="2" fill="#b0b0b5"/><rect x="${x+14}" y="128" width="20" height="8" rx="2" fill="#b0b0b5"/><text x="${x+24}" y="84" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4f3a">63 A</text><text x="${x+24}" y="99" text-anchor="middle" font-size="9" font-weight="700" fill="#7d725c">gG · ${p}</text>${ok?'':`<path d="M${x+6} 54 L${x+42} 122 M${x+42} 54 L${x+6} 122" stroke="#B4472C" stroke-width="4" stroke-linecap="round"/>`}`;}).join('');
    s+=`<text x="${w/2}" y="164" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">HAK</text><text x="${w/2}" y="182" text-anchor="middle" font-size="10" fill="#c7c7cc">Netzbetreiber · verplombt</text>`;
    return s+tLabels(d,w,h,'#fff');}},
- zs:{cat:0,name:'Zählerschrank',sub:'2 Hutschienen: SLS/PEN + Zählerplatz',enclosure:true,
-  rails:[{y:100,len:8,label:'Anschlussraum: SLS + PEN-Aufteilung'},{y:270,len:8,label:'Zählerplatz'}],h:385},
- uv:{cat:0,name:'Unterverteilung',sub:'3 Hutschienen à 12 TE',enclosure:true,
+ zs:{cat:0,name:'Zählerschrank',sub:'Für Hauptschalter und Zähler',enclosure:true,
+  rails:[{y:100,len:8,label:'Hauptschalter + Aufteilung'},{y:270,len:8,label:'Zählerplatz'}],h:385},
+ uv:{cat:0,name:'Unterverteilung',sub:'Für FI, Sicherungen und Schienen',enclosure:true,
   rails:[{y:100,len:12,label:'Reihe 1'},{y:270,len:12,label:'Reihe 2'},{y:440,len:12,label:'Reihe 3'}],h:555},
- sls:{cat:1,name:'SLS-Schalter',sub:'Selektiver Hauptschalter, 3-polig',rail:true,te:3,home:'zs',unit:'sls',ratings:[35,50,63],def:{rating:35,cable:'NYM-J 5×10',len:''},
+ sls:{cat:1,name:'Hauptschalter (SLS)',sub:'Schaltet das ganze Haus ab',rail:true,te:3,home:'zs',unit:'sls',ratings:[35,50,63],def:{rating:35,cable:'NYM-J 5×10',len:''},
   terms:[...['1','2','3'].map((n,i)=>T('i'+n,'L'+n,'L'+n,'top',fr(3)[i])),...['1','2','3'].map((n,i)=>T('o'+n,'L'+n,'L'+n,'bot',fr(3)[i]))],
   edges:(d,cl)=>cl()?[['i1','o1'],['i2','o2'],['i3','o3']]:[],
   draw(d,{w}){return railBody(w,'#eaf0fa','#9fb3d1')+`<text x="${w/2}" y="47" text-anchor="middle" font-size="10" font-weight="800" fill="#1d3a6b">SLS E${d.rating}</text>`+lever(d,w/2-15,52,30,24)+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
- zaehler:{cat:1,name:'Stromzähler',sub:'Drehstromzähler (eHZ)',rail:true,te:4,home:'zs',
+ zaehler:{cat:1,name:'Stromzähler',sub:'Misst den Verbrauch',rail:true,te:4,home:'zs',
   terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),...['1','2','3','N'].map((n,i)=>T('o'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'bot',fr(4)[i]))],
   edges:()=>[['i1','o1'],['i2','o2'],['i3','o3'],['iN','oN']],
   draw(d,{w}){return railBody(w,'#f4f4f6')+`<rect x="7" y="40" width="${w-14}" height="26" rx="4" fill="#16261a"/><text x="${w-12}" y="58" text-anchor="end" font-size="13" font-weight="700" fill="#5dff86" font-family="ui-monospace,Menlo,monospace">${fmt(RT.P/1000,2)} kW</text><text x="${w/2}" y="76" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">eHZ · kWh</text>`+tLabels(d,w,DH)+devLabel(d,w);}},
- pen:{cat:1,name:'PEN-Aufteilung',sub:'PEN → N + PE (TN-C-S)',rail:true,te:2,home:'zs',
+ pen:{cat:1,name:'Aufteilung PEN → N + PE',sub:'Teilt den Netzleiter in N und PE',rail:true,te:2,home:'zs',
   terms:[T('PEN','PEN','PEN','top',.5),T('N','N','N','bot',.25),T('PE','PE','PE','bot',.75)],
   edges:()=>[['PEN','N'],['PEN','PE']],
   draw(d,{w}){return railBody(w,'#eef7f0','#8cc49b')+`<text x="${w/2}" y="52" text-anchor="middle" font-size="9" font-weight="800" fill="#1e6b34">PEN</text><path d="M${w/2} 58 L${w/2} 64 M${w/4} 70 L${w/2} 64 L${w*.75} 70" stroke="#1e6b34" stroke-width="2" fill="none"/>`+tLabels(d,w,DH)+devLabel(d,w);}},
- fi4:{cat:2,name:'FI-Schalter 4-polig',sub:'Fehlerstromschutz 40 A, Typ A',rail:true,te:4,unit:'fi',idns:[30,300],def:{idn:30},
+ fi4:{cat:2,name:'FI-Schalter 4-polig',sub:'Schützt Menschen, für Drehstrom',rail:true,te:4,unit:'fi',idns:[30,300],def:{idn:30},
   terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),...['1','2','3','N'].map((n,i)=>T('o'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'bot',fr(4)[i]))],
   edges:(d,cl)=>cl()?[['i1','o1'],['i2','o2'],['i3','o3'],['iN','oN']]:[],
   draw(d,{w}){return railBody(w)+`<text x="${w/2-8}" y="46" text-anchor="middle" font-size="9" font-weight="800" fill="#1c1c1e">FI 40A ${d.idn}mA</text>`+lever(d,18,52,28,24)+`<g data-kind="test" data-id="${d.id}" style="cursor:pointer"><circle cx="${w-20}" cy="64" r="14" fill="transparent"/><circle cx="${w-20}" cy="64" r="9" fill="#ffd60a" stroke="#b38600"/><text x="${w-20}" y="68" text-anchor="middle" font-size="10" font-weight="800" fill="#5c4400" pointer-events="none">T</text></g>`+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
- fi2:{cat:2,name:'FI-Schalter 2-polig',sub:'Fehlerstromschutz 40 A für L + N',rail:true,te:2,unit:'fi',idns:[30,300],def:{idn:30},
+ fi2:{cat:2,name:'FI-Schalter 2-polig',sub:'Schützt Menschen, für L + N',rail:true,te:2,unit:'fi',idns:[30,300],def:{idn:30},
   terms:[T('iL','L','L','top',.25),T('iN','N','N','top',.75),T('oL','L','L','bot',.25),T('oN','N','N','bot',.75)],
   edges:(d,cl)=>cl()?[['iL','oL'],['iN','oN']]:[],
   draw(d,{w}){return railBody(w)+`<text x="${w/2}" y="46" text-anchor="middle" font-size="8.5" font-weight="800">FI ${d.idn}</text>`+lever(d,6,52,18,24)+`<g data-kind="test" data-id="${d.id}" style="cursor:pointer"><circle cx="37" cy="64" r="12" fill="transparent"/><circle cx="37" cy="64" r="7" fill="#ffd60a" stroke="#b38600"/><text x="37" y="67.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#5c4400" pointer-events="none">T</text></g>`+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
- ls1:{cat:2,name:'Leitungsschutzschalter',sub:'LS 1-polig, Charakteristik B',rail:true,te:1,unit:'ls',ratings:[6,10,13,16,20],def:{rating:16,cable:'NYM-J 3×1,5',len:''},
+ ls1:{cat:2,name:'Sicherung (LS)',sub:'Schützt die Leitung eines Stromkreises',rail:true,te:1,unit:'ls',ratings:[6,10,13,16,20],def:{rating:16,cable:'NYM-J 3×1,5',len:''},
   terms:[T('i','1','L','top',.5),T('o','2','L','bot',.5)],
   edges:(d,cl)=>cl()?[['i','o']]:[],
   draw(d,{w}){return railBody(w)+`<text x="${w/2}" y="47" text-anchor="middle" font-size="8.5" font-weight="800">B${d.rating}</text>`+lever(d,5,52,14,24)+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
- ls3:{cat:2,name:'Leitungsschutzschalter 3-polig',sub:'Für Drehstrom, z. B. Herd',rail:true,te:3,unit:'ls',ratings:[16,20,25,32],def:{rating:16,cable:'NYM-J 5×2,5',len:''},
+ ls3:{cat:2,name:'Sicherung 3-polig (LS)',sub:'Für Drehstrom, z. B. Herd',rail:true,te:3,unit:'ls',ratings:[16,20,25,32],def:{rating:16,cable:'NYM-J 5×2,5',len:''},
   terms:[...['1','2','3'].map((n,i)=>T('i'+n,'L'+n,'L'+n,'top',fr(3)[i])),...['1','2','3'].map((n,i)=>T('o'+n,'L'+n,'L'+n,'bot',fr(3)[i]))],
   edges:(d,cl)=>cl()?[['i1','o1'],['i2','o2'],['i3','o3']]:[],
   draw(d,{w}){return railBody(w)+`<text x="${w/2}" y="47" text-anchor="middle" font-size="9" font-weight="800">3 × B${d.rating}</text>`+lever(d,w/2-15,52,30,24)+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
- rcbo:{cat:2,name:'FI/LS-Schalter',sub:'FI und Sicherung in einem (RCBO)',rail:true,te:2,unit:'rcbo',ratings:[10,13,16,20],idns:[30,300],def:{rating:16,idn:30,cable:'NYM-J 3×1,5',len:''},
+ rcbo:{cat:2,name:'FI + Sicherung (FI/LS)',sub:'Beides in einem Gerät',rail:true,te:2,unit:'rcbo',ratings:[10,13,16,20],idns:[30,300],def:{rating:16,idn:30,cable:'NYM-J 3×1,5',len:''},
   terms:[T('iL','L','L','top',.25),T('iN','N','N','top',.75),T('oL','L','L','bot',.25),T('oN','N','N','bot',.75)],
   edges:(d,cl)=>cl()?[['iL','oL'],['iN','oN']]:[],
   draw(d,{w}){return railBody(w,'#fbf7ff','#b9a6d6')+`<text x="${w/2}" y="46" text-anchor="middle" font-size="8" font-weight="800">B${d.rating}·${d.idn}</text>`+lever(d,6,52,18,24)+`<g data-kind="test" data-id="${d.id}" style="cursor:pointer"><circle cx="37" cy="64" r="12" fill="transparent"/><circle cx="37" cy="64" r="7" fill="#ffd60a" stroke="#b38600"/><text x="37" y="67.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#5c4400" pointer-events="none">T</text></g>`+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
- spd:{cat:2,name:'Überspannungsschutz',sub:'SPD Typ 1+2, gegen Blitz-Spitzen',rail:true,te:4,
+ spd:{cat:2,name:'Überspannungsschutz',sub:'Gegen Spannungsspitzen, z. B. Blitz',rail:true,te:4,
   terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),T('pe','PE','PE','bot',.5)],
-  draw(d,{w}){return railBody(w,'#f6f6f8')+`<text x="${w/2}" y="47" text-anchor="middle" font-size="9" font-weight="800">SPD T1+2</text>${[0,1,2,3].map(i=>`<rect x="${10+i*20}" y="56" width="14" height="12" rx="2" fill="#34c759"/>`).join('')}`+tLabels(d,w,DH)+devLabel(d,w);}},
- nk:{cat:2,name:'N-Klemme',sub:'Sammelschiene für Neutralleiter',rail:true,te:4,
+  draw(d,{w}){return railBody(w,'#f6f6f8')+`<text x="${w/2}" y="47" text-anchor="middle" font-size="9" font-weight="800">SPD T1+2</text>${[0,1,2,3].map(i=>`<rect x="${10+i*20}" y="56" width="14" height="12" rx="2" fill="#2F9E57"/>`).join('')}`+tLabels(d,w,DH)+devLabel(d,w);}},
+ nk:{cat:2,name:'N-Schiene (blau)',sub:'Sammelt die Neutralleiter',rail:true,te:4,
   terms:[...fr(4).map((f,i)=>T('t'+i,'','N','top',f)),...fr(4).map((f,i)=>T('b'+i,'','N','bot',f))],
   edges:()=>['t1','t2','t3','b0','b1','b2','b3'].map(k=>['t0',k]),
   draw(d,{w}){return railBody(w,'#e3edff','#1f6feb')+`<rect x="6" y="${DH/2-5}" width="${w-12}" height="10" rx="3" fill="#1f6feb" opacity=".25"/><text x="${w/2}" y="${DH/2+8}" text-anchor="middle" font-size="22" font-weight="800" fill="#1f6feb">N</text>`+devLabel(d,w);}},
- pek:{cat:2,name:'PE-Klemme',sub:'Sammelschiene für Schutzleiter',rail:true,te:4,
+ pek:{cat:2,name:'PE-Schiene (grün-gelb)',sub:'Sammelt die Schutzleiter',rail:true,te:4,
   terms:[...fr(4).map((f,i)=>T('t'+i,'','PE','top',f)),...fr(4).map((f,i)=>T('b'+i,'','PE','bot',f))],
   edges:()=>['t1','t2','t3','b0','b1','b2','b3'].map(k=>['t0',k]),
   draw(d,{w}){return railBody(w,'#f1f8ec','#2fa14e')+`<rect x="6" y="${DH/2-11}" width="${w-12}" height="22" rx="4" fill="url(#pestripe)"/><text x="${w/2}" y="${DH/2+7}" text-anchor="middle" font-size="18" font-weight="800" fill="#fff" stroke="#1c1c1e" stroke-width=".6">PE</text>`+devLabel(d,w);}},
- lampe:{cat:3,name:'Lampe',sub:'60 W, mit Metallgehäuse (PE)',w:110,h:130,lTerm:'L',
+ lampe:{cat:3,name:'Lampe',sub:'60 W, mit Metallgehäuse',w:110,h:130,lTerm:'L',
   terms:[T('L','L','L','top',.25),T('N','N','N','top',.5),T('PE','PE','PE','top',.75)],
   loads:(d)=>[['L','N',60]],faulty:true,
   draw(d,{w,h}){const on=(RT.powered.get(d.id)||[]).length>0, hl=RT.housing.has(d.id);
-   return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="${hl?'#ff3b30':'#d1d1d6'}" stroke-width="${hl?3:1.2}" filter="url(#sh)"/><g transform="translate(0,30)">${on?`<circle cx="55" cy="40" r="34" fill="#ffd60a" opacity=".28"/>`:''}<circle cx="55" cy="40" r="21" fill="${on?'url(#bulb)':'#ececf0'}" stroke="${on?'#e0a800':'#c7c7cc'}"/><rect x="47" y="60" width="16" height="10" rx="2" fill="#aeaeb2"/>${on?'':`<path d="M48 40 q7 -10 14 0" stroke="#c7c7cc" stroke-width="2" fill="none"/>`}${hl?`<text x="12" y="20" font-size="16">⚡</text>`:''}`+cLabel(d,w,82)+'</g>'+tLabels(d,w,h);}},
- schalter:{cat:3,name:'Lichtschalter',sub:'Ausschalter, unterbricht L',w:96,h:130,unit:'sw',
+   return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="${hl?'#B4472C':'#d1d1d6'}" stroke-width="${hl?3:1.2}" filter="url(#sh)"/><g transform="translate(0,30)">${on?`<circle cx="55" cy="40" r="34" fill="#ffd60a" opacity=".28"/>`:''}<circle cx="55" cy="40" r="21" fill="${on?'url(#bulb)':'#EAE2D3'}" stroke="${on?'#e0a800':'#c7c7cc'}"/><rect x="47" y="60" width="16" height="10" rx="2" fill="#aeaeb2"/>${on?'':`<path d="M48 40 q7 -10 14 0" stroke="#c7c7cc" stroke-width="2" fill="none"/>`}${hl?`<text x="12" y="20" font-size="16">⚡</text>`:''}`+cLabel(d,w,82)+'</g>'+tLabels(d,w,h);}},
+ schalter:{cat:3,name:'Lichtschalter',sub:'Unterbricht L zur Lampe',w:96,h:130,unit:'sw',
   terms:[T('L','L','L','top',.3),T('LS','L↑','L','top',.7)],
   edges:(d,cl)=>cl()?[['L','LS']]:[],
-  draw(d,{w,h}){const on=!!d.on;return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="#d1d1d6" stroke-width="1.2" filter="url(#sh)"/><g transform="translate(0,30)"><rect x="18" y="8" width="60" height="62" rx="10" fill="#f5f5f7" stroke="#d1d1d6"/><g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="26" y="15" width="44" height="48" rx="7" fill="${on?'#34c759':'#e5e5ea'}" stroke="${on?'#248a3d':'#c7c7cc'}"/><text x="48" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="${on?'#fff':'#6e6e73'}" pointer-events="none">${on?'Ein':'Aus'}</text></g>`+cLabel(d,w,84)+'</g>'+tLabels(d,w,h);}},
- steckdose:{cat:3,name:'Steckdose',sub:'Schuko 16 A, Last wählbar',w:110,h:130,lTerm:'L',def:{load:0},
+  draw(d,{w,h}){const on=!!d.on;return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="#d1d1d6" stroke-width="1.2" filter="url(#sh)"/><g transform="translate(0,30)"><rect x="18" y="8" width="60" height="62" rx="10" fill="#f5f5f7" stroke="#d1d1d6"/><g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="26" y="15" width="44" height="48" rx="7" fill="${on?'#2F9E57':'#e5e5ea'}" stroke="${on?'#23784A':'#c7c7cc'}"/><text x="48" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="${on?'#fff':'#6e6e73'}" pointer-events="none">${on?'Ein':'Aus'}</text></g>`+cLabel(d,w,84)+'</g>'+tLabels(d,w,h);}},
+ steckdose:{cat:3,name:'Steckdose',sub:'Last wählbar',w:110,h:130,lTerm:'L',def:{load:0},
   terms:[T('L','L','L','top',.25),T('N','N','N','top',.5),T('PE','PE','PE','top',.75)],
   loads:(d,all)=>(all||d.load>0)?[['L','N',d.load||0]]:[],faulty:true,
   draw(d,{w,h}){const on=(RT.powered.get(d.id)||[]).length>0, live=RT.n&&RT.n.get(d.id+':L').phases.size>0, hl=RT.housing.has(d.id);
-   return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="${hl?'#ff3b30':'#d1d1d6'}" stroke-width="${hl?3:1.2}" filter="url(#sh)"/><g transform="translate(0,30)"><circle cx="55" cy="40" r="27" fill="#f2f2f7" stroke="#c7c7cc"/><rect x="51" y="13" width="8" height="5" rx="1" fill="#aeaeb2"/><rect x="51" y="62" width="8" height="5" rx="1" fill="#aeaeb2"/><circle cx="45" cy="40" r="3.6" fill="#48484a"/><circle cx="65" cy="40" r="3.6" fill="#48484a"/><circle cx="96" cy="13" r="5" fill="${live?'#34c759':'#d1d1d6'}"/>${d.load>0?`<rect x="6" y="6" width="38" height="16" rx="5" fill="${on?'#0a84ff':'#aeaeb2'}"/><text x="25" y="17.5" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">${fmt(d.load/1000)} kW</text>`:''}${hl?`<text x="86" y="80" font-size="16">⚡</text>`:''}`+cLabel(d,w,84)+'</g>'+tLabels(d,w,h);}},
- herd:{cat:3,name:'Herd',sub:'Drehstrom 400 V, 3 × 2 kW',w:190,h:140,lTerm:'L1',def:{on:true},
+   return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="${hl?'#B4472C':'#d1d1d6'}" stroke-width="${hl?3:1.2}" filter="url(#sh)"/><g transform="translate(0,30)"><circle cx="55" cy="40" r="27" fill="#EFE8DC" stroke="#c7c7cc"/><rect x="51" y="13" width="8" height="5" rx="1" fill="#aeaeb2"/><rect x="51" y="62" width="8" height="5" rx="1" fill="#aeaeb2"/><circle cx="45" cy="40" r="3.6" fill="#48484a"/><circle cx="65" cy="40" r="3.6" fill="#48484a"/><circle cx="96" cy="13" r="5" fill="${live?'#2F9E57':'#d1d1d6'}"/>${d.load>0?`<rect x="6" y="6" width="38" height="16" rx="5" fill="${on?'#1A1A1A':'#aeaeb2'}"/><text x="25" y="17.5" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">${fmt(d.load/1000)} kW</text>`:''}${hl?`<text x="86" y="80" font-size="16">⚡</text>`:''}`+cLabel(d,w,84)+'</g>'+tLabels(d,w,h);}},
+ herd:{cat:3,name:'Herd',sub:'Drehstrom, 3 Kochplatten',w:190,h:140,lTerm:'L1',def:{on:true},
   terms:[T('L1','L1','L1','top',.14),T('L2','L2','L2','top',.32),T('L3','L3','L3','top',.5),T('N','N','N','top',.68),T('PE','PE','PE','top',.86)],
   loads:(d,all)=>(all||d.on)?[['L1','N',2000],['L2','N',2000],['L3','N',2000]]:[],faulty:true,
   draw(d,{w,h}){const pw=RT.powered.get(d.id)||[], hl=RT.housing.has(d.id);const ph=new Set(pw.map(e=>e.term));
-   return `<rect width="${w}" height="${h}" rx="14" fill="#2c2c2e" stroke="${hl?'#ff3b30':'#1c1c1e'}" stroke-width="${hl?3:1}" filter="url(#sh)"/><g transform="translate(0,34)">`+['L1','L2','L3'].map((p,i)=>`<circle cx="${48+i*47}" cy="52" r="19" fill="${ph.has(p)?'url(#hot)':'#48484a'}" stroke="#636366"/><text x="${48+i*47}" y="56" text-anchor="middle" font-size="9" font-weight="700" fill="${ph.has(p)?'#fff':'#8e8e93'}" pointer-events="none">${p}</text>`).join('')+
-   `<g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="8" y="6" width="44" height="20" rx="6" fill="${d.on?'#34c759':'#636366'}"/><text x="30" y="20" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" pointer-events="none">${d.on?'Ein':'Aus'}</text></g>${hl?`<text x="164" y="24" font-size="16">⚡</text>`:''}`+cLabel(d,w,94,'#fff')+'</g>'+tLabels(d,w,h,'#d1d1d6');}},
- wago:{cat:3,name:'Verbindungsklemme',sub:'5-fach, z. B. in der Abzweigdose',w:120,h:56,
+   return `<rect width="${w}" height="${h}" rx="14" fill="#2c2c2e" stroke="${hl?'#B4472C':'#1c1c1e'}" stroke-width="${hl?3:1}" filter="url(#sh)"/><g transform="translate(0,34)">`+['L1','L2','L3'].map((p,i)=>`<circle cx="${48+i*47}" cy="52" r="19" fill="${ph.has(p)?'url(#hot)':'#48484a'}" stroke="#636366"/><text x="${48+i*47}" y="56" text-anchor="middle" font-size="9" font-weight="700" fill="${ph.has(p)?'#fff':'#8e8e93'}" pointer-events="none">${p}</text>`).join('')+
+   `<g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="8" y="6" width="44" height="20" rx="6" fill="${d.on?'#2F9E57':'#636366'}"/><text x="30" y="20" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" pointer-events="none">${d.on?'Ein':'Aus'}</text></g>${hl?`<text x="164" y="24" font-size="16">⚡</text>`:''}`+cLabel(d,w,94,'#fff')+'</g>'+tLabels(d,w,h,'#d1d1d6');}},
+ wago:{cat:3,name:'Verbindungsklemme',sub:'Verbindet Drähte, z. B. in der Dose',w:120,h:56,
   terms:fr(5).map((f,i)=>T('k'+i,'','any','bot',f)),
   edges:()=>['k1','k2','k3','k4'].map(k=>['k0',k]),
-  draw(d,{w,h}){return `<rect width="${w}" height="${h}" rx="8" fill="#ececf0" stroke="#aeaeb2"/>${fr(5).map(f=>`<rect x="${f*w-7}" y="8" width="14" height="18" rx="3" fill="#ff9f0a"/>`).join('')}<text x="${w/2}" y="${h-24}" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">${esc(d.label||'Klemme')}</text>`;}},
+  draw(d,{w,h}){return `<rect width="${w}" height="${h}" rx="8" fill="#EAE2D3" stroke="#aeaeb2"/>${fr(5).map(f=>`<rect x="${f*w-7}" y="8" width="14" height="18" rx="3" fill="#C98A1B"/>`).join('')}<text x="${w/2}" y="${h-24}" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">${esc(d.label||'Klemme')}</text>`;}},
 };
-const CATS=['Gehäuse','Zählerschrank-Geräte','Unterverteilung','Verbraucher'];
+const CATS=['1 · Netz und Schränke','2 · Im Zählerschrank','3 · In der Unterverteilung','4 · Verbraucher'];
 
 /* ---------- Erklärungen ---------- */
 const FIT=['Summenstromwandler: Alle aktiven Leiter (L und N) laufen durch einen Ringkern. Ist die Summe der Ströme nicht null, löst er aus.','30 mA für Personenschutz, 300 mA für Brandschutz. Abschaltung in der Praxis meist in 20–40 ms.','Pflicht für Steckdosen bis 32 A und für Beleuchtung in Wohnungen (VDE 0100-410).','Schützt nicht vor Überlast oder Kurzschluss L–N, dafür braucht es den LS.','N jedes Stromkreises muss über denselben FI laufen wie sein L.','Prüftaste T regelmäßig drücken, meist halbjährlich.'];
@@ -351,7 +367,7 @@ function sz(d){const ty=TYPES[d.type];if(ty.rail)return{w:ty.te*TE,h:DH};if(ty.e
 function getPos(d){if(d.mount){const e=byId(d.mount.enc);if(e){const r=TYPES[e.type].rails[d.mount.rail];return{x:e.x+PAD+d.mount.slot*TE,y:e.y+r.y-DH/2};}d.mount=null;}return{x:d.x,y:d.y};}
 function termOf(key){const [id,tid]=key.split(':');const d=byId(id);if(!d)return null;const t=TYPES[d.type].terms?.find(t=>t.id===tid);return t?{d,t}:null;}
 function termAbs(key){const o=termOf(key);if(!o)return null;const p=getPos(o.d),s=sz(o.d);return{x:p.x+o.t.fx*s.w,y:o.t.side==='top'?p.y+12:p.y+s.h-12,side:o.t.side};}
-function nm(d){if(!d)return'';const ty=TYPES[d.type];let n=d.label?((ty.unit==='ls'?'LS ':ty.unit==='rcbo'?'FI/LS ':'')+d.label):ty.name;if(!d.label&&d.rating&&ty.unit!=='sw'&&ty.ratings)n+=` B${d.rating}`;if(d.type==='sls'&&!d.label)n=`SLS E${d.rating}`;return n;}
+function nm(d){if(!d)return'';const ty=TYPES[d.type];if(d.label)return(ty.unit==='ls'?'Sicherung ':ty.unit==='rcbo'?'FI/LS ':'')+d.label;if(d.type==='sls')return'Hauptschalter';if(d.type==='hak')return'Hausanschluss';if(d.type==='pen')return'Aufteilung PEN';if(ty.unit==='ls')return`Sicherung B${d.rating}`;if(ty.unit==='rcbo')return`FI/LS B${d.rating}`;return ty.name;}
 
 /* ---------- Netzberechnung ---------- */
 function closed(d,suf,o){if(o.open&&o.open.includes(d.id+'#'+suf))return false;if(o.structural)return true;if(d.type==='hak')return d.fuses[+suf.slice(1)];return !!d.on;}
@@ -399,8 +415,8 @@ function simulate(){
       const u=c[0].u;const ks=S.items.some(d=>d.fault?.koerper&&n.get(d.id+':PE').phases.size);
       let m=`<b>${esc(uName(u))} hat ausgelöst</b>Kurzschluss (${shortDesc(sh[0][1])}). `;
       if(u.kind==='nh')m+='Die Sicherung im HAK ist durchgebrannt. Tauschen darf sie nur der Netzbetreiber bzw. ein eingetragener Elektroinstallateur.';
-      else if(u.kind==='sls')m+='Kein kleinerer LS konnte den Fehler abschalten. Der Kurzschluss liegt vor den LS oder der Kreis hat keinen LS.';
-      else m+='Der magnetische Schnellauslöser hat in wenigen Millisekunden abgeschaltet. Der SLS davor bleibt drin (Selektivität).';
+      else if(u.kind==='sls')m+='Keine kleinere Sicherung konnte abschalten. Der Kurzschluss liegt vor den Sicherungen oder der Kreis hat keine Sicherung.';
+      else m+='Der magnetische Schnellauslöser der Sicherung hat in wenigen Millisekunden abgeschaltet. Der Hauptschalter davor bleibt drin.';
       if(ks&&u.kind!=='nh')m+=' Hinweis: Ohne FI wird der Körperschluss nur über den hohen Kurzschlussstrom L–PE abgeschaltet.';
       trip(u,'Kurzschluss',m);continue;
     }
@@ -441,7 +457,7 @@ function check(){
   for(const [r,p] of shorts(sN)){const ws=S.wires.filter(w=>sN.find(w.a)===r).map(w=>'w:'+w.id);add('err',`Kurzschluss in der Verdrahtung: ${shortDesc(p)} sind direkt verbunden. Beim Einschalten löst die Sicherung sofort aus.`,ws);}
   const sX=buildNets({structural:true,noFaults:true,excludePen:true});const g={};
   for(const d of S.items){if(d.type==='pen'||d.type==='hak')continue;for(const t of TYPES[d.type].terms||[]){if(t.role!=='N'&&t.role!=='PE')continue;const r=sX.find(d.id+':'+t.id);(g[r]||(g[r]={N:new Set(),PE:new Set()}))[t.role].add(d.id);}}
-  for(const r in g)if(g[r].N.size&&g[r].PE.size)add('err','N und PE sind nach der PEN-Aufteilung wieder miteinander verbunden. Dann fließt Betriebsstrom über den Schutzleiter, FIs lösen aus.',[...g[r].N,...g[r].PE]);
+  for(const r in g)if(g[r].N.size&&g[r].PE.size)add('err','N und PE sind nach der Aufteilung wieder miteinander verbunden. Dann fließt Betriebsstrom über den Schutzleiter, FIs lösen aus.',[...g[r].N,...g[r].PE]);
   const U=units();const fiU=U.filter(isFI),lsU=U.filter(u=>u.kind==='ls'||u.kind==='rcbo'),swU=U.filter(u=>u.kind==='sw');
   const cons=S.items.filter(d=>TYPES[d.type].loads);
   for(const d of cons){const els=loadEls(true).filter(e=>e.d===d);
@@ -453,9 +469,9 @@ function check(){
     const fi30=fiU.filter(u=>u.idn<=30&&!nu(u).get(e0.L).phases.size);
     if(!fi30.length){if(d.type==='herd')add('hint',`${nm(d)}: kein 30-mA-FI. Für fest angeschlossene Geräte nicht zwingend, aber üblich.`,[d.id]);else add('err',`${nm(d)}: kein 30-mA-FI im Stromkreis. Pflicht für Steckdosen bis 32 A und Beleuchtung in Wohnungen (VDE 0100-410).`,[d.id]);}
     const lsOn=lsU.filter(u=>!nu(u).get(e0.L).phases.size);
-    if(!lsOn.length)add('err',`${nm(d)}: kein Leitungsschutzschalter im Stromkreis. Die Leitung ist nicht gegen Überlast geschützt.`,[d.id]);
-    else if(d.type==='steckdose'&&Math.min(...lsOn.map(u=>u.rating))>16)add('warn',`${nm(d)}: LS größer als 16 A. Bei 1,5 mm² und Schuko-Steckdose ist B16 die Obergrenze.`,[d.id]);
-    if(d.type==='herd'&&lsOn.length&&!lsOn.some(u=>u.d.type==='ls3'))add('hint',`${nm(d)}: Für Drehstrom einen 3-poligen LS nehmen, damit bei einem Fehler alle drei Außenleiter abschalten.`,[d.id]);
+    if(!lsOn.length)add('err',`${nm(d)}: keine Sicherung (LS) im Stromkreis. Die Leitung ist nicht gegen Überlast geschützt und könnte heiß werden.`,[d.id]);
+    else if(d.type==='steckdose'&&Math.min(...lsOn.map(u=>u.rating))>16)add('warn',`${nm(d)}: Sicherung größer als 16 A. Bei 1,5 mm² und Schuko-Steckdose ist B16 die Obergrenze.`,[d.id]);
+    if(d.type==='herd'&&lsOn.length&&!lsOn.some(u=>u.d.type==='ls3'))add('hint',`${nm(d)}: Für Drehstrom eine 3-polige Sicherung nehmen, damit bei einem Fehler alle drei Außenleiter abschalten.`,[d.id]);
     let fiBad=false;for(const e of els){if(fiBad)break;if(!sN.get(e.L).phases.size||!sN.get(e.N).ground)continue;
       for(const u of fiU){const n2=nu(u);if((!n2.get(e.L).phases.size)!==(!n2.get(e.N).ground)){add('err',`${nm(d)}: L und N laufen nicht über denselben FI (${nm(u.d)}). Der FI löst beim Einschalten aus.`,[d.id,u.d.id]);fiBad=true;break;}}}
     if(d.type==='lampe')for(const u of swU){if(sN.get(d.id+':N').ground&&!nu(u).get(d.id+':N').ground)add('err',`${nm(d)}: Der Schalter schaltet N statt L. Die Lampe steht auch bei „Aus“ unter Spannung.`,[d.id,u.d.id]);}
@@ -465,8 +481,8 @@ function check(){
       else if(/^L/.test(r)&&['blau','gnge','pen'].includes(c))bad=`Außenleiter (${r}) darf nicht ${COL[c].n.toLowerCase()} sein. Diese Farbe steht für ${c==='blau'?'N':'PE'} – man würde eine Spannung führende Ader für ungefährlich halten`;
       if(bad){add('err',`Leiterfarbe an ${nm(o.d)}: ${bad}.`,['w:'+w.id]);break;}}}
   const sls=S.items.filter(d=>d.type==='sls');
-  if(S.items.some(d=>d.type==='hak')){if(!sls.length)add('warn','Kein SLS-Schalter vorhanden. Nach VDE-AR-N 4100 gehört er vor den Zähler.');
-    else for(const z of S.items.filter(d=>d.type==='zaehler')){const k=z.id+':i1';if(!sN.get(k).phases.size)continue;if(buildNets({structural:true,noFaults:true,open:sls.map(s=>s.id+'#')}).get(k).phases.size)add('warn',`${nm(z)}: Der SLS sitzt nicht vor dem Zähler.`,[z.id]);}
+  if(S.items.some(d=>d.type==='hak')){if(!sls.length)add('warn','Kein Hauptschalter (SLS) vorhanden. Nach VDE-AR-N 4100 gehört er vor den Zähler.');
+    else for(const z of S.items.filter(d=>d.type==='zaehler')){const k=z.id+':i1';if(!sN.get(k).phases.size)continue;if(buildNets({structural:true,noFaults:true,open:sls.map(s=>s.id+'#')}).get(k).phases.size)add('warn',`${nm(z)}: Der Hauptschalter (SLS) sitzt nicht vor dem Zähler.`,[z.id]);}
     if(!S.items.some(d=>d.type==='spd'))add('hint','Kein Überspannungsschutz. Bei Neuanlagen nach VDE 0100-443/-534 in der Praxis fast immer gefordert.');}
   for(const d of S.items)if(TYPES[d.type].rail&&!d.mount)add('warn',`${nm(d)} liegt frei und ist nicht auf einer Hutschiene eingerastet.`,[d.id]);
   const cnt={L1:0,L2:0,L3:0};for(const u of lsU.filter(u=>u.d.type!=='ls3')){const k=u.d.id+':'+(u.d.type==='ls1'?'i':'iL');const ph=[...sN.get(k).phases];if(ph.length===1)cnt[ph[0]]++;}
@@ -481,25 +497,28 @@ function encDraw(d){const ty=TYPES[d.type],{w,h}=sz(d);let s=`<rect width="${w}"
   ty.rails.forEach(r=>{s+=`<text x="${PAD}" y="${r.y-DH/2-8}" font-size="9.5" font-weight="600" fill="#8e8e93">${esc(r.label)}</text><rect x="${PAD-8}" y="${r.y-9}" width="${r.len*TE+16}" height="18" rx="2" fill="url(#rail)" stroke="#9a9aa0" stroke-width=".8"/>`;
     for(let i=0;i<=r.len;i++)s+=`<rect x="${PAD+i*TE-1.5}" y="${r.y-3}" width="3" height="6" rx="1" fill="#8e8e93" opacity=".6"/>`;});
   return s;}
-function markBox(d){const m=MARK[d.id];if(!m)return'';const s=sz(d);const c=m==='err'?'#ff3b30':'#ff9f0a';return `<rect x="-3" y="-3" width="${s.w+6}" height="${s.h+6}" rx="8" fill="${c}" fill-opacity=".07" stroke="${c}" stroke-width="2.5" stroke-dasharray="${m==='err'?'0':'6 4'}" pointer-events="none"/>`;}
-function selBox(d){const s=sz(d);return `<rect x="-5" y="-5" width="${s.w+10}" height="${s.h+10}" rx="9" fill="none" stroke="#0a84ff" stroke-width="2.5" pointer-events="none"/>`;}
+function markBox(d){const m=MARK[d.id];if(!m)return'';const s=sz(d);const c=m==='err'?'#B4472C':'#C98A1B';return `<rect x="-3" y="-3" width="${s.w+6}" height="${s.h+6}" rx="8" fill="${c}" fill-opacity=".07" stroke="${c}" stroke-width="2.5" stroke-dasharray="${m==='err'?'0':'6 4'}" pointer-events="none"/>`;}
+function selBox(d){const s=sz(d);return `<rect x="-5" y="-5" width="${s.w+10}" height="${s.h+10}" rx="9" fill="none" stroke="#1A1A1A" stroke-width="2.5" pointer-events="none"/>`;}
 function render(){
   const sel=S.sel;let se='',sd='',sw='',st='';
   const drag=act&&act.moved&&act.kind==='item'?act.id:null;
   for(const d of S.items){const ty=TYPES[d.type];if(!ty.enclosure)continue;const p=getPos(d);se+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})">${encDraw(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
-  if(GH){const e=byId(GH.enc);if(e){const r=TYPES[e.type].rails[GH.rail];se+=`<rect x="${e.x+PAD+GH.slot*TE}" y="${e.y+r.y-DH/2}" width="${GH.te*TE}" height="${DH}" rx="5" fill="#0a84ff" opacity=".18" stroke="#0a84ff" stroke-dasharray="5 4" stroke-width="2"/>`;}}
+  if(GH){const e=byId(GH.enc);if(e){const r=TYPES[e.type].rails[GH.rail];se+=`<rect x="${e.x+PAD+GH.slot*TE}" y="${e.y+r.y-DH/2}" width="${GH.te*TE}" height="${DH}" rx="5" fill="#1A1A1A" opacity=".18" stroke="#1A1A1A" stroke-dasharray="5 4" stroke-width="2"/>`;}}
   const devs=S.items.filter(d=>!TYPES[d.type].enclosure).sort((a,b)=>(a.id===drag)-(b.id===drag));
-  for(const d of devs){const p=getPos(d),s=sz(d);sd+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})">${TYPES[d.type].draw(d,s)}${markBox(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
+  pathCheck();const gt=guideTargets();
+  for(const d of devs){const p=getPos(d),s=sz(d);const dm=PATH&&!PATH.devs.has(d.id);const gb=G&&gt.box===d.id;sd+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})"${dm?' class="dim"':''}>${gb?`<rect x="-8" y="-8" width="${s.w+16}" height="${s.h+16}" rx="12" fill="none" stroke="#1A1A1A" stroke-width="3" stroke-dasharray="7 5" pointer-events="none"/>`:''}${TYPES[d.type].draw(d,s)}${markBox(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
   for(const w of S.wires){const p=wpath(w);if(!p)continue;const live=RT.n&&RT.n.get(w.a).phases.size>0;const c=COL[w.color]||COL.braun;const isSel=sel?.kind==='wire'&&sel.id===w.id;
-    sw+=`<g>${MARK['w:'+w.id]?`<path d="${p}" fill="none" stroke="#ff3b30" stroke-width="13" opacity=".35" stroke-linecap="round"/>`:''}${isSel?`<path d="${p}" fill="none" stroke="#0a84ff" stroke-width="12" opacity=".45" stroke-linecap="round"/>`:''}${live&&!RT.flow.has(w.id)?`<path class="glow" d="${p}"/>`:''}<path class="wire" d="${p}" stroke="${c.c}" stroke-width="4.5"/>`;
+    sw+=`<g${PATH&&!PATH.wires.has(w.id)?' class="dim"':''}>${MARK['w:'+w.id]?`<path d="${p}" fill="none" stroke="#B4472C" stroke-width="13" opacity=".35" stroke-linecap="round"/>`:''}${isSel?`<path d="${p}" fill="none" stroke="#1A1A1A" stroke-width="12" opacity=".45" stroke-linecap="round"/>`:''}${live&&!RT.flow.has(w.id)?`<path class="glow" d="${p}"/>`:''}<path class="wire" d="${p}" stroke="${c.c}" stroke-width="4.5"/>`;
     if(w.color==='gnge'||w.color==='pen')sw+=`<path class="wire" d="${p}" stroke="#f5d10a" stroke-width="4.5" stroke-dasharray="8 8"/>`;
     if(w.color==='pen'){const A=termAbs(w.a),B=termAbs(w.b);sw+=`<circle cx="${A.x}" cy="${A.y+(A.side==='top'?-12:12)}" r="4.5" fill="#1f6feb"/><circle cx="${B.x}" cy="${B.y+(B.side==='top'?-12:12)}" r="4.5" fill="#1f6feb"/>`;}
     if(RT.flow.has(w.id))sw+=`<path class="flow" d="${p}"/>`;
     sw+=`<path d="${p}" fill="none" stroke="transparent" stroke-width="18" data-kind="wire" data-id="${w.id}"/></g>`;}
+  if(gt.keys.length===2){const A=termAbs(gt.keys[0]),B=termAbs(gt.keys[1]);if(A&&B)sw+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="3 7" stroke-linecap="round" opacity=".55" pointer-events="none"/>`;}
+  sw+=stepLabels();
   for(const d of S.items){const ty=TYPES[d.type];if(!ty.terms)continue;for(const t of ty.terms){const k=d.id+':'+t.id;const a=termAbs(k);const live=RT.n&&RT.n.get(k).phases.size>0;
-    st+=`<g data-kind="term" data-key="${k}" transform="translate(${a.x},${a.y})"><circle r="13" fill="transparent"/><circle class="dot${live?' live':''}${pend===k?' pend':''}" r="${pend===k?7:5.5}"/>${MEAS&&(MA===k||MB===k)?`<circle r="10" fill="none" stroke="#5e5ce6" stroke-width="3"/><text y="-14" text-anchor="middle" font-size="11" font-weight="800" fill="#5e5ce6">${MA===k?'A':'B'}</text>`:''}</g>`;}}
+    st+=`<g data-kind="term" data-key="${k}" transform="translate(${a.x},${a.y})"><circle r="13" fill="transparent"/>${gt.keys.includes(k)?`<circle class="gpulse" r="9"/><circle r="11" fill="none" stroke="#1A1A1A" stroke-width="3"/><g transform="translate(0,${termAbs(k).side==='top'?-26:26})"><circle r="10" fill="#1A1A1A"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="800" fill="#F6F1E9">${gt.keys.indexOf(k)+1}</text></g>`:''}<circle class="dot${live?' live':''}${pend===k?' pend':''}" r="${pend===k?7:5.5}"/>${MEAS&&(MA===k||MB===k)?`<circle r="10" fill="none" stroke="#1A1A1A" stroke-width="3"/><text y="-14" text-anchor="middle" font-size="11" font-weight="800" fill="#1A1A1A">${MA===k?'A':'B'}</text>`:''}</g>`;}}
   Lenc.innerHTML=se;Ldev.innerHTML=sd;Lwire.innerHTML=sw;Lterm.innerHTML=st;
-  $('#empty').style.display=S.items.length?'none':'block';
+  $('#empty').style.display=S.items.length||FREE||G?'none':'block';
 }
 let raf=0;const req=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});};
 function applyView(){world.setAttribute('transform',`translate(${V.tx},${V.ty}) scale(${V.k})`);}
@@ -565,8 +584,8 @@ function zoomAt(mx,my,f){const wx=(mx-V.tx)/V.k,wy=(my-V.ty)/V.k;V.k=clamp(V.k*f
 function fit(){if(!S.items.length){V.k=1;V.tx=40;V.ty=30;applyView();return;}let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   for(const d of S.items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);y0=Math.min(y0,p.y-20);x1=Math.max(x1,p.x+s.w);y1=Math.max(y1,p.y+s.h+(d.type==='hak'?75:24));}
   for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
-  const r=svg.getBoundingClientRect();const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;
-  const W=r.width-pw-40,H=r.height-ph-40;V.k=clamp(Math.min(W/(x1-x0),H/(y1-y0)),.2,1.6);V.tx=20+(W-(x1-x0)*V.k)/2-x0*V.k;V.ty=20+(H-(y1-y0)*V.k)/2-y0*V.k;applyView();}
+  y0-=56;y1+=50;const r=svg.getBoundingClientRect();const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;
+  const gl=G&&innerWidth>=900?450:0,gtp=G&&innerWidth<900?($('#guide').offsetHeight||0)+16:0;const W=r.width-pw-gl-40,H=r.height-ph-gtp-40;V.k=clamp(Math.min(W/(x1-x0),H/(y1-y0)),.2,1.6);V.tx=gl+20+(W-(x1-x0)*V.k)/2-x0*V.k;V.ty=gtp+20+(H-(y1-y0)*V.k)/2-y0*V.k;applyView();}
 function centerOn(d){const p=getPos(d),s=sz(d);const r=svg.getBoundingClientRect();const sx=V.tx+(p.x+s.w/2)*V.k,sy=V.ty+(p.y+s.h/2)*V.k;
   if(sx<30||sx>r.width-30||sy<30||sy>r.height*.5){V.tx+=r.width/2-sx;V.ty+=r.height*.3-sy;applyView();}}
 
@@ -582,7 +601,7 @@ function onTap(a){
 }
 function connect(a,b){if(a===b){render();return;}if(S.wires.some(w=>(w.a===a&&w.b===b)||(w.a===b&&w.b===a))){render();return;}
   const ra=termOf(a).t.role,rb=termOf(b).t.role;let color='braun';for(const r of ROLEPRIO)if(ra===r||rb===r){color=RC[r];break;}
-  S.wires.push({id:'w'+(S.nid++),a,b,color});changed();}
+  const nw={id:'w'+(S.nid++),a,b,color};S.wires.push(nw);if(G){const st=GSTEPS[G.i];G.note=st&&st.a&&!wireFits(nw,st)?'Diese Verbindung gehört nicht zu diesem Schritt. Mit „↶ Zurück“ nimmst du sie wieder weg.':'';}changed();}
 function toggleDev(d){if(d.type==='herd'){d.on=!d.on;changed();return;}d.on=!d.on;if(d.on)d.tripped=null;changed();}
 function fiTest(d){if(!d.on){toast(`${esc(nm(d))} ist bereits aus. Erst wieder einschalten.`,'info');renderPanel();return;}
   const n=buildNets();const k=d.id+':'+(d.type==='fi4'?'i1':'iL');
@@ -632,7 +651,7 @@ function renderPanel(){const P=$('#panel');const s=S.sel;
     h+=`<div class="ph"><div><div class="pt">${esc(ty.name)}</div><div class="ps ${st.c}">${esc(st.t)}${st.ol?`<span id="olc">${Math.max(0,Math.ceil((OL[d.id+'#'].until-Date.now())/1000))} s</span>`:''}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
     h+=`<div class="col"><div>Bezeichnung</div><input class="txt" data-act="label" value="${esc(d.label)}" placeholder="z. B. Küche, Licht Flur" maxlength="24"></div>`;
     if(ty.loads||d.type==='schalter')h+=`<div class="col"><div>Raum</div><input class="txt" list="roomlist" data-act="room" value="${esc(d.room)}" placeholder="z. B. Küche, Flur, Bad"></div>`;
-    if(d.cable!==undefined)h+=`<div class="col"><div>${d.type==='sls'?'Hauptleitung zur Unterverteilung':'Leitung dieses Stromkreises'}</div><div class="two"><select class="txt" data-act="cable">${CABLES.map(c=>`<option${c===d.cable?' selected':''}>${c}</option>`).join('')}</select><input class="txt" type="number" inputmode="decimal" min="0" step="0.5" data-act="len" value="${esc(d.len)}" placeholder="Länge in m"></div></div>`;
+    if(d.cable!==undefined)h+=`<div class="col"><div>${d.type==='sls'?'Hauptleitung zur Unterverteilung':'Leitung dieses Stromkreises (für die Doku)'}</div><div class="two"><select class="txt" data-act="cable">${CABLES.map(c=>`<option${c===d.cable?' selected':''}>${c}</option>`).join('')}</select><input class="txt" type="number" inputmode="decimal" min="0" step="0.5" data-act="len" value="${esc(d.len)}" placeholder="Länge in m"></div></div>`;
     if(ty.unit&&ty.unit!=='sw')h+=tg('on',d.on,'Eingeschaltet',d.tripped?'Wieder einschalten. Besteht der Fehler noch, löst er sofort erneut aus.':'Entspricht dem Hebel am Gerät');
     if(d.type==='schalter')h+=tg('on',d.on,'Schalter ein');
     if(d.type==='herd')h+=tg('on',d.on,'Herd ein','Drei Kochplatten à 2 kW, je eine pro Außenleiter');
@@ -641,6 +660,7 @@ function renderPanel(){const P=$('#panel');const s=S.sel;
     if(ty.unit==='fi'||ty.unit==='rcbo')h+=`<div class="actions" style="margin-top:12px"><button class="btn" data-act="test">Prüftaste T drücken</button></div>`;
     if(d.type==='steckdose')h+=`<div class="sec">Was ist eingesteckt?</div><div style="margin-top:8px">${seg('load',LOADS.map(([v,l])=>[v,l]),d.load)}</div>`;
     if(d.type==='hak'&&d.fuses.some(f=>!f))h+=`<div class="alert">Eine NH-Sicherung ist durchgebrannt. Den Fehler erst beheben, dann ersetzen.</div><div class="actions"><button class="btn" data-act="fuses">Sicherungen ersetzen (Netzbetreiber)</button></div>`;
+    if(ty.loads){pathCheck();h+=`<div class="sec">Weg des Stroms</div>`+(PATH&&PATH.for===d.id?`<div class="expl" style="font-size:14.5px;line-height:1.5">${PATH.txt.map(([k,v])=>`<div style="margin:6px 0"><b>${k}</b> ${esc(v)}</div>`).join('')}<div style="font-size:13px;color:var(--sub)">Auf der Fläche hervorgehoben, der Rest ist blass. „Schließen“ blendet alles wieder ein.</div></div>`:`<div style="font-size:14px;color:var(--sub);margin-top:6px">Noch kein vollständiger Weg – schließe L, N und PE an.</div>`);}
     if(ty.faulty){h+=`<div class="sec">Fehler simulieren</div>`+tg('kurz',d.fault.kurz,'Kurzschluss',`${ty.lTerm} berührt N im Gerät`,true)+tg('koerper',d.fault.koerper,'Körperschluss',`${ty.lTerm} berührt das Metallgehäuse`,true);
       if(RT.housing.has(d.id))h+=`<div class="alert">Das Gehäuse führt Spannung, weil kein Schutzleiter angeschlossen ist. Bisher merkt das niemand. Was passiert, wenn jemand es anfasst?</div><div class="actions"><button class="btn red" data-act="touch">Gehäuse berühren</button></div>`;}
     if(inf)h+=`<div class="sec">Erklärung</div><div class="expl"><p>${esc(inf.e)}</p><details><summary>Technisch erklärt</summary><ul>${inf.t.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details></div>`;
@@ -656,26 +676,27 @@ function buildPal(){let h=`<div class="hd"><b>Bauteile</b><button class="btn" da
   $('#pal').innerHTML=h;}
 function modal(html){$('#sheet').innerHTML=html;$('#modal').style.display='flex';}
 function closeModal(){$('#modal').style.display='none';}
-function openCheck(){const R=check();const c=l=>R.filter(r=>r.lvl===l).length;const M={err:['#ff3b30','Fehler'],warn:['#ff9f0a','Warnung'],hint:['#0a84ff','Hinweis']};
+function openCheck(){const R=check();const c=l=>R.filter(r=>r.lvl===l).length;const M={err:['#B4472C','Fehler'],warn:['#C98A1B','Warnung'],hint:['#1A1A1A','Hinweis']};
   let h=`<div class="mh"><h2>Prüfergebnis</h2><button class="btn" data-act="mclose">Schließen</button></div>`;
   if(!S.items.length)h+='<p>Noch nichts aufgebaut.</p>';
-  else{h+=`<div class="sum"><span style="background:#ffe5e3;color:#d70015">${c('err')} Fehler</span><span style="background:#fff2db;color:#a15c00">${c('warn')} Warnungen</span><span style="background:#e5f1ff;color:#0058d0">${c('hint')} Hinweise</span></div>`;
-    if(!c('err')&&!c('warn'))h+=`<div class="res"><i style="background:#34c759"></i><div><span class="tag" style="color:#248a3d">In Ordnung</span>Keine Fehler in der Verdrahtung gefunden.</div></div>`;
+  else{h+=`<div class="sum"><span style="background:#F6E3DC;color:#9A3A22">${c('err')} Fehler</span><span style="background:#F7EBD3;color:#8A5A0B">${c('warn')} Warnungen</span><span style="background:#ECE6DA;color:#3B362E">${c('hint')} Hinweise</span></div>`;
+    if(!c('err')&&!c('warn'))h+=`<div class="res"><i style="background:#2F9E57"></i><div><span class="tag" style="color:#23784A">In Ordnung</span>Keine Fehler in der Verdrahtung gefunden.</div></div>`;
     for(const lv of ['err','warn','hint'])for(const r of R.filter(x=>x.lvl===lv))h+=`<div class="res" data-act="goto" data-v="${esc(r.ids[0]||'')}"><i style="background:${M[lv][0]}"></i><div><span class="tag" style="color:${M[lv][0]}">${M[lv][1]}</span>${esc(r.txt)}</div></div>`;
     h+=`<p style="font-size:12.5px;color:var(--sub);margin-top:14px">Die Prüfung deckt die wichtigsten Regeln ab, ersetzt aber keine Abnahmeprüfung (VDE 0100-600) durch eine Elektrofachkraft.</p>`;}
   modal(h);}
 function openHelp(){modal(`<div class="mh"><h2>Hilfe</h2><button class="btn" data-act="mclose">Schließen</button></div><div class="help">
+<h3>Einstieg</h3><ul><li><b>Geführt aufbauen</b> (unter „Mehr“): Schritt für Schritt einen Lichtkreis verdrahten. Die zwei Anschlüsse jedes Schritts leuchten auf.</li><li><b>Weg des Stroms</b>: Lampe, Steckdose oder Herd antippen – der Weg vom Hausanschluss bis zum Verbraucher wird hervorgehoben.</li><li>Die großen Zahlen 1–4 auf der Fläche zeigen die Reihenfolge: Hausanschluss → Zählerschrank → Unterverteilung → Verbraucher.</li></ul>
 <h3>Aufbauen</h3><ul><li><b>Bauteile</b> antippen und Gerät wählen. Hutschienengeräte rasten automatisch ein: SLS, Zähler und PEN-Aufteilung im Zählerschrank, der Rest in der Unterverteilung.</li><li>Bauteil ziehen zum Verschieben. Über einer Hutschiene zeigt ein blauer Rahmen, wo es einrastet. Ziehst du einen Schrank, wandert alles darin mit.</li></ul>
 <h3>Verbinden</h3><ul><li>Vom Anschluss (Punkt) zum anderen Anschluss ziehen – oder ersten Punkt antippen, dann den zweiten.</li><li>Die Aderfarbe wird passend gewählt. Leitung antippen zum Ändern oder Löschen.</li><li>Gelb leuchtende Punkte und Leitungen führen Spannung. Weiße laufende Striche zeigen, wo Strom fließt.</li></ul>
 <h3>Schalten und Fehler</h3><ul><li>Hebel antippen schaltet ein und aus. Ausgelöste Geräte zeigen ein rotes Ausrufezeichen.</li><li>Bei Lampe, Steckdose und Herd kannst du Kurzschluss und Körperschluss auslösen. Bei der Steckdose wählst du die Last, damit testest du Überlast.</li><li><b>Prüfen</b> findet typische Verdrahtungsfehler.</li></ul>
 <h3>Fehler sofort sehen</h3><ul><li>Nach jedem Schritt wird geprüft. Ein Fehler wird sofort gemeldet – mit Grund – und das Teil rot markiert. Orange gestrichelt heißt: noch unvollständig.</li><li>Der Knopf oben zeigt den Stand: grün „Alles korrekt“, rot mit Anzahl der Fehler. Antippen zeigt die Liste.</li></ul>
-<h3>Messen und Rückgängig</h3><ul><li><b>Messen</b>: zwei Anschlüsse antippen, das Messgerät zeigt 0, 230 oder 400 V – wie ein zweipoliger Spannungsprüfer.</li><li><b>↶ Zurück</b> nimmt den letzten Schritt zurück.</li></ul>
-<h3>Dokumentation</h3><ul><li><b>Doku</b>: Kundendaten eintragen, Räume und Kleinmaterial ergänzen. Stromkreisliste, Materialliste und Schaltplan entstehen automatisch.</li><li>Leitungstyp und Länge trägst du beim jeweiligen LS ein, Räume beim Verbraucher.</li><li><b>Drucken / PDF</b> erzeugt das Dokument, <b>Materialliste CSV</b> öffnet sich in Excel.</li></ul>
-<h3>Ansicht, Speichern, Teilen</h3><ul><li>Zwei Finger: zoomen. Leere Fläche ziehen: verschieben.</li><li>Gespeichert wird automatisch auf diesem Gerät. <b>Projekt → Exportieren</b> sichert einen Aufbau als Datei, z. B. pro Kunde.</li><li><b>Teilen</b> zeigt den Link zur Webseite.</li></ul>
+<h3>Messen und Rückgängig</h3><ul><li><b>Messen</b> (unter „Mehr“): zwei Anschlüsse antippen, das Messgerät zeigt 0, 230 oder 400 V – wie ein zweipoliger Spannungsprüfer.</li><li><b>↶ Zurück</b> nimmt den letzten Schritt zurück.</li></ul>
+<h3>Dokumentation</h3><ul><li><b>Doku</b>: Kundendaten eintragen, Räume und Kleinmaterial ergänzen. Stromkreisliste, Materialliste und Schaltplan entstehen automatisch.</li><li>Leitungstyp und Länge trägst du bei der jeweiligen Sicherung ein, Räume beim Verbraucher.</li><li><b>Drucken / PDF</b> erzeugt das Dokument, <b>Materialliste CSV</b> öffnet sich in Excel.</li></ul>
+<h3>Ansicht, Speichern, Teilen</h3><ul><li>Zwei Finger: zoomen. Leere Fläche ziehen: verschieben.</li><li>Gespeichert wird automatisch auf diesem Gerät. <b>Mehr → Projekt → Exportieren</b> sichert einen Aufbau als Datei, z. B. pro Kunde.</li><li><b>Mehr → Teilen</b> zeigt den Link zur Webseite.</li></ul>
 <h3>Vereinfachungen</h3><ul><li>Auslösezeiten bei Überlast sind gerafft. Ströme werden aus der Nennleistung berechnet, Leitungsquerschnitte und Schleifenimpedanz sind nicht simuliert.</li><li>Lernwerkzeug: Arbeiten am HAK, Zählerschrank und an der Unterverteilung gehören in die Hände einer Elektrofachkraft.</li></ul></div>`);}
 function openProject(){modal(`<div class="mh"><h2>Projekt</h2><button class="btn" data-act="mclose">Schließen</button></div>
 ${artifactCap?`<div class="row"><div class="l">Speichern<small>Sichert den Aufbau dauerhaft in dieser Seite, auch für andere Geräte.</small></div><button class="btn pri" data-act="savepage">Speichern</button></div>`:''}
-<div class="row"><div class="l">Beispiel laden<small>Fertiger, korrekt verdrahteter Aufbau zum Anschauen</small></div><button class="btn" data-act="example">Beispiel</button></div>
+
 <div class="row"><div class="l">Als Datei exportieren<small>JSON-Datei zum Aufheben oder Weitergeben</small></div><button class="btn" data-act="export">Exportieren</button></div>
 <div class="row"><div class="l">Datei importieren<small>Eine exportierte JSON-Datei laden</small></div><button class="btn" data-act="import">Importieren</button></div>
 <div class="row"><div class="l">Alles löschen<small>Leere Fläche, neu beginnen</small></div><button class="btn red" data-act="clear">Leeren</button></div>
@@ -706,10 +727,10 @@ async function exportFile(){saveFile(`Aufbau_${fname()}.json`,JSON.stringify(sna
 async function saveFile(name,data,mime){if(dlCap){try{await dlCap.save({filename:name,data});}catch(_){toast('Speichern abgebrochen.','info');}return;}
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:mime}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);}catch(_){toast('Download ist hier nicht möglich.','warn');}}
 $('#file').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(loadData(o)){saveLocal();closeModal();toast('Importiert.','ok');}else toast('Die Datei passt nicht.','warn');}catch(_){toast('Die Datei konnte nicht gelesen werden.','warn');}e.target.value='';});
-let sT=0;function changed(sim=true){if(sim)simulate();live();render();renderPanel();histPush();if(MEAS)showMeter();clearTimeout(sT);sT=setTimeout(saveLocal,400);}
+let sT=0;function changed(sim=true){VER++;if(sim)simulate();live();guideUpdate();render();renderPanel();histPush();if(MEAS)showMeter();clearTimeout(sT);sT=setTimeout(saveLocal,400);}
 
 /* ---------- Beispiel ---------- */
-function example(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S.doc||{},extras:[]};OL={};pend=null;LIVEQ=true;
+function exampleHouse(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S.doc||{},extras:[]};OL={};pend=null;LIVEQ=true;G=null;FREE=false;guideUpdate();
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb,color)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c=color;if(!c){const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
   const hak=A('hak',{x:40,y:100}),zs=A('zs',{x:320,y:40}),uv=A('uv',{x:640,y:40});
   const sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:5}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:2}});
@@ -726,7 +747,7 @@ function example(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S.doc|
   W(lsL,'o',sch,'L');W(sch,'LS',lam,'L','schwarz');W(nk,'b1',lam,'N');W(pk,'b1',lam,'PE');
   ['1','2','3'].forEach(n=>W(ls3,'o'+n,herd,'L'+n));W(nk,'b2',herd,'N');W(pk,'b2',herd,'PE');
   S.sel=null;closeModal();fillRooms();changed();fit();
-  toast('<b>Beispiel geladen</b>Korrekt verdrahtet: HAK → SLS → Zähler → FI → LS → Verbraucher. Probier Fehler aus: Lampe oder Steckdose antippen.','ok',7000);}
+  toast('<b>Beispiel: ganzes Haus</b>Licht, Steckdose und Herd. Tippe einen Verbraucher an – sein Weg leuchtet auf.','ok',6000);}
 
 /* ---------- Klicks ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;const a=b.dataset.act,v=b.dataset.v;const d=S.sel?.kind==='item'?byId(S.sel.id):null;
@@ -734,8 +755,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   switch(a){
    case'pal':$('#pal').classList.toggle('open');break;case'palclose':$('#pal').classList.remove('open');break;
    case'add':addType(v);break;case'check':openCheck();break;case'help':openHelp();break;case'project':openProject();break;
-   case'example':if(S.items.length){modal(`<div class="mh"><h2>Beispiel laden?</h2><button class="btn" data-act="mclose">Abbrechen</button></div><p style="font-size:15px">Der aktuelle Aufbau wird ersetzt. Speichere ihn vorher über Projekt → Exportieren, wenn du ihn behalten willst.</p><div class="actions"><button class="btn pri" data-act="example2">Beispiel laden</button></div>`);}else example();break;
-   case'example2':example();break;
+   case'example':case'exhouse':case'guide':if(S.items.length){modal(`<div class="mh"><h2>${a==='guide'?'Geführt aufbauen?':'Beispiel laden?'}</h2><button class="btn" data-act="mclose">Abbrechen</button></div><p style="font-size:15px;line-height:1.5">Der aktuelle Aufbau wird ersetzt. Mit „↶ Zurück“ kommst du wieder dorthin. Zum dauerhaften Aufheben: Mehr → Projekt → Exportieren.</p><div class="actions"><button class="btn pri" data-act="go" data-v="${a}">${a==='guide'?'Starten':'Beispiel laden'}</button></div>`);}else runStart(a);break;
+   case'go':closeModal();runStart(v);break;
+   case'free':FREE=true;render();$('#pal').classList.add('open');break;
+   case'more':openMore();break;case'mx':closeModal();if(v==='meas')setMeas(true);else if(v==='fit')fit();else if(v==='share')openShare();else if(v==='project')openProject();else if(v==='help')openHelp();else document.querySelector(`[data-act="${v}"]`)?.click();break;
+   case'gdo':guideDo();break;case'gend':endGuide();break;
    case'mclose':closeModal();break;case'zin':{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,1.25);break;}case'zout':{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,.8);break;}
    case'fit':fit();break;case'close':S.sel=null;render();renderPanel();break;
    case'color':{const w=S.wires.find(x=>x.id===S.sel.id);w.color=v;changed(false);break;}
@@ -766,6 +790,105 @@ document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(
 addEventListener('resize',()=>{});
 
 
+
+/* ---------- Start-Wege, Mehr ---------- */
+let FREE=false,VER=0;
+function runStart(a){if(a==='guide')startGuide();else if(a==='exhouse')exampleHouse();else exampleSimple();}
+function openMore(){const row=(v,t,d)=>`<div class="mrow" data-act="mx" data-v="${v}"><div><b>${t}</b><span>${d}</span></div><span class="ch">›</span></div>`;
+  modal(`<div class="mh"><h2>Mehr</h2><button class="btn" data-act="mclose">Schließen</button></div>
+  ${row('guide','Geführt aufbauen','Schritt für Schritt einen Lichtkreis verdrahten, mit Erklärung.')}
+  ${row('meas','Messen','Spannung zwischen zwei Anschlüssen anzeigen – wie ein Spannungsprüfer.')}
+  ${row('example','Beispiel: Lichtkreis','Einfach: ein Stromkreis vom Hausanschluss bis zur Lampe.')}
+  ${row('exhouse','Beispiel: ganzes Haus','Licht, Steckdose und Herd mit Drehstrom.')}
+  ${row('fit','Einpassen','Alles auf den Bildschirm holen.')}
+  ${row('share','Teilen','Link zur Webseite für andere.')}
+  ${row('project','Projekt','Exportieren, importieren, neu beginnen.')}
+  ${row('help','Hilfe','So funktioniert der Baukasten.')}`);}
+
+/* ---------- Lichtkreis: Beispiel und geführter Aufbau ---------- */
+const GSTEPS=[
+ {a:['hak','L1'],b:['sls','i1'],t:'Verbinde L1 vom Hausanschluss mit dem Hauptschalter (oben, L1).',e:'Im Haus kommen drei Außenleiter an: L1, L2 und L3. Für einen Lichtkreis reicht L1. Er läuft zuerst über den Hauptschalter, damit man das ganze Haus abschalten kann.'},
+ {a:['hak','PEN'],b:['pen','PEN'],t:'Verbinde PEN vom Hausanschluss mit der Aufteilung (oben, PEN).',e:'Aus dem Netz kommt PEN: Neutralleiter und Schutzleiter in einem Draht – grün-gelb mit blauer Markierung.'},
+ {a:['sls','o1'],b:['z','i1'],t:'Verbinde den Hauptschalter (unten, L1) mit dem Zähler (oben, L1).',e:'Der Zähler misst alles, was danach verbraucht wird.'},
+ {a:['pen','N'],b:['z','iN'],t:'Verbinde N der Aufteilung mit dem Zähler (oben, N).',e:'Ab hier sind N (blau) und PE (grün-gelb) getrennt – und werden nie wieder verbunden.'},
+ {a:['z','o1'],b:['fi','iL'],t:'Verbinde den Zähler (unten, L1) mit dem FI-Schalter (oben, L).',e:'Der FI vergleicht, ob genauso viel Strom zurückkommt, wie hinfließt.'},
+ {a:['z','oN'],b:['fi','iN'],t:'Verbinde den Zähler (unten, N) mit dem FI-Schalter (oben, N).',e:'Auch N muss durch den FI. Sonst kann er Hin- und Rückstrom nicht vergleichen.'},
+ {a:['fi','oL'],b:['ls','i'],t:'Verbinde den FI (unten, L) mit der Sicherung (oben).',e:'Die Sicherung schützt die Leitung dieses einen Stromkreises vor Überlast und Kurzschluss.'},
+ {a:['fi','oN'],b:['nk',null],t:'Verbinde den FI (unten, N) mit der blauen N-Schiene.',e:'Alle Rückleiter hinter diesem FI sammeln sich auf seiner eigenen N-Schiene.'},
+ {a:['pen','PE'],b:['pk',null],t:'Verbinde PE der Aufteilung mit der grün-gelben PE-Schiene.',e:'Der Schutzleiter läuft an FI und Sicherung vorbei. Er wird nie geschaltet.'},
+ {a:['ls','o'],b:['sch','L'],t:'Verbinde die Sicherung (unten) mit dem Lichtschalter (L).',e:'Der Schalter unterbricht immer L, nie N.'},
+ {a:['sch','LS'],b:['lam','L'],t:'Verbinde den Lichtschalter (L↑) mit der Lampe (L).',e:'Das ist der geschaltete Außenleiter: Er führt nur Spannung, wenn der Schalter an ist.'},
+ {a:['pk',null],b:['lam','PE'],t:'Verbinde die PE-Schiene mit der Lampe (PE).',e:'PE schützt das Metallgehäuse. Bei einem Defekt fließt der Strom hierüber ab statt durch dich. Darum kommt er vor N dran.'},
+ {a:['nk',null],b:['lam','N'],t:'Verbinde die N-Schiene mit der Lampe (N).',e:'Über N fließt der Strom von der Lampe zurück.'},
+ {act:'switch',t:'Schalte den Lichtschalter ein.',e:'Tippe auf die Wippe des Schalters. Jetzt ist der Stromkreis geschlossen – die Lampe leuchtet.'}];
+let G=null,LKIDS=null;
+function lichtkreis(withWires){S={items:[],wires:[],nid:1,rooms:['Flur'],doc:S.doc||{},extras:[]};OL={};pend=null;LIVEQ=true;MA=MB=null;FREE=false;
+  const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};
+  const hak=A('hak',{x:40,y:100}),zs=A('zs',{x:320,y:40}),uv=A('uv',{x:640,y:40});
+  const sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0},len:6}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:5}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:2}});
+  const fi=A('fi2',{mount:{enc:uv.id,rail:0,slot:0},label:'FI 1'}),ls=A('ls1',{mount:{enc:uv.id,rail:0,slot:4},rating:10,label:'Licht',len:9});
+  const nk=A('nk',{mount:{enc:uv.id,rail:1,slot:0}}),pk=A('pek',{mount:{enc:uv.id,rail:1,slot:6}});
+  const sch=A('schalter',{x:650,y:650,label:'Schalter Flur',room:'Flur',on:withWires}),lam=A('lampe',{x:800,y:650,label:'Lampe Flur',room:'Flur'});
+  LKIDS={hak:hak.id,sls:sls.id,pen:pen.id,z:z.id,fi:fi.id,ls:ls.id,nk:nk.id,pk:pk.id,sch:sch.id,lam:lam.id};
+  if(withWires)for(const st of GSTEPS)if(st.a){const ka=stepKey(st.a,st.b),kb=stepKey(st.b,st.a);const ra=termOf(ka).t.role,rb=termOf(kb).t.role;let c='braun';for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}if(st.b[0]==='lam'&&st.b[1]==='L')c='schwarz';S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c});}}
+function stepKey(x,other){const id=(G?G.ids:LKIDS)[x[0]];if(x[1])return id+':'+x[1];const d=byId(id);const used=new Set(S.wires.flatMap(w=>[w.a,w.b]));
+  const pref=other&&['sch','lam'].includes(other[0])?'b':'t';const ts=TYPES[d.type].terms.map(t=>t.id).sort((p,q)=>(p[0]===pref?0:1)-(q[0]===pref?0:1));
+  return id+':'+(ts.find(t=>!used.has(id+':'+t))||ts[0]);}
+function exampleSimple(){G=null;lichtkreis(true);S.sel=null;closeModal();fillRooms();changed();fit();
+  toast('<b>Beispiel: Lichtkreis</b>Vom Hausanschluss bis zur Lampe. Tippe die Lampe an – der Weg des Stroms leuchtet auf.','ok',6000);}
+function startGuide(){G=null;lichtkreis(false);G={ids:{...LKIDS},i:0,note:'',last:-1};S.sel=null;closeModal();fillRooms();document.body.classList.add('guiding');changed();fit();}
+function endGuide(){G=null;document.body.classList.remove('guiding');$('#guide').style.display='none';render();}
+const keyMatch=(k,x)=>{if(!G)return false;const [id,t]=k.split(':');return id===G.ids[x[0]]&&(!x[1]||t===x[1]);};
+function wireFits(w,st){return(keyMatch(w.a,st.a)&&keyMatch(w.b,st.b))||(keyMatch(w.b,st.a)&&keyMatch(w.a,st.b));}
+function stepDone(st){if(st.act==='switch'){const sc=byId(G.ids.sch);return !!(sc&&sc.on&&RT.powered.has(G.ids.lam));}return S.wires.some(w=>wireFits(w,st));}
+function guideTargets(){const r={keys:[],box:null};if(!G||G.i>=GSTEPS.length)return r;const st=GSTEPS[G.i];
+  if(st.act){r.box=G.ids.sch;return r;}const ka=st.a[1]?G.ids[st.a[0]]+':'+st.a[1]:stepKey(st.a,st.b),kb=st.b[1]?G.ids[st.b[0]]+':'+st.b[1]:stepKey(st.b,st.a);
+  if(termOf(ka)&&termOf(kb))r.keys=[ka,kb];return r;}
+function guideUpdate(){const box=$('#guide');if(!G){box.style.display='none';return;}
+  if(!Object.values(G.ids).every(id=>byId(id))){toast('Für die Anleitung fehlt ein Bauteil. Die Anleitung wurde beendet.','info');endGuide();return;}
+  let i=0;while(i<GSTEPS.length&&stepDone(GSTEPS[i]))i++;
+  if(i!==G.i){if(i>G.i)G.note='';G.i=i;}
+  const n=GSTEPS.length;box.style.display='block';
+  if(i>=n){box.innerHTML=`<div class="st">Geschafft</div><div class="gt">Die Lampe leuchtet!</div><div class="ge">Du hast einen kompletten Lichtkreis verdrahtet. Tippe die Lampe an: Dort siehst du den Weg des Stroms und kannst Fehler auslösen – etwa einen Körperschluss. Dann siehst du, warum es FI und PE gibt.</div><div class="bar2"><i style="width:100%"></i></div><div class="actions"><button class="btn pri" data-act="gend">Fertig</button></div>`;return;}
+  const st=GSTEPS[i];box.innerHTML=`<div class="st">Schritt ${i+1} von ${n}</div><div class="bar2"><i style="width:${Math.round(i/n*100)}%"></i></div><div class="gt">${esc(st.t)}</div><div class="ge">${esc(st.e)}</div>${G.note?`<div class="gn">${esc(G.note)}</div>`:''}
+  <div class="actions"><button class="btn" data-act="gdo">${st.act?'Für mich schalten':'Für mich verbinden'}</button><button class="btn" data-act="gend">Beenden</button></div>`;
+  if(G.last!==i){G.last=i;setTimeout(()=>showTargets(),30);}}
+function showTargets(){const gt=guideTargets();const pts=gt.keys.map(termAbs).filter(Boolean);if(gt.box){const d=byId(gt.box);if(d){const p=getPos(d),s=sz(d);pts.push({x:p.x+s.w/2,y:p.y+s.h/2});}}
+  if(!pts.length)return;const r=svg.getBoundingClientRect();const wide=innerWidth>=900;const top=wide?20:($('#guide').offsetHeight||0)+24,left=wide?450:20,bottom=r.height-20;
+  const vis=pt=>{const x=V.tx+pt.x*V.k,y=V.ty+pt.y*V.k;return x>left&&x<r.width-20&&y>top&&y<bottom;};
+  if(pts.every(vis))return;const mx=pts.reduce((a,p)=>a+p.x,0)/pts.length,my=pts.reduce((a,p)=>a+p.y,0)/pts.length;
+  V.tx=left+(r.width-left)/2-mx*V.k;V.ty=top+(bottom-top)/2-my*V.k;applyView();}
+function guideDo(){if(!G||G.i>=GSTEPS.length)return;const st=GSTEPS[G.i];
+  if(st.act){const sc=byId(G.ids.sch);if(sc){sc.on=true;changed();}return;}
+  const gt=guideTargets();if(gt.keys.length===2){G.note='';connect(gt.keys[0],gt.keys[1]);}}
+
+/* ---------- Wegweiser 1–4 ---------- */
+function stepLabels(){const arcTop=(x0,x1)=>{let m=1e9;for(const w of S.wires)for(const k of [w.a,w.b]){const A=termAbs(k);if(!A||A.side!=='top'||A.x<x0||A.x>x1)continue;const o=termAbs(k===w.a?w.b:w.a);if(!o)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-o.x,A.y-o.y)*.35));m=Math.min(m,A.y-c*.75);}return m;};
+  const lab=(x,y,n,t,sub)=>`<g class="steplbl" transform="translate(${x},${y})" pointer-events="none"><circle cx="15" cy="-5" r="15" fill="#1A1A1A"/><text x="15" y="0.5" text-anchor="middle" font-size="15" font-weight="800" fill="#F6F1E9">${n}</text><text x="38" y="-6" font-size="17" font-weight="800" fill="#1A1A1A" stroke="#F6F1E9" stroke-width="5" paint-order="stroke">${t}</text><text x="38" y="11" font-size="11.5" font-weight="600" fill="#6B655C" stroke="#F6F1E9" stroke-width="4" paint-order="stroke">${sub}</text></g>`;
+  const one=(n,t,sub,items,below)=>{if(!items.length)return'';let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;for(const d of items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);x1=Math.max(x1,p.x+s.w);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y+s.h);}
+    if(below)return lab(x0,y1+34,n,t,sub);const top=Math.min(y0,arcTop(x0,x1));return lab(x0,top-34,n,t,sub);};
+  const by=t=>S.items.filter(d=>d.type===t).slice(0,1);
+  return one(1,'Hausanschluss','Hier kommt der Strom ins Haus',by('hak'))+one(2,'Zählerschrank','Hauptschalter und Zähler',by('zs'))+one(3,'Unterverteilung','FI und Sicherungen',by('uv'))
+   +one(4,'Verbraucher','Hier wird der Strom genutzt',S.items.filter(d=>TYPES[d.type].loads||d.type==='schalter'),true);}
+
+/* ---------- Weg des Stroms ---------- */
+let PATH=null,PATHKEY='';
+function pathCheck(){const s=S.sel;const key=(s&&s.kind==='item'?s.id:'')+'|'+VER;if(key===PATHKEY)return;PATHKEY=key;PATH=null;
+  if(!s||s.kind!=='item')return;const d=byId(s.id);if(!d||!TYPES[d.type].loads)return;
+  const base=buildNets({structural:true,noFaults:true});const Ls=TYPES[d.type].terms.filter(t=>/^L/.test(t.role)).map(t=>d.id+':'+t.id);const N=d.id+':N',PE=d.id+':PE';
+  if(!Ls.some(k=>base.get(k).phases.size)||!base.get(N).ground)return;
+  const res={L:[],N:[],PE:[]};
+  for(const w of S.wires){const n2=buildNets({structural:true,noFaults:true,excludeWire:w.id});
+    if(Ls.some(k=>base.get(k).phases.size&&!n2.get(k).phases.size))res.L.push(w.id);
+    if(!n2.get(N).ground)res.N.push(w.id);if(base.get(PE).ground&&!n2.get(PE).ground)res.PE.push(w.id);}
+  const order=(ids,start)=>{const adj={};for(const id of ids){const w=S.wires.find(x=>x.id===id);const a=w.a.split(':')[0],b=w.b.split(':')[0];(adj[a]||(adj[a]=[])).push(b);(adj[b]||(adj[b]=[])).push(a);}
+    if(!adj[start])return[];const seen=[start],q=[start];while(q.length){const x=q.shift();for(const y of adj[x])if(!seen.includes(y)){seen.push(y);q.push(y);}}return seen.map(id=>nm(byId(id)));};
+  const hak=S.items.find(x=>x.type==='hak');const lOrder=hak?order(res.L,hak.id):order(res.L,d.id).reverse();
+  const txt=[];if(lOrder.length)txt.push(['Hin über L:',lOrder.join(' → ')]);const nO=order(res.N,d.id);if(nO.length)txt.push(['Zurück über N:',nO.join(' → ')]);
+  const pO=order(res.PE,d.id);txt.push(['Schutzleiter PE:',pO.length?pO.join(' → '):'nicht angeschlossen']);
+  const wires=new Set([...res.L,...res.N,...res.PE]);const devs=new Set([d.id]);for(const id of wires){const w=S.wires.find(x=>x.id===id);devs.add(w.a.split(':')[0]);devs.add(w.b.split(':')[0]);}
+  PATH={for:d.id,wires,devs,txt};}
+
 /* ---------- Live-Prüfung ---------- */
 let MARK={},LASTERR=new Set(),LIVEQ=false;
 function live(quiet){const R=check();MARK={};const rank={err:2,warn:1,hint:0};
@@ -782,11 +905,11 @@ const histStr=()=>JSON.stringify({items:S.items,wires:S.wires,nid:S.nid,rooms:S.
 function histPush(){const s=histStr();if(CUR!==null&&s!==CUR){HIST.push(CUR);if(HIST.length>80)HIST.shift();}CUR=s;$('#undoBtn').disabled=!HIST.length;}
 function histReset(){HIST=[];CUR=histStr();$('#undoBtn').disabled=true;}
 function undo(){if(!HIST.length)return;const o=JSON.parse(HIST.pop());Object.assign(S,{items:o.items,wires:o.wires,nid:o.nid,rooms:o.rooms||[],extras:o.extras||[],sel:null});
-  OL={};pend=null;MA=MB=null;CUR=histStr();LIVEQ=true;simulate();live(true);fillRooms();render();renderPanel();if(MEAS)showMeter();$('#undoBtn').disabled=!HIST.length;clearTimeout(sT);sT=setTimeout(saveLocal,400);toast('Letzter Schritt rückgängig gemacht.','info',1800);}
+  OL={};pend=null;MA=MB=null;CUR=histStr();LIVEQ=true;VER++;simulate();live(true);guideUpdate();fillRooms();render();renderPanel();if(MEAS)showMeter();$('#undoBtn').disabled=!HIST.length;clearTimeout(sT);sT=setTimeout(saveLocal,400);toast('Letzter Schritt rückgängig gemacht.','info',1800);}
 
 /* ---------- Messgerät ---------- */
 let MEAS=false,MA=null,MB=null;
-function setMeas(on){MEAS=on;MA=MB=null;pend=null;const b=$('#measBtn');b.classList.toggle('on',on);b.textContent=on?'Messen beenden':'Messen';showMeter();render();
+function setMeas(on){MEAS=on;MA=MB=null;pend=null;showMeter();render();
   if(on)toast('Messgerät: Tippe zwei Anschlüsse an (Messspitze A und B).','info',3000);}
 function measTap(k){if(!MA||MB){MA=k;MB=null;}else if(k!==MA)MB=k;showMeter();render();}
 function volt(a,b){const n=buildNets();if(n.find(a)===n.find(b))return{v:0,t:'Beide Punkte sind direkt miteinander verbunden.'};
@@ -852,7 +975,7 @@ function materials(){const g={};const add=(cat,name,qty=1,unit='Stk.',note='')=>
 function bounds(){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   for(const d of S.items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);y0=Math.min(y0,p.y-20);x1=Math.max(x1,p.x+s.w);y1=Math.max(y1,p.y+s.h+(d.type==='hak'?75:24));}
   for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
-  return{x0:x0-14,y0:y0-14,x1:x1+14,y1:y1+14};}
+  return{x0:x0-14,y0:y0-70,x1:x1+14,y1:y1+64};}
 function planSVG(){const ks=S.sel,km=MEAS,kp=pend,kM=MARK;S.sel=null;pend=null;MEAS=false;MARK={};render();
   const b=bounds();let all=svg.querySelector('defs').innerHTML+'§§'+Lenc.innerHTML+Ldev.innerHTML+Lwire.innerHTML+Lterm.innerHTML;
   S.sel=ks;MEAS=km;pend=kp;MARK=kM;render();
@@ -876,7 +999,7 @@ let dT=0;function docDirty(){clearTimeout(dT);dT=setTimeout(()=>{renderPaper();s
 function renderPaper(){const D=S.doc;const C=circuits();const M=materials();const R=check();const ne=R.filter(r=>r.lvl==='err').length,nw=R.filter(r=>r.lvl==='warn').length;
   const fin=d=>d?`${esc(d.label||TYPES[d.type].name)} (${d.idn} mA)`:'–';const sls=S.items.find(d=>d.type==='sls');
   const rooms=[...new Set(S.items.map(d=>d.room).filter(Boolean))];const cName=d=>esc(d.label||TYPES[d.type].name);
-  const badge=ne?`<span class="badge" style="background:#ffe5e3;color:#d70015">${ne} Fehler offen</span>`:nw?`<span class="badge" style="background:#fff2db;color:#a15c00">${nw} Punkte unvollständig</span>`:`<span class="badge" style="background:#e3f6e8;color:#1b7a35">Keine Fehler im Plan</span>`;
+  const badge=ne?`<span class="badge" style="background:#F6E3DC;color:#9A3A22">${ne} Fehler offen</span>`:nw?`<span class="badge" style="background:#F7EBD3;color:#8A5A0B">${nw} Punkte unvollständig</span>`:`<span class="badge" style="background:#E2F0E6;color:#23784A">Keine Fehler im Plan</span>`;
   let h=`<h1>Dokumentation Elektroinstallation</h1><div class="meta">Unterverteilung · Netzform TN-C-S · Stand ${esc(D.datum||'')}</div>
   <table class="kv"><tr><td>Kunde</td><td>${esc(D.kunde||'')}</td></tr><tr><td>Adresse</td><td>${esc(D.adresse||'')}</td></tr><tr><td>Objekt / Anlage</td><td>${esc(D.objekt||'')}</td></tr>${D.auftrag?`<tr><td>Auftrags-Nr.</td><td>${esc(D.auftrag)}</td></tr>`:''}<tr><td>Erstellt von</td><td>${esc(D.ersteller||'')}</td></tr>${D.notiz?`<tr><td>Bemerkungen</td><td>${esc(D.notiz)}</td></tr>`:''}</table>`;
   const nFI=S.items.filter(d=>d.type==='fi4'||d.type==='fi2'||d.type==='rcbo');
@@ -886,7 +1009,7 @@ function renderPaper(){const D=S.doc;const C=circuits();const M=materials();cons
   const cons=S.items.filter(d=>TYPES[d.type].loads||d.type==='schalter');const circOf=d=>(C.find(c=>c.cons.includes(d)||c.sws.includes(d))||{}).nr||'–';
   const byRoom={};for(const d of cons)(byRoom[d.room||'Ohne Raum']||(byRoom[d.room||'Ohne Raum']=[])).push(d);
   h+=`<h2>3. Räume und Verbraucher</h2>${cons.length?`<table><tr><th>Raum</th><th>Verbraucher</th><th>Art</th><th>Stromkreis</th></tr>${Object.entries(byRoom).sort((a,b)=>a[0]==='Ohne Raum'?1:b[0]==='Ohne Raum'?-1:a[0].localeCompare(b[0])).map(([r,ds])=>ds.map((d,i)=>`<tr>${i===0?`<td rowspan="${ds.length}"><b>${esc(r)}</b></td>`:''}<td>${cName(d)}</td><td>${esc(TYPES[d.type].name)}</td><td>${circOf(d)}</td></tr>`).join('')).join('')}</table>`:'<p>Keine Verbraucher im Plan.</p>'}`;
-  h+=`<h2>4. Materialliste</h2><div class="tw"><table><tr><th>Pos.</th><th>Menge</th><th>Einheit</th><th>Bezeichnung</th><th>Hinweis</th></tr>${(()=>{let cat='',i=0;return M.rows.map(r=>{let x='';if(r.cat!==cat){cat=r.cat;x=`<tr class="catrow"><td colspan="5" style="background:#fafafa;font-weight:700">${esc(cat)}</td></tr>`;}i++;return x+`<tr><td>${i}</td><td style="text-align:right">${fmt(r.qty)}</td><td>${esc(r.unit)}</td><td>${esc(r.name)}</td><td>${esc(r.note||'')}</td></tr>`;}).join('');})()}</table></div>${M.missing?`<div class="meta" style="color:#c93400">Bei ${M.missing} Leitung${M.missing>1?'en':''} fehlt noch die Länge – beim jeweiligen LS bzw. SLS eintragen.</div>`:''}`;
+  h+=`<h2>4. Materialliste</h2><div class="tw"><table><tr><th>Pos.</th><th>Menge</th><th>Einheit</th><th>Bezeichnung</th><th>Hinweis</th></tr>${(()=>{let cat='',i=0;return M.rows.map(r=>{let x='';if(r.cat!==cat){cat=r.cat;x=`<tr class="catrow"><td colspan="5" style="background:#fafafa;font-weight:700">${esc(cat)}</td></tr>`;}i++;return x+`<tr><td>${i}</td><td style="text-align:right">${fmt(r.qty)}</td><td>${esc(r.unit)}</td><td>${esc(r.name)}</td><td>${esc(r.note||'')}</td></tr>`;}).join('');})()}</table></div>${M.missing?`<div class="meta" style="color:#9A3A22">Bei ${M.missing} Leitung${M.missing>1?'en':''} fehlt noch die Länge – bei der jeweiligen Sicherung bzw. beim Hauptschalter eintragen.</div>`:''}`;
   h+=`<h2>5. Schaltplan</h2><div class="plan">${planSVG()}</div><div class="meta">Leiterfarben: braun L1 · schwarz L2 · grau L3 · blau N · grün-gelb PE</div>`;
   h+=`<div class="sig"><div>Ort, Datum</div><div>Unterschrift Elektrofachkraft</div></div>`;
   $('#paper').innerHTML=h;}
