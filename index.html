@@ -191,6 +191,120 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
 .dot.pend{fill:var(--acc);stroke:#fff;stroke-width:2.5}
 .tl{font-size:8.5px;fill:#48484a;font-weight:700;text-anchor:middle;pointer-events:none}
 .lbl{font-size:10px;fill:#6e6e73;text-anchor:middle;pointer-events:none;font-weight:600}
+/*DOSE-CSS-START*/
+#dosev #dz-app{position:fixed;inset:0;display:grid;grid-template-rows:58px minmax(0,1fr)}
+#dosev #dz-bar{display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(246,241,233,.94);border-bottom:1px solid rgba(26,26,26,.08);overflow-x:auto;scrollbar-width:none}
+#dosev #dz-bar::-webkit-scrollbar{display:none}
+#dosev #dz-bar .ttl{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;white-space:nowrap;display:flex;align-items:center;gap:8px;margin-right:4px}
+#dosev #dz-bar .ttl i{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#1A1A1A;color:#F6F1E9;font-style:normal;font-size:14px}
+#dosev .sp{flex:1}
+#dosev .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 14px;border:0;border-radius:20px;background:#EAE2D3;color:var(--txt);font-family:inherit;font-size:14px;font-weight:700;white-space:nowrap;cursor:pointer;flex:none}
+#dosev .btn:active{transform:scale(.97)}
+#dosev .btn.pri{background:#1A1A1A;color:#F6F1E9}
+#dosev .btn.sq{width:40px;padding:0;font-size:20px}
+#dosev .btn:disabled{opacity:.35}
+#dosev .vseg{display:inline-flex;background:#EAE2D3;border-radius:20px;padding:3px;gap:2px;flex:none}
+#dosev .vseg button{border:0;background:transparent;height:34px;padding:0 13px;border-radius:17px;font:inherit;font-size:14px;font-weight:700;color:#6B655C;cursor:pointer;white-space:nowrap}
+#dosev .vseg button.on{background:#1A1A1A;color:#F6F1E9}
+#dosev #dz-main{display:grid;grid-template-columns:minmax(0,1fr) 384px;min-height:0}
+@media (orientation:portrait){#dosev #dz-main{grid-template-columns:1fr;grid-template-rows:minmax(0,54fr) minmax(0,46fr)}}
+#dosev #dz-stage{position:relative;overflow:hidden;background:#EFE8DC;min-height:0}
+#dosev #dz-stg{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
+#dosev #dz-zoom{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px;z-index:3}
+#dosev #dz-zoom .btn{background:rgba(255,253,249,.94);box-shadow:0 2px 8px rgba(60,45,20,.15)}
+#dosev #dz-sum{position:absolute;left:10px;top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3;background:rgba(255,253,249,.95);border-radius:14px;padding:8px 12px;box-shadow:0 2px 10px rgba(60,45,20,.12);font-size:13px;line-height:1.35;max-width:calc(100% - 20px)}
+#dosev #dz-sum b{font-size:14.5px}
+#dosev #dz-sum .s{color:var(--sub)}
+#dosev #dz-info{position:absolute;left:10px;right:10px;bottom:10px;z-index:4;background:#FFFDF9;border:2px solid #1A1A1A;border-radius:18px;padding:12px 14px 12px;box-shadow:0 10px 30px rgba(60,45,20,.22);display:none;max-height:60%;overflow:auto;max-width:560px}
+#dosev #dz-info h3{margin:0 34px 4px 0;font-size:16.5px}
+#dosev #dz-info p{margin:4px 0;font-size:14.5px;line-height:1.45}
+#dosev #dz-info .x{position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:17px;border:0;background:#EAE2D3;font-size:18px;font-weight:700;cursor:pointer}
+#dosev #dz-info .tag{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:9px;background:#EAE2D3;margin-right:4px}
+#dosev #dz-panel{background:var(--card);border-left:1px solid var(--line);overflow:auto;-webkit-overflow-scrolling:touch;min-height:0}
+@media (orientation:portrait){#dosev #dz-panel{border-left:0;border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(60,45,20,.08)}}
+#dosev #dz-tabs{position:sticky;top:0;z-index:2;background:var(--card);display:flex;gap:4px;padding:10px 10px 8px;border-bottom:1px solid var(--line)}
+#dosev #dz-tabs button{flex:1;border:0;background:#F3EDE2;height:40px;border-radius:12px;font:inherit;font-size:14px;font-weight:700;color:#3B362E;cursor:pointer;white-space:nowrap;padding:0 6px;position:relative}
+#dosev #dz-tabs button.on{background:#1A1A1A;color:#F6F1E9}
+#dosev #dz-tabs .bd{display:inline-grid;place-items:center;min-width:19px;height:19px;border-radius:10px;font-size:11.5px;margin-left:5px;padding:0 5px;background:#B4472C;color:#fff}
+#dosev #dz-tabs .bd.w{background:#C98A1B}
+#dosev #dz-tabs .bd.ok{background:#2F9E57}
+#dosev #dz-pc{padding:12px 12px 30px}
+#dosev .h{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin:14px 2px 8px}
+#dosev .h:first-child{margin-top:2px}
+#dosev .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px;margin-bottom:10px}
+#dosev .card.f{border-color:#1A1A1A;box-shadow:0 0 0 1px #1A1A1A}
+#dosev .bh{display:flex;align-items:center;gap:10px}
+#dosev .bh .ic{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;background:#F3EDE2}
+#dosev .bh .ic svg{width:24px;height:24px}
+#dosev .bh .t{flex:1;min-width:0}
+#dosev .bh .t b{display:block;font-size:15px}
+#dosev .bh .t span{display:block;font-size:12.5px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dosev .del{border:0;background:#F6E3DC;color:#9A3A22;width:34px;height:34px;border-radius:17px;font-size:17px;font-weight:800;cursor:pointer;flex:none}
+#dosev .row{display:flex;align-items:center;gap:8px;margin-top:8px}
+#dosev .row>label{font-size:12.5px;color:var(--sub);width:86px;flex:none;line-height:1.2}
+#dosev .row>.grow{flex:1;min-width:0}
+#dosev select.txt{width:100%;font:inherit;font-size:15px;font-weight:600;padding:8px 30px 8px 10px;border:1px solid #d9d2c4;border-radius:10px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236e6e73' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;-webkit-appearance:none;color:var(--txt);height:40px}
+#dosev .seg{display:flex;background:#F0EAE0;border-radius:11px;padding:3px;gap:3px}
+#dosev .seg button{flex:1;border:0;background:transparent;padding:0 8px;height:34px;border-radius:9px;font-weight:700;font-size:13.5px;font-family:inherit;color:var(--txt);cursor:pointer;white-space:nowrap}
+#dosev .seg button.on{background:#1A1A1A;color:#F6F1E9}
+#dosev .step{display:flex;align-items:center;gap:0;background:#F0EAE0;border-radius:11px;padding:3px}
+#dosev .step button{width:40px;height:34px;border:0;background:#fff;border-radius:9px;font-size:19px;font-weight:800;cursor:pointer}
+#dosev .step b{min-width:36px;text-align:center;font-size:16px}
+#dosev .chips{display:flex;flex-wrap:wrap;gap:8px}
+#dosev .chip{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 13px 0 9px;border:1.5px dashed #b9ae9a;background:#FFFDF9;border-radius:21px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;color:var(--txt)}
+#dosev .chip svg{width:22px;height:22px}
+#dosev .bsp{display:block;width:100%;text-align:left;border:0;background:#F3EDE2;border-radius:12px;padding:9px 12px;margin:6px 0;font:inherit;font-size:13.5px;cursor:pointer;color:inherit}
+#dosev .bsp b{display:block;font-size:14px}
+#dosev .ck{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:5px 0}
+#dosev .ck input{width:22px;height:22px;accent-color:#1A1A1A}
+#dosev /* Anleitung */
+.sc{background:#1A1A1A;color:#F6F1E9;border-radius:18px;padding:14px 16px}
+#dosev .sc .n{font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#C9BFAE}
+#dosev .sc h3{margin:4px 0 6px;font-size:18px;line-height:1.25}
+#dosev .sc p{margin:6px 0;font-size:15px;line-height:1.5;color:#EDE6DA}
+#dosev .sc ul{margin:6px 0;padding-left:20px;font-size:15px;line-height:1.5;color:#EDE6DA}
+#dosev .sc .tip{background:#33302b;border-radius:10px;padding:8px 10px;font-size:13.5px;color:#F3D9A4;margin-top:8px}
+#dosev .nav{display:flex;gap:8px;margin:10px 0 4px}
+#dosev .nav .btn{flex:1;height:48px;font-size:15.5px}
+#dosev .sl{display:flex;gap:10px;align-items:flex-start;width:100%;border:0;background:transparent;text-align:left;padding:8px 6px;border-radius:10px;font:inherit;font-size:14px;cursor:pointer;color:inherit}
+#dosev .sl i{flex:none;width:24px;height:24px;border-radius:12px;background:#EAE2D3;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800}
+#dosev .sl.on{background:#F3EDE2}
+#dosev .sl.on i{background:#B4472C;color:#fff}
+#dosev .sl.done i{background:#2F9E57;color:#fff}
+#dosev /* Prüfen */
+.wn{display:block;width:100%;text-align:left;border:1px solid var(--line);border-left:5px solid #9a9aa0;background:#fff;border-radius:12px;padding:9px 12px;margin-bottom:8px;font:inherit;color:inherit;cursor:pointer}
+#dosev .wn.fehler{border-left-color:#B4472C}
+#dosev .wn.achtung{border-left-color:#C98A1B}
+#dosev .wn.hinweis{border-left-color:#8f8778}
+#dosev .wn.f{box-shadow:0 0 0 2px #1A1A1A}
+#dosev .wn b{display:block;font-size:14.5px}
+#dosev .wn .l{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+#dosev .wn.fehler .l{color:#B4472C}
+#dosev .wn.achtung .l{color:#9A6A10}
+#dosev .wn.hinweis .l{color:#6B655C}
+#dosev .wn p{margin:4px 0 0;font-size:13.5px;line-height:1.45;color:#3B362E}
+#dosev /* Material */
+table.m{width:100%;border-collapse:collapse;font-size:14px}
+#dosev table.m td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+#dosev table.m td:first-child{font-weight:800;white-space:nowrap;width:44px;text-align:right}
+#dosev table.m small{display:block;color:var(--sub);font-size:12.5px}
+#dosev .ph{font-size:12px;color:#8A5A0B;background:#F7EBD3;border-radius:9px;padding:7px 10px;margin-top:10px;line-height:1.4}
+#dosev /* SVG */
+#dz-stg text{font-family:"Manrope",system-ui,sans-serif}
+#dosev #dz-vp.focus [data-ref]:not(.hl){opacity:.16}
+#dosev #dz-vp.focus [data-ref].hl{opacity:1}
+#dosev #dz-vp [data-ref]{transition:opacity .2s}
+#dosev #dz-vp .pulse{animation:pl 1.3s ease-in-out infinite}
+@keyframes pl{50%{opacity:.35}}
+
+#dosev{position:fixed;inset:0;z-index:36;background:#F6F1E9;display:none;-webkit-user-select:none;user-select:none;font-family:"Manrope",system-ui,sans-serif}
+#dosev #dz-bar{position:absolute;left:0;right:0;top:0;height:58px}
+#dosev #dz-bar .ttl{font-size:17px;white-space:nowrap;margin-right:4px}
+@media (max-width:820px){#dosev #dz-bar .ttl{display:none}#dosev #dz-bar [data-dz=reset]{display:none}}
+#dosev #dz-main{position:absolute;left:0;right:0;top:58px;bottom:0}
+#dosev select.txt{-webkit-user-select:auto}
+
+/*DOSE-CSS-END*/
 </style>
 </head>
 <body data-k>
@@ -240,6 +354,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
 <div id="floors" data-k></div>
 <div id="docv" data-k></div>
 <div id="wallv" data-k></div>
+<div id="dosev" data-k></div>
 <div id="mini3" style="display:none;position:fixed;right:14px;top:132px;z-index:6;background:#FFFDF9;border-radius:16px;padding:6px;box-shadow:0 4px 18px rgba(0,0,0,.08);pointer-events:none"></div>
 <datalist id="roomlist" data-k></datalist>
 <div id="modal" data-k><div class="sheet" id="sheet"></div></div>
@@ -729,6 +844,7 @@ function renderPanel(){const P=$('#panel');const s=S.sel;
   } else {const d=byId(s.id);if(!d){S.sel=null;P.style.display='none';return;}const ty=TYPES[d.type];const st=statusOf(d);const inf=INFO[d.type];
     h+=`<div class="ph"><div><div class="pt">${esc(ty.name)}</div><div class="ps ${st.c}">${esc(st.t)}${st.ol?`<span id="olc">${Math.max(0,Math.ceil((OL[d.id+'#'].until-Date.now())/1000))} s</span>`:''}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
     h+=`<div class="col"><div>Bezeichnung</div><input class="txt" data-act="label" value="${esc(d.label)}" placeholder="z. B. Küche, Licht Flur" maxlength="24"></div>`;
+    if(d.type==='adose'){const M=doseModel(d);h+=`<div class="actions" style="margin-top:10px"><button class="btn pri" data-act="dose">Dose öffnen</button></div><div style="font-size:13px;color:var(--sub);margin-top:6px">${M?`${esc(M.size.name)} mm · ${esc(dzKl(M))}`:'Zeigt die offene Dose: welche Ader in welche Klemme, passende Dosengröße und eine Anleitung Schritt für Schritt.'}</div>`;}
     if(ty.loads||d.type==='schalter')h+=`<div class="col"><div>Raum</div><input class="txt" list="roomlist" data-act="room" value="${esc(d.room)}" placeholder="z. B. Küche, Flur, Bad"></div>`;
     if(d.cable!==undefined)h+=`<div class="col"><div>${d.type==='sls'?'Hauptleitung zur Unterverteilung':'Leitung dieses Stromkreises (für die Doku)'}</div><div class="two"><select class="txt" data-act="cable">${CABLES.map(c=>`<option${c===d.cable?' selected':''}>${c}</option>`).join('')}</select><input class="txt" type="number" inputmode="decimal" min="0" step="0.5" data-act="len" value="${esc(d.len)}" placeholder="Länge in m"></div></div>`;
     if(ty.unit&&ty.unit!=='sw')h+=tg('on',d.on,'Eingeschaltet',d.tripped?'Wieder einschalten. Besteht der Fehler noch, löst er sofort erneut aus.':'Entspricht dem Hebel am Gerät');
@@ -855,7 +971,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'savepage':savePage();break;case'export':exportFile();break;case'import':$('#file').click();break;
    case'clear':S={items:[],wires:[],nid:1,sel:null,rooms:[],doc:{},extras:[],plan:emptyPlan()};OL={};closeModal();changed();fit();break;
    case'meas':setMeas(!MEAS);break;
-   case'view':VSET(v);break;case'troom':openTemplates();break;case'tshape':TPL.shape=v;openTemplates();break;case'tinsert':insertTemplate();break;
+   case'view':VSET(v);break;case'dose':if(S.sel?.kind==='item')openDose(S.sel.id);break;case'troom':openTemplates();break;case'tshape':TPL.shape=v;openTemplates();break;case'tinsert':insertTemplate();break;
    case'rrot':{const r=room(S.sel?.id);if(r){rotateRoom(r);changed(false);}break;}
    case'wview':if(S.sel?.kind==='wall')openWall(S.sel.room,S.sel.i);break;case'opwall':{const o=S.plan.openings.find(x=>x.id===S.sel?.id);const w=o&&openWall0(o);if(w){openWall(w.r.id,w.i);WV.sel=o.id;renderWall();}break;}
    case'waddp':{const r=room(S.sel?.room);if(r){const o=addOpening(r,S.sel.i,v);if(o)S.sel={kind:'opening',id:o.id};changed(false);}break;}
@@ -864,7 +980,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'oplock':{const o=S.plan.openings.find(x=>x.id===S.sel?.id);if(o){o.lock=v;changed(false);}break;}
    case'opdel':S.plan.openings=S.plan.openings.filter(x=>x.id!==S.sel?.id);S.sel=null;changed(false);break;
    case'wprev':case'wnext':{const r=room(WV.room);const n=r.pts.length;let i=WV.i;for(let k=0;k<n;k++){i=(i+(a==='wnext'?1:n-1))%n;if(wallFrame(r,i))break;}WV.i=i;WV.sel=null;renderWall();break;}
-   case'wclose':closeWall();break;case'wsel':WV.sel=v;renderWall();break;
+   case'wclose':closeWall();break;case'wdose':openDose(v);break;case'wsel':WV.sel=v;renderWall();break;
    case'wadd':{const r=room(WV.room);const o=addOpening(r,WV.i,v);if(o)WV.sel=o.id;changed(false);renderWall();break;}
    case'wodel':S.plan.openings=S.plan.openings.filter(x=>x.id!==WV.sel);WV.sel=null;changed(false);renderWall();break;
    case'wolock':{const o=S.plan.openings.find(x=>x.id===WV.sel);if(o){o.lock=v;changed(false);renderWall();}break;}
@@ -1093,7 +1209,7 @@ const MAT={hak:d=>['Hausanschluss','Hausanschlusskasten, 3 × NH 63 A gG','Netzb
  dsteck:d=>['Installation',`Doppelsteckdose ${d.ip}`],kombi:d=>['Installation',`Kombination Schalter + Steckdose ${d.ip}`]};
 const CATORDER=['Hausanschluss','Verteilung','Reiheneinbaugeräte','Installation','Leitungen','Verdrahtung in der Verteilung','Zusatzmaterial'];
 function materials(){const g={};const add=(cat,name,qty=1,unit='Stk.',note='')=>{const k=cat+'|'+name+'|'+unit;(g[k]||(g[k]={cat,name,qty:0,unit,note})).qty+=qty;};
-  for(const d of S.items){const m=MAT[d.type];if(!m)continue;const [cat,name,note]=m(d);add(cat,name,1,'Stk.',note||'');}
+  for(const d of S.items){if(d.type==='adose'){const M=doseModel(d);if(M){for(const r of M.material.rows){if(/^NYM|^Schrauben/.test(r[1]))continue;add('Installation',r[1],+r[0]||1,'Stk.',r[2]);}continue;}}const m=MAT[d.type];if(!m)continue;const [cat,name,note]=m(d);add(cat,name,1,'Stk.',note||'');}
   const ud=S.items.filter(d=>d.type==='schalter'||d.type==='steckdose').length;if(ud)add('Installation','Geräte-/Schalterdose Unterputz',ud);
   const cab={};let missing=0;for(const d of S.items)if(d.cable!==undefined){if(+d.len>0)cab[d.cable]=(cab[d.cable]||0)+(+d.len);else missing++;}
   for(const [c,m] of Object.entries(cab))add('Leitungen',c,Math.round(m*10)/10,'m');
@@ -1144,6 +1260,7 @@ function renderPaper(){const D=S.doc;const C=circuits();const M=materials();cons
   let sn=5;const FLS=S.plan.floors.filter(f=>flHasContent(f.id));for(const f of FLS.slice().reverse())h+=`<h2>${sn++}. Installationsplan ${esc(f.name)}</h2><div class="plan">${planDocSVG(f.id)}</div><div class="meta">${LEGEND_TXT}</div>`;
   for(const f of FLS.slice().reverse()){const d3=doc3SVG(f.id,45);if(d3)h+=`<h2>${sn++}. 3D-Ansicht ${esc(f.name)}</h2><div class="meta">Zwei Blickrichtungen. Senkrechte rote Linien: Leitungsführung nach Installationszone, schematisch.</div><div class="plan">${d3}</div><div class="plan" style="margin-top:10px">${doc3SVG(f.id,225)}</div>`;}
   const WVS=[];for(const r of S.plan.rooms.slice().sort((a,b)=>flIdx(b.fl)-flIdx(a.fl)))for(let i=0;i<r.pts.length;i++){if(!wallFrame(r,i))continue;if(devsOnWall(r,i).length||opsOnWall(r,i).length)WVS.push(`<div><h4>${esc(flName(r.fl))} · ${esc(r.name)} · Wand ${i+1}</h4>${wallSVG(r,i,{doc:true,k:48})}</div>`);}
+  const DZS=S.items.filter(d=>d.type==='adose'&&d.box);if(DZS.length)h+=`<h2>${sn++}. Abzweigdosen</h2><div class="meta">Offene Dose von vorn. Klemmen, Aderfarben und Reihenfolge der Arbeitsschritte.</div>`+DZS.map(doseDocHTML).join('');
   if(WVS.length)h+=`<h2>${sn++}. Wandansichten</h2><div class="meta">Blick von innen. Gelb: Installationszonen nach DIN 18015-3. Maße in Metern, Höhe = Mitte des Geräts über Fußboden.</div><div class="wgrid">${WVS.join('')}</div>`;
   if(FLS.length>1||S.plan.risers.length)h+=`<h2>${sn++}. Gebäudeansicht</h2><div class="plan">${buildingSVG(true)}</div>`;
   h+=`<h2>${sn}. Schaltplan</h2><div class="plan">${planSVG()}</div><div class="meta">Leiterfarben: braun L1 · schwarz L2 · grau L3 · blau N · grün-gelb PE</div>`;
@@ -1417,7 +1534,7 @@ function roomRules(add,sN,nu,fiU){const P=S.plan;if(!P.rooms.length)return;const
     if(rule.hint&&!seen.has(r.id)){seen.add(r.id);add('hint',`${r.name} (${r.type}): ${rule.hint}`,[]);}}}
 
 /* ---------- Wände, Öffnungen, Vorlagen ---------- */
-const WALLMOUNT=new Set(['schalter','steckdose','dsteck','kombi','herd','uv','zs','hak','abzk']);
+const WALLMOUNT=new Set(['schalter','steckdose','dsteck','kombi','herd','uv','zs','hak','abzk','adose']);
 const ZDEF={lampe:-.1,leiste:-.1,adose:-.3,wago:-.3,abzk:2,schalter:1.05,kombi:1.05,steckdose:.3,dsteck:.3,herd:.45,uv:1.5,zs:1.5,hak:.8};
 function flH(fl){return +(S.plan.floors.find(f=>f.id===fl)||{}).h||2.5;}
 function zOf(d){const p=S.plan.pos[d.id];const h=flH(p?p[2]:FL());const z=S.plan.z[d.id];if(z!=null)return Math.min(z,h);const v=ZDEF[d.type]??.5;return v<0?h+v:v;}
@@ -1488,7 +1605,7 @@ function closeWall(){WV=null;$('#wallv').style.display='none';render();renderPan
 function renderWall(){if(!WV)return;const r=room(WV.room);if(!r){closeWall();return;}const n=r.pts.length;let F=wallFrame(r,WV.i);let guard=0;while(!F&&guard++<n){WV.i=(WV.i+1)%n;F=wallFrame(r,WV.i);}if(!F){closeWall();return;}
   const mid=WV.mid??midDefault(r);const devs=devsOnWall(r,WV.i),ops=opsOnWall(r,WV.i);const Z=zonesFor(r,WV.i,mid);const inZ=(s,z)=>Z.some(q=>s>=q.s0-.02&&s<=q.s1+.02&&z>=q.z0-.02&&z<=q.z1+.02);
   const sel=WV.sel&&(byId(WV.sel)||S.plan.openings.find(o=>o.id===WV.sel));let ed='';
-  if(sel&&sel.type){const s=along(F,S.plan.pos[sel.id]);ed=`<div class="sec">${esc(nm(sel))}</div><div class="grid2" style="margin-top:6px"><div><label>Abstand von links (m)</label><input class="txt" inputmode="decimal" data-act="wds" value="${fmt(s,2)}"></div><div><label>Höhe Mitte (m)</label><input class="txt" inputmode="decimal" data-act="wdz" value="${fmt(zOf(sel),2)}"></div></div>`;}
+  if(sel&&sel.type){const s=along(F,S.plan.pos[sel.id]);ed=`<div class="sec">${esc(nm(sel))}</div><div class="grid2" style="margin-top:6px"><div><label>Abstand von links (m)</label><input class="txt" inputmode="decimal" data-act="wds" value="${fmt(s,2)}"></div><div><label>Höhe Mitte (m)</label><input class="txt" inputmode="decimal" data-act="wdz" value="${fmt(zOf(sel),2)}"></div></div>${sel.type==='adose'?`<div class="actions" style="margin-top:10px"><button class="btn pri" data-act="wdose" data-v="${sel.id}">Dose öffnen</button></div>`:''}`;}
   else if(sel){const w=openWall0(sel);ed=`<div class="sec">${sel.kind==='door'?'Tür':'Fenster'}</div><div class="grid2" style="margin-top:6px"><div><label>Breite (m)</label><input class="txt" inputmode="decimal" data-act="wow" value="${fmt(sel.w,2)}"></div><div><label>Höhe (m)</label><input class="txt" inputmode="decimal" data-act="woh" value="${fmt(sel.h,2)}"></div><div><label>Abstand Mitte von links (m)</label><input class="txt" inputmode="decimal" data-act="wos" value="${fmt(w.s,2)}"></div>${sel.kind==='window'?`<div><label>Brüstung (m)</label><input class="txt" inputmode="decimal" data-act="wosill" value="${fmt(sel.sill,2)}"></div>`:`<div><label>Schlossseite</label>${seg('wolock',[['links','Links'],['rechts','Rechts']],sel.lock)}</div>`}</div><div class="actions"><button class="btn red" data-act="wodel">${sel.kind==='door'?'Tür':'Fenster'} entfernen</button></div>`;}
   $('#wallv').innerHTML=`<div class="dbar noprint"><b>${esc(r.name)} · Wand ${WV.i+1} von ${n}</b><button class="btn" data-act="wprev">← Wand</button><button class="btn" data-act="wnext">Wand →</button><button class="btn pri" data-act="wclose">Fertig</button></div>
   <div class="dedit"><div style="font-size:13.5px;color:var(--sub);margin-bottom:8px">Blick von innen auf die Wand. Geräte ziehen: waagrecht = Abstand, senkrecht = Höhe. Sie rasten bei 30 cm und 105 cm ein.</div>${wallSVG(r,WV.i,{mid})}
@@ -1515,9 +1632,9 @@ let WD=null;
           pos:{id:[x,y,fl]}, routes:[{fl,pts}], ducts:[{fl,pts}], risers:[{x,y,from,to}]}
    opts.devices: [{id,type,name,z}]  (z = Montagehöhe Mitte, wie zOf())                                   */
 (function(G){
-const WALLMOUNT=new Set(['schalter','steckdose','dsteck','kombi','herd','uv','zs','hak','abzk']);
+const WALLMOUNT=new Set(['schalter','steckdose','dsteck','kombi','herd','uv','zs','hak','abzk','adose']);
 // Plakettengröße [Breite, Höhe, Tiefe] in m (bewusst etwas größer als real, damit lesbar)
-const DSIZE={uv:[.6,.75,.14],zs:[.55,1.0,.2],hak:[.32,.42,.14],herd:[.22,.22,.05],abzk:[.16,.16,.07]};
+const DSIZE={uv:[.6,.75,.14],zs:[.55,1.0,.2],hak:[.32,.42,.14],herd:[.22,.22,.05],abzk:[.16,.16,.07],adose:[.13,.13,.07]};
 const DDEF=[.2,.2,.035];
 const FLOORCOL={'Wohnraum':'#E8D9BD','Schlafraum':'#E8D9BD','Kinderzimmer':'#E8D9BD','Büro':'#E8D9BD','Küche':'#E3DED3','Flur':'#E6DCCB','Treppenhaus':'#E6DCCB',
  'WC':'#D9E2E1','Bad / Dusche':'#D9E2E1','Hauswirtschaft':'#DEE1D9','Keller (trocken)':'#E4E0D8','Keller (feucht)':'#DCE2DF','Garage':'#E0DCD3','Werkstatt':'#E0DCD3',
@@ -1761,6 +1878,791 @@ function fit3d(){R3.ui=1;const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()
   V.k=clamp(Math.min(W/(b.x1-b.x0),H/(b.y1-b.y0)),.1,3);V.tx=10+(W-(b.x1-b.x0)*V.k)/2-b.x0*V.k;V.ty=70+(H-(b.y1-b.y0)*V.k)/2-b.y0*V.k;R3.k0=V.k;applyView();render3d();}
 function doc3SVG(fl,yaw){const o={...opts3(true),floors:[fl],doc:true,idp:'d'+fl+'_'+(yaw??45),bg:'#fff',yaw:yaw??45,pitch:40,walls:'cut',zones:true};const v=scene3v2.standalone(S.plan,o);if(!v)return'';return v.replace('<svg ','<svg ').split('url(#hatch)').join('url(#dhatch)').replace(/(<svg[^>]*>)/,'$1<defs><pattern id="dhatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fff"/><rect width="2.2" height="6" fill="#1A1A1A"/></pattern></defs>');}
 
+/*DOSE-START*/
+const DOSE=(()=>{
+/* =====================================================================
+   KONSTANTEN  (belegt = recherchiert; „App-Annahme“ = noch zu prüfen)
+   Alle Maße in mm.
+   ===================================================================== */
+const ADERFARBEN={
+  br:  {name:'braun',     hex:'#8a5a2b',dark:'#5b391a'},
+  sw:  {name:'schwarz',   hex:'#1c1c1e',dark:'#000000'},
+  gr:  {name:'grau',      hex:'#9a9aa0',dark:'#6c6c72'},
+  bl:  {name:'blau',      hex:'#1f6feb',dark:'#1450ad'},
+  gnge:{name:'grün-gelb', hex:'#2fa14e',dark:'#1d7337',stripe:'#f2d22e'},
+};
+// Aderfarben nach HD 308 S2. d = Mantel-Außendurchmesser in mm (Quelle: Faber-Datenblätter, ca.-Werte).
+// quelle: 'beleg' = recherchiert, 'annahme' = App-Annahme
+const KABELTYPEN={
+  'NYM-J 3×1,5':{adern:['gnge','bl','br'],qs:1.5,d:8.2,quelle:'beleg'},
+  'NYM-J 4×1,5':{adern:['gnge','br','sw','gr'],qs:1.5,d:9.0,quelle:'annahme'},
+  'NYM-J 5×1,5':{adern:['gnge','bl','br','sw','gr'],qs:1.5,d:9.5,quelle:'beleg'},
+  'NYM-J 3×2,5':{adern:['gnge','bl','br'],qs:2.5,d:9.4,quelle:'beleg'},
+  'NYM-J 5×2,5':{adern:['gnge','bl','br','sw','gr'],qs:2.5,d:11.0,quelle:'beleg'},
+  'NYM-O 2×1,5':{adern:['bl','br'],qs:1.5,d:7.8,quelle:'beleg'},   // Schalterschleife ohne PE
+};
+const ADER_D={1.5:2.9,2.5:3.5};            // Ader-Außendurchmesser inkl. Isolierung (PLATZHALTER)
+// Aufputz-Abzweigdosen (Spelsberg Abox …-L, IP66). Belegt: Innenmaß, Einführungen gesamt, max. Querschnitt.
+// Verteilung der Einführungen je Seite nur bei 040-L belegt (+1× hinten, hier nicht genutzt); bei den
+// anderen App-Annahme. wand, membranMaxD (größte Leitung je Membran) = App-Annahme.
+// Füllgrad: Herstellerangabe zur Klemmenzahl gibt es nicht → Flächenheuristik FUELLGRAD (App-Annahme).
+const DOSEN=[
+  {id:'S', name:'Abzweigdose AP 75×75',  bsp:'z. B. Spelsberg Abox 025-L',innen:[75,75],  tiefe:37,wand:6,einfGesamt:9, einf:{top:2,right:2,bottom:3,left:2},einfBeleg:false,qsMax:2.5,ip:'IP66',membranMaxD:13},
+  {id:'M', name:'Abzweigdose AP 90×90',  bsp:'z. B. Spelsberg Abox 040-L',innen:[90,90],  tiefe:49,wand:6,einfGesamt:11,einf:{top:3,right:2,bottom:3,left:2},einfBeleg:true, qsMax:4,  ip:'IP66',membranMaxD:17},
+  {id:'L', name:'Abzweigdose AP 114×114',bsp:'z. B. Spelsberg Abox 060-L',innen:[114,114],tiefe:54,wand:7,einfGesamt:10,einf:{top:3,right:2,bottom:3,left:2},einfBeleg:false,qsMax:6,  ip:'IP66',membranMaxD:17},
+  {id:'XL',name:'Abzweigdose AP 139×140',bsp:'z. B. Spelsberg Abox 100-L',innen:[139,140],tiefe:64,wand:7,einfGesamt:12,einf:{top:3,right:3,bottom:3,left:3},einfBeleg:false,qsMax:10, ip:'IP66',membranMaxD:17},
+];
+// App-Annahme: Klemmen-Grundfläche + je Ader ADER_FLAECHE dürfen höchstens FUELLGRAD der Innenfläche belegen.
+const FUELLGRAD={max:0.55,aderFlaeche:60};
+// Hebelklemmen WAGO 221-412/-413/-415 (belegt): 1 Leiter je Stelle, 0,2–4 mm² (feindrähtig 0,14–4), 11 mm, 32 A.
+// Maße B × T in mm (Draufsicht; Höhe 8,4 mm).
+const HEBEL={
+  sizes:{2:{breite:13.2,laenge:18.8,art:'WAGO 221-412'},3:{breite:18.8,laenge:18.8,art:'WAGO 221-413'},5:{breite:30,laenge:18.6,art:'WAGO 221-415'}},
+  stufen:[2,3,5], qsMin:0.2, qsMax:4, abisolier:11, strom:32, name:n=>`Hebelklemme ${n}-fach`,
+};
+// Lüsterklemme: Leiter je Stelle normativ nicht belegt → App rechnet mit 1 Leiter je Seite.
+// Gruppen mit mehr als 2 Adern gehen damit nicht (Brücken verbrauchen alle Plätze) → dann 2 je Seite + Warnung.
+// raster, tiefe, abisolier, qsMax = App-Annahme.
+const LUESTER={raster:9.5,tiefe:15,leiterJeSeite:1,leiterJeSeiteNotfall:2,abisolier:8,qsMax:2.5,name:'Lüsterklemme 2,5 mm²'};
+// Layout-Regeln (App-Annahme). mantelInnen: Praxisregel 5–10 mm.
+const LAYOUT={seitenStrafe:90,obenStrafe:60,rand:7,biege:20,reihenSpalt:5,kanal:22,klemmenSpaltMax:12,mantelInnen:8,aussen:44,labelBreite:34};
+const TEXTE={aderLaenge:'ca. 8–15 cm (Praxisregel)',mantelInDose:'ca. 5–10 mm (Praxisregel)'};
+// Feuchtraum-Praxisregel: Einführung von unten/seitlich → Zuleitung standardmäßig links
+const RICHTUNG_STANDARD={zuleitung:'left',lampe:'right',schalter:'bottom',steckdose:'bottom',weiter:'left'};
+
+/* ===================================================================== */
+const SIDES=['top','right','bottom','left'];
+const SIDE_DE={top:'oben',right:'rechts',bottom:'unten',left:'links'};
+const NRM={top:[0,1],bottom:[0,-1],left:[1,0],right:[-1,0]};
+const LAT={top:[1,0],bottom:[1,0],left:[0,1],right:[0,1]};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f1=n=>Math.round(n*100)/100;
+const FN={
+  PE:{name:'Schutzleiter (PE)',kurz:'PE',tag:'#2fa14e',txt:'Führt im Normalbetrieb keinen Strom. Hat ein Gerät einen Defekt, leitet er den Fehlerstrom ab, damit Sicherung oder FI sofort abschalten. Nie unterbrechen, nie schalten.'},
+  N: {name:'Neutralleiter (N)',kurz:'N',tag:'#1f6feb',txt:'Rückleiter: Über ihn fließt der Strom von der Lampe oder Steckdose zurück zum Sicherungskasten. Wird nie geschaltet.'},
+  L: {name:'Dauerphase (L)',kurz:'L',tag:'#8a5a2b',txt:'Führt immer Strom (230 V), solange die Sicherung eingeschaltet ist. Sie versorgt Schalter, Steckdosen und die nächste Dose.'},
+  S: {name:'Geschaltete Phase',kurz:'S',tag:'#1c1c1e',txt:'Führt nur Strom, wenn der Schalter eingeschaltet ist. Sie kommt vom Schalter zurück und geht weiter zur Lampe.'},
+  K: {name:'Korrespondierende',kurz:'K',tag:'#7d7d84',txt:'Wechseldraht zwischen den beiden Wechselschaltern. Je nach Schalterstellung führt einer der beiden Drähte Strom.'},
+  R: {name:'Reserve',kurz:'–',tag:'#bbb',txt:'Wird in dieser Dose nicht gebraucht. Nicht abisolieren und ordentlich in die Dose legen (oder einzeln in eine Klemme stecken).'},
+};
+const ICON={
+  zuleitung:'<path d="M12 2 5 13h6l-1 9 7-12h-6l1-8z" fill="#B4472C"/>',
+  lampe:'<circle cx="12" cy="10" r="6" fill="#F2C84B" stroke="#1A1A1A" stroke-width="1.6"/><path d="M9.5 17h5M10 20h4" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>',
+  schalter:'<rect x="5" y="3" width="14" height="18" rx="3" fill="#fff" stroke="#1A1A1A" stroke-width="1.6"/><rect x="9" y="7" width="6" height="10" rx="1.5" fill="#1A1A1A"/>',
+  steckdose:'<circle cx="12" cy="12" r="9" fill="#fff" stroke="#1A1A1A" stroke-width="1.6"/><circle cx="8.6" cy="12" r="1.6" fill="#1A1A1A"/><circle cx="15.4" cy="12" r="1.6" fill="#1A1A1A"/>',
+  weiter:'<rect x="2" y="7" width="9" height="10" rx="2" fill="#fff" stroke="#1A1A1A" stroke-width="1.6"/><path d="M12 12h9m-3-3 3 3-3 3" stroke="#1A1A1A" stroke-width="1.8" fill="none" stroke-linecap="round"/>',
+};
+const ART_DE={zuleitung:'Zuleitung',lampe:'Lampe',schalter:'Schalter',steckdose:'Steckdose',weiter:'Weiter zur nächsten Dose'};
+
+/* ---------------------------------------------------------------------
+   1) Bausteine → Leitungen mit Funktionen
+   --------------------------------------------------------------------- */
+function outputsOf(cfg){
+  const outs=[];let no=0;
+  for(const b of cfg.bloecke)if(b.art==='schalter'){no++;
+    if(b.schaltart==='serie')outs.push({key:b.id+':a',block:b.id,no,label:`Schalter ${no} · Taste 1`,kurz:`S${no}·1`},{key:b.id+':b',block:b.id,no,label:`Schalter ${no} · Taste 2`,kurz:`S${no}·2`});
+    else if(b.schaltart==='wechsel')outs.push({key:b.id,block:b.id,no,label:`Wechselschaltung ${no}`,kurz:`S${no}`});
+    else outs.push({key:b.id,block:b.id,no,label:`Schalter ${no}`,kurz:`S${no}`});}
+  return outs;
+}
+function feedQs(cfg){const z=cfg.bloecke.find(b=>b.art==='zuleitung');if(!z)return 1.5;const t=z.kabel&&z.kabel!=='auto'?KABELTYPEN[z.kabel]:null;return t?t.qs:1.5;}
+function autoTyp(nL,needN,qs){const q=qs===2.5?'2,5':'1,5';
+  if(needN){if(nL<=1)return`NYM-J 3×${q}`;if(nL<=3)return`NYM-J 5×${q}`;return null;}
+  if(nL<=2)return`NYM-J 3×${q}`;if(nL<=4)return`NYM-J 5×${q}`;return null;}
+
+function expand(cfg,W){
+  const outs=outputsOf(cfg),outMap=Object.fromEntries(outs.map(o=>[o.key,o]));
+  const cables=[];let lampNo=0,sdNo=0,wNo=0,swNo=0;
+  const nSd=cfg.bloecke.filter(b=>b.art==='steckdose').length,nW=cfg.bloecke.filter(b=>b.art==='weiter').length;
+  const fq=feedQs(cfg);
+  const add=(b,o)=>{const L=o.L,needN=o.N;const qs=(b.art==='steckdose'||b.art==='weiter'||b.art==='zuleitung')?fq:1.5;
+    const auto=!b.kabel||b.kabel==='auto';const typ=auto?autoTyp(L.length,needN,qs):b.kabel;
+    cables.push({id:b.id+'#'+(o.i||0),block:b.id,art:b.art,autoSide:!b.seite||b.seite==='auto',name:o.name,kurz:o.kurz,typ,auto,fnL:L,needN,pref:b.seite&&b.seite!=='auto'?b.seite:RICHTUNG_STANDARD[b.art],sub:o.sub||''});};
+  for(const b of cfg.bloecke){
+    if(b.art==='zuleitung')add(b,{name:'vom Sicherungskasten',kurz:'Zuleitung',L:['L'],N:true});
+    else if(b.art==='lampe'){let an=b.an;if(an!=='dauer'&&!outMap[an]){if(an)W('hinweis','Lampe hatte keinen gültigen Schalter','Der gewählte Schalter existiert nicht mehr. Die Lampe hängt jetzt am ersten Schalter (oder an Dauerstrom, wenn es keinen gibt).',[]);an=outs[0]?outs[0].key:'dauer';}
+      for(let i=0;i<(b.anzahl||1);i++){lampNo++;add(b,{i,name:`zur Lampe ${lampNo}`,kurz:`Lampe ${lampNo}`,L:[an==='dauer'?'L':'S:'+an],N:true,sub:an==='dauer'?'Dauerlicht':outMap[an].label});}}
+    else if(b.art==='schalter'){swNo++;
+      if(b.schaltart==='serie')add(b,{name:`zum Serienschalter ${swNo}`,kurz:`Schalter ${swNo}`,L:['L','S:'+b.id+':a','S:'+b.id+':b'],N:false});
+      else if(b.schaltart==='wechsel'){add(b,{i:0,name:`zum Wechselschalter ${swNo}A`,kurz:`Wechsel ${swNo}A`,L:['L','K:'+b.id+':1','K:'+b.id+':2'],N:false,sub:'bekommt Dauerphase'});
+        add(b,{i:1,name:`zum Wechselschalter ${swNo}B`,kurz:`Wechsel ${swNo}B`,L:['S:'+b.id,'K:'+b.id+':1','K:'+b.id+':2'],N:false,sub:'gibt geschaltete Phase zurück'});}
+      else add(b,{name:`zum Schalter ${swNo}`,kurz:`Schalter ${swNo}`,L:['L','S:'+b.id],N:false});}
+    else if(b.art==='steckdose'){sdNo++;add(b,{name:nSd>1?`zur Steckdose ${sdNo}`:'zur Steckdose',kurz:nSd>1?`Steckdose ${sdNo}`:'Steckdose',L:['L'],N:true});}
+    else if(b.art==='weiter'){wNo++;const mit=(b.mit||[]).filter(k=>outMap[k]);add(b,{name:nW>1?`zur nächsten Dose ${wNo}`:'zur nächsten Dose',kurz:nW>1?`Weiter ${wNo}`:'Weiter',L:['L',...mit.map(k=>'S:'+k)],N:true,sub:mit.length?'+ '+mit.map(k=>outMap[k].kurz).join(', '):''});}
+  }
+  return{cables,outs,outMap};
+}
+
+/* 2) Aderzuordnung je Leitung */
+function assignCores(cables,W){
+  const cores=[];
+  for(const c of cables){
+    const t=KABELTYPEN[c.typ];c.cores=[];
+    if(!t){W('fehler',`Keine passende Leitung für „${c.kurz}“`,`Es werden ${c.fnL.length} Phasen${c.needN?' + N':''} + PE gebraucht. Dafür gibt es im Katalog keine Leitung. Teile die Funktion auf zwei Leitungen auf.`,['c:'+c.id]);continue;}
+    const avail=[...t.adern];const take=col=>{const i=avail.indexOf(col);if(i<0)return null;avail.splice(i,1);return col;};
+    const mk=(col,fn,grp,marked)=>{const k={id:c.id+'.'+col,cable:c.id,col,fn,grp,marked:!!marked,qs:t.qs};cores.push(k);c.cores.push(k);return k;};
+    if(take('gnge'))mk('gnge','PE','PE');else if(c.art==='schalter')W('hinweis',`„${c.kurz}“ ohne Schutzleiter`,'Eine Schalterschleife ohne PE (z. B. NYM-O 2×1,5) geht nur zu einem Schalter aus Kunststoff ohne Schutzleiter-Anschluss. Mit NYM-J ist der PE gleich mit dabei.',['c:'+c.id]);else W('fehler',`„${c.kurz}“ hat keinen Schutzleiter`,'Jede Leitung zu Lampe oder Steckdose braucht einen grün-gelben Schutzleiter (NYM-J statt NYM-O).',['c:'+c.id]);
+    if(c.needN){if(take('bl'))mk('bl','N','N');else W('fehler',`„${c.kurz}“ hat keine blaue Ader für N`,`Diese Leitung braucht einen Neutralleiter. ${c.typ} hat keine blaue Ader. Nimm NYM-J 3× oder 5×.`,['c:'+c.id]);}
+    const miss=[];
+    for(const g of c.fnL){const col=['br','sw','gr','bl'].find(x=>avail.includes(x));if(!col){miss.push(g);continue;}take(col);mk(col,g[0]==='L'?'L':g[0],g,col==='bl');}
+    if(miss.length)W('fehler',`„${c.kurz}“ hat zu wenig Adern`,`${c.typ} reicht nicht: Es fehlen ${miss.length} Ader(n) für ${miss.map(grpName).join(', ')}. Wähle eine Leitung mit mehr Adern, z. B. NYM-J 5×1,5.`,['c:'+c.id]);
+    for(const col of avail)mk(col,'R','R:'+c.id+'.'+col);
+  }
+  return cores;
+}
+let OUTS_CUR={};
+function grpName(g){if(g==='PE')return FN.PE.name;if(g==='N')return FN.N.name;if(g==='L')return FN.L.name;
+  if(g.startsWith('S:')){const o=OUTS_CUR[g.slice(2)];return'Geschaltete Phase '+(o?o.label:'');}
+  if(g.startsWith('K:')){const [_,b,n]=g.split(':');const o=OUTS_CUR[b];return`Korrespondierende ${n} (${o?o.label:''})`;}
+  return'Reserve';}
+function grpKurz(g){if(g==='PE'||g==='N'||g==='L')return g;if(g.startsWith('S:')){const o=OUTS_CUR[g.slice(2)];return o?o.kurz:'S';}
+  if(g.startsWith('K:')){const [_,b,n]=g.split(':');const o=OUTS_CUR[b];return(o?o.kurz:'S')+' K'+n;}return'R';}
+const GRP_ORDER=g=>g==='PE'?0:g==='N'?1:g==='L'?2:g.startsWith('S:')?3:g.startsWith('K:')?4:9;
+
+/* 3) Klemmengruppen */
+function buildGroups(cores){
+  const m=new Map();for(const k of cores){if(k.fn==='R')continue;if(!m.has(k.grp))m.set(k.grp,{key:k.grp,fn:k.fn,cores:[]});m.get(k.grp).cores.push(k);}
+  return[...m.values()].sort((a,b)=>GRP_ORDER(a.key)-GRP_ORDER(b.key)||a.key.localeCompare(b.key));
+}
+
+/* 4) Klemmen planen (Größe, Aufteilung, Brücken) */
+function planClampsHebel(groups,up){
+  const clamps=[],bridges=[];let n=0;
+  for(const g of groups){const N=g.cores.length;const k=N<=5?1:Math.ceil((N-2)/3);
+    const cs=[...g.cores].sort((a,b)=>up(b)-up(a));const chunks=[];let rest=N;let idx=0;
+    for(let i=0;i<k;i++){const br=k===1?0:(i===0||i===k-1)?1:2;const cap=5-br;const sz=Math.min(cap,Math.ceil(rest/(k-i)));chunks.push({cores:cs.slice(idx,idx+sz),br});idx+=sz;rest-=sz;}
+    const ids=[];
+    for(const ch of chunks){const need=Math.max(2,ch.cores.length+ch.br);const pol=HEBEL.stufen.find(s=>s>=need);const sz=HEBEL.sizes[pol];
+      const meanUp=ch.cores.reduce((s,c)=>s+up(c),0)/Math.max(1,ch.cores.length);
+      const cl={id:'k'+(++n),grp:g.key,art:'hebel',pol,w:sz.breite,L:sz.laenge,cores:ch.cores.map(c=>c.id),face:meanUp>=.5?'up':'down',upv:meanUp,bridges:[]};clamps.push(cl);ids.push(cl.id);}
+    for(let i=0;i+1<ids.length;i++){const b={id:'br'+bridges.length,grp:g.key,a:ids[i],b:ids[i+1]};bridges.push(b);}
+  }
+  return{clamps,bridges};
+}
+function planClampsLuester(groups,up){
+  const clamps=[],bridges=[];let n=0;
+  for(const g of groups){const N=g.cores.length;const m=N<=2*LUESTER.leiterJeSeite?LUESTER.leiterJeSeite:LUESTER.leiterJeSeiteNotfall;let p=1;while(2*m*p-2*(p-1)<N)p++;
+    const cl={id:'k'+(++n),grp:g.key,art:'luester',pol:p,m,w:p*LUESTER.raster,L:LUESTER.tiefe,cores:g.cores.map(c=>c.id),face:'both',upv:.5,bridges:[]};clamps.push(cl);
+    for(let j=0;j+1<p;j++)bridges.push({id:'br'+bridges.length,grp:g.key,a:cl.id,b:cl.id,pos:j});}
+  return{clamps,bridges};
+}
+
+/* ---------------------------------------------------------------------
+   5) Geometrie: Seiten, Einführungen, Klemmenreihen, Aderverlauf
+   --------------------------------------------------------------------- */
+function entryPos(box,side,i,k){const[W,H]=box.innen;const Ls=(side==='top'||side==='bottom')?W:H;const t=k===1?.5:.25+.5*i/(k-1);const p=Ls*t;
+  return side==='top'?[p,0]:side==='bottom'?[p,H]:side==='left'?[0,p]:[W,p];}
+function entryName(side,i,k){if(k===1)return SIDE_DE[side];const hz=side==='top'||side==='bottom';
+  const a=hz?['links','Mitte','rechts']:['oben','Mitte','unten'];const n=k===2?[a[0],a[2]][i]:a[i];return SIDE_DE[side]+' '+n;}
+
+function assignSides(cables,box){
+  const cap={...box.einf},side={};const free=s=>cap[s];
+  const order=[...cables].sort((a,b)=>(a.art==='zuleitung'?0:1)-(b.art==='zuleitung'?0:1));
+  const over=[];
+  for(const c of order){if(cap[c.pref]>0){side[c.id]=c.pref;cap[c.pref]--;}else over.push(c);}
+  for(const c of over){const i=SIDES.indexOf(c.pref);const opp=SIDES[(i+2)%4];
+    const cand=[SIDES[(i+1)%4],SIDES[(i+3)%4]].sort((a,b)=>(a==='top')-(b==='top')||free(b)-free(a));cand.push(opp);
+    const s=cand.find(x=>cap[x]>0);if(!s)return null;side[c.id]=s;cap[s]--;}
+  return side;
+}
+function sideUp(side){return side==='top'?1:side==='bottom'?0:.5;}
+
+// Bézier-Hilfen
+function bez(p0,p1,p2,p3,t){const u=1-t;return[u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]];}
+const add2=(a,b,k=1)=>[a[0]+b[0]*k,a[1]+b[1]*k];
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+const clampv=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+function computeGeo(M,box,st){
+  const[W,H]=box.innen;const G={cab:{},cl:{},core:{},br:[],ok:true};
+  // Leitungen: Eintritt + Mantelende
+  for(const s of SIDES){const ids=st.order[s];const k=box.einf[s];
+    ids.forEach((id,j)=>{const i=st.entry[id];const Pe=entryPos(box,s,i,k);const n=NRM[s];
+      G.cab[id]={side:s,ei:i,ek:k,Pe,E:add2(Pe,n,LAYOUT.mantelInnen),n,l:LAT[s]};});}
+  // Klemmen platzieren
+  const hebel=M.klemme==='hebel';const avail=W-2*LAYOUT.rand;
+  const rows=hebel?['up','down']:['mid'];
+  const rowsUsed=rows.filter(r=>st.rows[r].length);
+  const faceOf=(id,r)=>(st.face&&st.face[id])||r;
+  const kanal=hebel&&rowsUsed.length===2&&(st.rows.up.some(id=>faceOf(id,'up')==='down')||st.rows.down.some(id=>faceOf(id,'down')==='up'));
+  const spalt=kanal?LAYOUT.kanal:LAYOUT.reihenSpalt;
+  for(const r of rows){const ids=st.rows[r];if(!ids.length)continue;const cls=ids.map(id=>M.clampById[id]);
+    const sw=cls.reduce((s,c)=>s+c.w,0);const gap=Math.min(LAYOUT.klemmenSpaltMax,Math.max(3,(avail-sw)/(cls.length+1)));
+    const tot=sw+gap*(cls.length-1);if(tot>avail+.01)G.ok=false;let x=(W-tot)/2;
+    let yFace,face;const Lh=cls[0].L;
+    if(r==='mid'){yFace=H/2-Lh/2;face='both';}
+    const band=rowsUsed.length===2?(r==='up'?H/2-spalt/2-Lh:H/2+spalt/2):H/2-Lh/2;
+    for(const c of cls){const fc=r==='mid'?'both':faceOf(c.id,r);const yF=r==='mid'?yFace:(fc==='up'?band:band+Lh);G.cl[c.id]={x0:x,w:c.w,L:c.L,face:fc,yFace:yF,cx:x+c.w/2};x+=c.w+gap;}
+  }
+  const hl=Math.max(...Object.values(HEBEL.sizes).map(z=>z.laenge));const needH=hebel?(rowsUsed.length===2?2*hl+spalt:hl):LUESTER.tiefe;
+  if(needH+2*LAYOUT.biege>H+.01)G.ok=false;
+  // Slots belegen
+  const coreE=k=>G.cab[k.cable].E;
+  for(const cl of M.clamps){const g=G.cl[cl.id];if(!g)continue;g.slots={};
+    const myBr=M.bridges.filter(b=>b.a===cl.id||b.b===cl.id);
+    const cores=cl.cores.map(id=>M.coreById[id]);
+    // Anfahrt: von vorn direkt, von hinten über einen Punkt neben der Klemme
+    const appr=(k,C,d)=>{const E=coreE(k);const beh=g.face!=='both'&&((E[0]-C[0])*d[0]+(E[1]-C[1])*d[1]<4);
+      if(!beh)return{A:E};const left=E[0]<g.cx;const Wp=[left?g.x0-5:g.x0+g.w+5,C[1]+d[1]*9];return{A:Wp,W:Wp};};
+    // Winkel-Sortierung: Adern von links → linke Plätze (aus Sicht der Klemmenöffnung)
+    const angSort=(list,C,d)=>{const u=[-d[1],d[0]];const th=k=>{const a=appr(k,C,d).A;const x=(a[0]-C[0])*u[0]+(a[1]-C[1])*u[1],y=(a[0]-C[0])*d[0]+(a[1]-C[1])*d[1];let t=Math.atan2(y,x);if(t<-Math.PI/2)t+=2*Math.PI;return t;};
+      return[...list].sort((a,b)=>th(b)-th(a));};
+    const uProj=(P,d)=>P[0]*(-d[1])+P[1]*d[0];
+    if(cl.art==='hebel'){const d=g.face==='up'?[0,-1]:[0,1];const yF=g.yFace;const C=[g.cx,yF];
+      const holes=[...Array(cl.pol)].map((_,i)=>[g.x0+(i+.5)*g.w/cl.pol,yF]);let free=holes.map((_,i)=>i);
+      g.brSlot={};
+      const brs=myBr.map(b=>{const o=b.a===cl.id?b.b:b.a;return{b,ox:G.cl[o]?G.cl[o].cx:g.cx};}).sort((a,b)=>a.ox-b.ox);
+      if(brs.length===2){g.brSlot[brs[0].b.id]=0;g.brSlot[brs[1].b.id]=cl.pol-1;free=free.filter(i=>i!==0&&i!==cl.pol-1);}
+      else if(brs.length===1){const i=brs[0].ox>=g.cx?cl.pol-1:0;g.brSlot[brs[0].b.id]=i;free=free.filter(x=>x!==i);}
+      free.sort((a,b)=>uProj(holes[a],d)-uProj(holes[b],d));
+      const sorted=angSort(cores,C,d);
+      const use=free.length>sorted.length?pickSpread(free,sorted.length):free;
+      sorted.forEach((k,i)=>{const a=appr(k,C,d);G.core[k.id]={P:holes[use[i]],d,cl:cl.id,W:a.W};});
+      g.holes=holes;g.d=d;
+    }else{// Lüster: Positionen mit Ober-/Unterseite
+      const p=cl.pol,m=cl.m;const yT=g.yFace,yB=g.yFace+g.L;
+      const top=[],bot=[];for(const k of cores)(coreE(k)[1]<H/2?top:bot).push(k);
+      g.brSide={};
+      for(const b of myBr){g.brSide[b.pos]=top.length>bot.length?'B':'T';}
+      const holeX=(j,s)=>g.x0+(j+.5)*LUESTER.raster+(m>1?(s-(m-1)/2)*2.2:0);
+      const slotsT=[],slotsB=[];
+      for(let j=0;j<p;j++){const usedT=new Set(),usedB=new Set();
+        if(g.brSide[j]==='T')usedT.add(m-1);if(g.brSide[j]==='B')usedB.add(m-1);
+        if(g.brSide[j-1]==='T')usedT.add(0);if(g.brSide[j-1]==='B')usedB.add(0);
+        for(let s=0;s<m;s++){if(!usedT.has(s))slotsT.push([holeX(j,s),yT]);if(!usedB.has(s))slotsB.push([holeX(j,s),yB]);}}
+      slotsB.reverse();// Unterseite: aus Sicht der Öffnung von rechts nach links
+      while(top.length>slotsT.length)bot.push(top.pop());while(bot.length>slotsB.length)top.push(bot.pop());
+      const CT=[g.cx,yT],CB=[g.cx,yB];
+      const sT=angSort(top,CT,[0,-1]),sB=angSort(bot,CB,[0,1]);
+      const uT=slotsT.length>sT.length?pickSpread(slotsT.map((_,i)=>i),sT.length):slotsT.map((_,i)=>i);
+      const uB=slotsB.length>sB.length?pickSpread(slotsB.map((_,i)=>i),sB.length):slotsB.map((_,i)=>i);
+      sT.forEach((k,i)=>{G.core[k.id]={P:slotsT[uT[i]],d:[0,-1],cl:cl.id};});
+      sB.forEach((k,i)=>{G.core[k.id]={P:slotsB[uB[i]],d:[0,1],cl:cl.id};});
+      g.holeX=holeX;
+    }
+  }
+  // Adern: Fächer am Mantelende (sortiert nach Ziel), ruhige Kurven
+  for(const c of M.cables){const cg=G.cab[c.id];if(!cg)continue;const ks=c.cores;
+    const tgt=k=>{const t=G.core[k.id];return t?(t.W||t.P):null;};
+    const proj=k=>{const q=tgt(k);if(!q)return null;return(q[0]-cg.E[0])*cg.l[0]+(q[1]-cg.E[1])*cg.l[1];};
+    const pj=Object.fromEntries(ks.map(k=>[k.id,proj(k)]));
+    const live=ks.filter(k=>pj[k.id]!==null).sort((a,b)=>pj[a.id]-pj[b.id]);
+    // Reserve an den Rand, der weiter weg vom Mittel der Ziele liegt
+    const mean=live.length?live.reduce((s,k)=>s+pj[k.id],0)/live.length:0;const res=ks.filter(k=>pj[k.id]===null);
+    const ord=mean>0?[...res,...live]:[...live,...res];
+    const td=KABELTYPEN[c.typ];const dd=td?td.d:9;const sp=Math.min(ADER_D[c.cores[0]?.qs||1.5]*.92,(dd-1)/Math.max(1,ord.length-1));
+    const meanD=live.length?live.reduce((s,k)=>s+dist(cg.E,tgt(k)),0)/live.length:20;const k1=clampv(meanD*.4,6,28);
+    ord.forEach((k,i)=>{const off=(i-(ord.length-1)/2)*sp;const S0=add2(add2(cg.E,cg.n,-2.5),cg.l,off);
+      const t=G.core[k.id];
+      if(!t){// Reserve: sanfter Bogen zur Seite, liegt an der Dosenwand
+        const sg=off>=0?1:-1;const end=add2(add2(cg.Pe,cg.n,4.5),cg.l,sg*(dd/2+16));
+        G.core[k.id]={segs:[[S0,add2(S0,cg.n,5),add2(end,cg.l,-sg*9),end]],res:true,end};return;}
+      const P=t.P,d=t.d;const g=G.cl[t.cl];let segs;
+      if(!t.W){const D=dist(S0,P);const k2=clampv(D*.36,5,22);segs=[[S0,add2(S0,cg.n,Math.min(k1,D*.5)),add2(P,d,k2),P]];}
+      else{const Wp=t.W;const tdir=[Wp[0]<g.cx?1:-1,0];const D1=dist(S0,Wp);
+        segs=[[S0,add2(S0,cg.n,Math.min(k1,D1*.5)),add2(Wp,tdir,-clampv(D1*.35,4,16)),Wp],[Wp,add2(Wp,tdir,clampv(Math.abs(P[0]-Wp[0])*.55,3,12)),add2(P,d,6),P]];G.wraps=(G.wraps||0)+1;}
+      t.segs=segs;t.order=i;});
+  }
+  // Brücken
+  for(const b of M.bridges){const ga=G.cl[b.a],gb=G.cl[b.b];if(!ga||!gb)continue;
+    if(M.klemme==='hebel'){const ca=M.clampById[b.a],cb=M.clampById[b.b];const Pa=ga.holes[ga.brSlot[b.id]],Pb=gb.holes[gb.brSlot[b.id]];
+      const D=dist(Pa,Pb);const k=clampv(D*.4,8,20);G.br.push({id:b.id,grp:b.grp,segs:[[Pa,add2(Pa,ga.d,k),add2(Pb,gb.d,k),Pb]],a:b.a,b:b.b});}
+    else{const s=ga.brSide[b.pos];const m=M.clampById[b.a].m;const y=s==='T'?ga.yFace:ga.yFace+ga.L;const dy=s==='T'?-1:1;
+      const Pa=[ga.holeX(b.pos,m-1),y],Pb=[ga.holeX(b.pos+1,0),y];G.br.push({id:b.id,grp:b.grp,segs:[[Pa,[Pa[0],y+dy*6],[Pb[0],y+dy*6],Pb]],a:b.a,b:b.b});}}
+  G.cost=costOf(M,G);
+  return G;
+}
+function pickSpread(free,n){if(n<=0)return[];if(n===1)return[free[Math.floor((free.length-1)/2)]];const r=[];for(let i=0;i<n;i++)r.push(free[Math.round(i*(free.length-1)/(n-1))]);return[...new Set(r)].length===n?r:free.slice(0,n);}
+
+function polyOf(segs,n=8){const pts=[];segs.forEach((s,si)=>{for(let i=si?1:0;i<=n;i++)pts.push(bez(s[0],s[1],s[2],s[3],i/n));});return pts;}
+function segX(a,b,c,d){const d1=(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]),d2=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0]),d3=(d[0]-c[0])*(a[1]-c[1])-(d[1]-c[1])*(a[0]-c[0]),d4=(d[0]-c[0])*(b[1]-c[1])-(d[1]-c[1])*(b[0]-c[0]);return d1*d2<0&&d3*d4<0;}
+function costOf(M,G){
+  const P=[];let len=0,over=0;
+  for(const k of M.cores){const t=G.core[k.id];if(!t||!t.segs||t.res)continue;const pts=polyOf(t.segs);
+    let bb=[1e9,1e9,-1e9,-1e9];for(let i=0;i<pts.length;i++){const p=pts[i];bb=[Math.min(bb[0],p[0]),Math.min(bb[1],p[1]),Math.max(bb[2],p[0]),Math.max(bb[3],p[1])];if(i)len+=dist(p,pts[i-1]);}
+    // über fremde Klemmen?
+    for(const id in G.cl){if(id===t.cl)continue;const g=G.cl[id];const y0=g.face==='down'?g.yFace-g.L:g.yFace,y1=y0+g.L;
+      for(const p of pts)if(p[0]>g.x0&&p[0]<g.x0+g.w&&p[1]>y0&&p[1]<y1){over++;}}
+    P.push({pts,bb,k});}
+  let x=0;
+  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j];if(a.bb[2]<b.bb[0]||b.bb[2]<a.bb[0]||a.bb[3]<b.bb[1]||b.bb[3]<a.bb[1])continue;
+    for(let s=1;s<a.pts.length;s++)for(let t=1;t<b.pts.length;t++)if(segX(a.pts[s-1],a.pts[s],b.pts[t-1],b.pts[t])){x++;if(globalThis.XDBG)globalThis.XDBG.push([a.k.id,b.k.id,s,t]);}}
+  return{cross:x,over,len,wraps:G.wraps||0,score:x*40+over*14+(G.wraps||0)*25+len*.06};
+}
+
+const TR={top:'left',left:'top',bottom:'right',right:'bottom'};
+function trBox(box){return Object.assign({},box,{innen:[box.innen[1],box.innen[0]],einf:{top:box.einf.left,left:box.einf.top,bottom:box.einf.right,right:box.einf.bottom}});}
+// Probiert Klemmenreihen waagerecht (h) und senkrecht (v, über transponierte Dose) und nimmt die bessere.
+function layoutBox(M,box){
+  let side0=assignSides(M.cables,box);if(!side0)return null;
+  // Seitenzuordnung: Leitungen mit Richtung „Auto“ dürfen auf eine Nachbarseite ausweichen,
+  // wenn das Kreuzungen spart (Strafe je Abweichung von der Standardrichtung).
+  const evalSides=(sd,quick)=>{let b=null;for(const o of['h','v']){const bx=o==='h'?box:trBox(box);const m={};for(const k in sd)m[k]=o==='h'?sd[k]:TR[sd[k]];
+      const r=layoutCore(M,bx,m,quick);if(r){const sc=r.G.cost.score+M.cables.filter(c=>sd[c.id]&&sd[c.id]!==c.pref).length*LAYOUT.seitenStrafe+M.cables.filter(c=>sd[c.id]==='top'&&c.pref!=='top').length*LAYOUT.obenStrafe;if(!b||sc<b)b=sc;}}return b;};
+  if(M.cables.length<=10){let cur=evalSides(side0,true);
+    for(const c of M.cables){if(!c.autoSide||!side0[c.id])continue;const i=SIDES.indexOf(c.pref);
+      for(const alt of[c.pref,SIDES[(i+1)%4],SIDES[(i+3)%4]]){if(alt===side0[c.id])continue;const used=Object.entries(side0).filter(([k,v])=>v===alt&&k!==c.id).length;if(used>=box.einf[alt])continue;
+        const t={...side0,[c.id]:alt};const sc=evalSides(t,true);if(sc!==null&&(cur===null||sc<cur-1)){cur=sc;side0=t;}}}}
+  let best=null;
+  for(const o of['h','v']){const b=o==='h'?box:trBox(box);const sd={};for(const k in side0)sd[k]=o==='h'?side0[k]:TR[side0[k]];
+    const r=layoutCore(M,b,sd);if(r&&(!best||r.G.cost.score<best.score))best={o,score:r.G.cost.score};}
+  if(!best)return null;
+  const b=best.o==='h'?box:trBox(box);const sd={};for(const k in side0)sd[k]=best.o==='h'?side0[k]:TR[side0[k]];
+  const r=layoutCore(M,b,sd);if(best.o==='v')transposeResult(r,M);r.orient=best.o;r.side=side0;return r;
+}
+function transposeResult(r,M){const T=p=>p&&[p[1],p[0]];const TS=segs=>segs.map(s=>s.map(T));const G=r.G;
+  for(const id in G.cab){const g=G.cab[id];g.side=TR[g.side];g.Pe=T(g.Pe);g.E=T(g.E);g.n=T(g.n);g.l=T(g.l);}
+  for(const id in G.core){const g=G.core[id];if(g.P)g.P=T(g.P);if(g.d)g.d=T(g.d);if(g.segs)g.segs=TS(g.segs);if(g.end)g.end=T(g.end);}
+  for(const b of G.br)b.segs=TS(b.segs);
+  for(const id in G.cl)G.cl[id].orient='v';
+  const o=r.st.order;r.st.order={top:o.left,left:o.top,bottom:o.right,right:o.bottom};}
+function layoutCore(M,box,side,quick){
+  const st={order:{top:[],right:[],bottom:[],left:[]},entry:{},rows:{up:[],down:[],mid:[]},face:{}};
+  for(const c of M.cables)if(c.cores.length)st.order[side[c.id]].push(c.id);
+  const pickEntries=(s,desired)=>{const ids=st.order[s],k=box.einf[s],n=ids.length;if(!n)return;
+    let best=null;const combos=[];const rec=(st0,acc)=>{if(acc.length===n){combos.push(acc);return;}for(let i=st0;i<k;i++)rec(i+1,[...acc,i]);};rec(0,[]);
+    for(const cb of combos){let c=0;cb.forEach((ei,j)=>{const p=entryPos(box,s,ei,k);const v=(s==='top'||s==='bottom')?p[0]:p[1];c+=Math.abs(v-(desired?desired[j]:((s==='top'||s==='bottom')?box.innen[0]:box.innen[1])/2));});
+      if(!best||c<best.c-1e-6)best={c,cb};}
+    best.cb.forEach((ei,j)=>st.entry[ids[j]]=ei);};
+  for(const s of SIDES)pickEntries(s);
+  // Klemmen planen mit Aufwärts-Wert der Adern
+  const upOf=k=>{const s=side[k.cable];if(s==='left'||s==='right'){const i=st.entry[k.cable];const p=entryPos(box,s,i,box.einf[s]);return 1-p[1]/box.innen[1]*.999;}return sideUp(s);};
+  const plan=M.klemme==='hebel'?planClampsHebel(M.groups,upOf):planClampsLuester(M.groups,upOf);
+  M.clamps=plan.clamps;M.bridges=plan.bridges;M.clampById=Object.fromEntries(M.clamps.map(c=>[c.id,c]));
+  const avail=box.innen[0]-2*LAYOUT.rand;
+  if(M.klemme==='hebel'){
+    for(const c of M.clamps)st.rows[c.face].push(c.id);
+    const wid=r=>st.rows[r].reduce((s,id)=>s+M.clampById[id].w,0)+3*(st.rows[r].length-1);
+    let guard=0;
+    while(guard++<20){const wu=wid('up'),wd=wid('down');let from=null;if(wu>avail&&wu>=wd)from='up';else if(wd>avail)from='down';if(!from)break;const to=from==='up'?'down':'up';
+      const cand=st.rows[from].map(id=>M.clampById[id]).sort((a,b)=>from==='up'?a.upv-b.upv:b.upv-a.upv)[0];if(wid(to)+cand.w+3>avail)break;
+      st.rows[from]=st.rows[from].filter(id=>id!==cand.id);st.rows[to].push(cand.id);cand.face=to;}
+  }else{st.rows.mid=M.clamps.map(c=>c.id);const w=M.clamps.reduce((s,c)=>s+c.w,0)+3*(M.clamps.length-1);if(w>avail)return null;}
+  // Baryzentrum: Klemmenreihenfolge nach Herkunft der Adern
+  const baryClamps=G=>{for(const r of ['up','down','mid']){const xs={};for(const id of st.rows[r]){const cl=M.clampById[id];
+      const v=cl.cores.map(cid=>{const k=M.coreById[cid];const cg=G?G.cab[k.cable]:null;if(cg)return cg.E[0];const s=side[k.cable];const p=entryPos(box,s,st.entry[k.cable],box.einf[s]);return p[0];});
+      xs[id]=v.reduce((a,b)=>a+b,0)/v.length+GRP_ORDER(cl.grp)*.01;}
+    st.rows[r].sort((a,b)=>xs[a]-xs[b]);}};
+  const clone=o=>JSON.parse(JSON.stringify(o));
+  const refine=st0=>{Object.assign(st,clone(st0));baryClamps(null);let G=computeGeo(M,box,st);if(!G.ok)return null;
+  // Baryzentrum: Leitungsreihenfolge je Seite nach Zielklemmen
+  for(let it=0;it<3;it++){
+    for(const s of SIDES){const ids=st.order[s];if(ids.length<1)continue;const hz=s==='top'||s==='bottom';
+      const m={};for(const id of ids){const c=M.cableById[id];const v=c.cores.filter(k=>G.core[k.id]&&!G.core[k.id].res).map(k=>G.core[k.id].P[hz?0:1]);m[id]=v.length?v.reduce((a,b)=>a+b,0)/v.length:0;}
+      ids.sort((a,b)=>m[a]-m[b]);pickEntries(s,ids.map(id=>m[id]));}
+    G=computeGeo(M,box,st);baryClamps(G);G=computeGeo(M,box,st);
+  }
+  return{G,st:clone(st)};};
+  // Varianten der Reihenzuordnung (Hebel): alle Kombinationen bis 7 Klemmen, sonst Stichprobe
+  let variants=[clone(st)];
+  if(M.klemme==='hebel'){const ids=M.clamps.map(c=>c.id),n=ids.length;const wOf=list=>list.reduce((s,id)=>s+M.clampById[id].w,0)+3*Math.max(0,list.length-1);
+    const masks=[];if(n<=7)for(let m=0;m<(1<<n);m++)masks.push(m);else{let seed=7;for(let i=0;i<90;i++){seed=(seed*1103515245+12345)&0x7fffffff;masks.push(seed%(1<<n));}}
+    for(const m of masks){const up=ids.filter((_,i)=>m>>i&1),dn=ids.filter((_,i)=>!(m>>i&1));if(wOf(up)>avail||wOf(dn)>avail)continue;const v=clone(st);v.rows.up=up;v.rows.down=dn;v.face={};variants.push(v);}}
+  if(quick)variants=variants.filter((_,i)=>i%Math.max(1,Math.floor(variants.length/10))===0);
+  let cands=[];
+  for(const v of variants){for(const c of M.clamps)c.face=v.rows.up.includes(c.id)?'up':v.rows.down.includes(c.id)?'down':c.face;const r=refine(v);if(r)cands.push(r);}
+  if(!cands.length)return null;
+  cands.sort((a,b)=>a.G.cost.score-b.G.cost.score);if(globalThis.DEBUG)console.log("variants",variants.length,"cands",cands.length,cands.slice(0,5).map(c=>c.G.cost.cross+"/"+c.G.cost.over+":"+c.st.rows.up.join(",")));
+  const top=cands.slice(0,quick?1:3);let G=null;
+  let winner=null;
+  for(const c0 of top){Object.assign(st,clone(c0.st));for(const c of M.clamps)c.face=st.rows.up.includes(c.id)?'up':st.rows.down.includes(c.id)?'down':c.face;const r=localSearch(computeGeo(M,box,st));if(!winner||r.G.cost.score<winner.G.cost.score)winner=r;}
+  return{G:computeGeo(M,box,winner.st),st:winner.st};
+  function localSearch(G){
+  let best=G,bestSt=clone(st);
+  const tryS=s2=>{const g=computeGeo(M,box,s2);if(g.ok&&g.cost.score<best.cost.score-1e-6){best=g;bestSt=clone(s2);return true;}return false;};
+  for(let pass=0;pass<(quick?1:3);pass++){let imp=false;
+    for(const r of ['up','down','mid'])for(let i=0;i+1<bestSt.rows[r].length;i++){const s2=clone(bestSt);[s2.rows[r][i],s2.rows[r][i+1]]=[s2.rows[r][i+1],s2.rows[r][i]];if(tryS(s2))imp=true;}
+    for(const s of SIDES)for(let i=0;i+1<bestSt.order[s].length;i++){const s2=clone(bestSt);const o=s2.order[s];[o[i],o[i+1]]=[o[i+1],o[i]];const e=o.map(id=>s2.entry[id]).sort((a,b)=>a-b);o.forEach((id,j)=>s2.entry[id]=e[j]);if(tryS(s2))imp=true;}
+    for(const s of SIDES){const k=box.einf[s],ids=bestSt.order[s];if(ids.length>=k||!ids.length)continue;
+      for(let j=0;j<ids.length;j++)for(const dlt of[-1,1]){const s2=clone(bestSt);const ne=s2.entry[ids[j]]+dlt;if(ne<0||ne>=k)continue;if(ids.some((id,q)=>q!==j&&s2.entry[id]===ne))continue;s2.entry[ids[j]]=ne;
+        const ok=ids.every((id,q)=>q===0||s2.entry[ids[q-1]]<s2.entry[id]);if(ok&&tryS(s2))imp=true;}}
+    if(M.klemme==='hebel')for(const r of['up','down'])for(const id of[...bestSt.rows[r]]){const s2=clone(bestSt);const to=r==='up'?'down':'up';s2.rows[r]=s2.rows[r].filter(x=>x!==id);
+      const xs=s2.rows[to];let bi=xs.length;const cx=best.cl[id].cx;for(let q=0;q<xs.length;q++)if(best.cl[xs[q]].cx>cx){bi=q;break;}xs.splice(bi,0,id);
+      s2.face=s2.face||{};s2.face[id]=to;if(tryS(s2))imp=true;}
+    if(M.klemme==='hebel')for(const r of['up','down'])for(const id of[...bestSt.rows[r]]){const s2=clone(bestSt);s2.face=s2.face||{};const cur=s2.face[id]||r;s2.face[id]=cur==='up'?'down':'up';if(tryS(s2))imp=true;}
+    if(!imp)break;}
+  return{G:best,st:bestSt};}
+}
+
+/* ---------------------------------------------------------------------
+   6) boxModel(cfg) → komplettes Modell
+   --------------------------------------------------------------------- */
+function boxModel(cfg){
+  const warnings=[];const W=(lvl,titel,warum,refs=[])=>warnings.push({lvl,titel,warum,refs});
+  const M={cfg,klemme:cfg.klemme||'hebel',warnings};
+  const ex=expand(cfg,W);OUTS_CUR=ex.outMap;M.outMap=ex.outMap;M.outs=ex.outs;M.cables=ex.cables;M.cableById=Object.fromEntries(M.cables.map(c=>[c.id,c]));
+  M.cores=assignCores(M.cables,W);M.coreById=Object.fromEntries(M.cores.map(k=>[k.id,k]));
+  M.groups=buildGroups(M.cores);
+  const nCab=M.cables.filter(c=>c.cores.length).length;
+  // Dosengröße wählen
+  let chosen=null,why=[];
+  const cands=cfg.dose&&cfg.dose!=='auto'?[DOSEN.find(d=>d.id===cfg.dose)]:DOSEN;
+  for(const box of cands){const ein=Object.values(box.einf).reduce((a,b)=>a+b,0);
+    if(nCab>ein){why.push(`${box.id}: nur ${ein} Einführungen`);continue;}
+    const qsx=Math.max(...M.cables.filter(c=>KABELTYPEN[c.typ]).map(c=>KABELTYPEN[c.typ].qs),0);if(qsx>box.qsMax){why.push(`${box.id}: nur bis ${String(box.qsMax).replace('.',',')} mm²`);continue;}
+    if(fuell(M,box)>FUELLGRAD.max){why.push(`${box.id}: zu voll`);continue;}
+    const fat=M.cables.find(c=>KABELTYPEN[c.typ]&&KABELTYPEN[c.typ].d>box.membranMaxD);if(fat){why.push(`${box.id}: Leitung zu dick`);continue;}
+    const Mc=Object.assign({},M);const r=layoutBox(Mc,box);if(!r){why.push(`${box.id}: Klemmen passen nicht`);continue;}
+    chosen={box,r,Mc};break;}
+  if(!chosen){// Notfall: größte Dose, ohne Prüfung zeichnen
+    const box=cfg.dose&&cfg.dose!=='auto'?DOSEN.find(d=>d.id===cfg.dose):DOSEN[DOSEN.length-1];
+    W('fehler',cfg.dose&&cfg.dose!=='auto'?`Dose ${box.id} ist zu klein`:'Zu viel für eine Dose',`${why.join(' · ')}. ${cfg.dose&&cfg.dose!=='auto'?'Stell die Größe auf „Automatisch“ oder nimm eine größere Dose.':'Teile die Leitungen auf zwei Dosen auf (eine Leitung „Weiter zur nächsten Dose“).'} Eine volle Dose wird warm, Adern knicken und Klemmen lösen sich beim Deckel-Aufsetzen.`);
+    const Mc=Object.assign({},M);let r=null;
+    // Großzügig: Platz-Checks aufweichen, damit trotzdem etwas gezeichnet wird
+    let fake;for(const f of[1.5,2,2.6]){fake=Object.assign({},box,{innen:[Math.round(box.innen[0]*f),Math.round(box.innen[1]*f)],einf:{top:4,right:4,bottom:4,left:4}});r=layoutBox(Mc,fake);if(r)break;}
+    chosen={box:fake,r,Mc,overflow:true};}
+  Object.assign(M,chosen.Mc);M.box=chosen.box;M.overflow=!!chosen.overflow;M.realBox=chosen.overflow?(cfg.dose&&cfg.dose!=='auto'?DOSEN.find(d=>d.id===cfg.dose):DOSEN[DOSEN.length-1]):chosen.box;
+  M.geo=chosen.r?chosen.r.G:null;M.st=chosen.r?chosen.r.st:null;
+  M.layout=M.geo?{cables:M.geo.cab,clamps:M.geo.cl,cores:M.geo.core,bridges:M.geo.br,crossings:M.geo.cost.cross,overClamp:M.geo.cost.over}:null;
+  M.size={id:M.realBox.id,name:M.realBox.name,innen:M.realBox.innen,ip:M.realBox.ip,einfuehrungen:M.realBox.einfGesamt,seitlich:Object.values(M.realBox.einf).reduce((a,b)=>a+b,0),fuellgrad:Math.round(fuell(M,M.realBox)*100),belegt:nCab,adern:M.cores.length};
+  checks(M,W);
+  M.steps=buildSteps(M);M.material=buildMaterial(M);M.info=buildInfo(M);
+  const rank={fehler:0,achtung:1,hinweis:2};warnings.sort((a,b)=>rank[a.lvl]-rank[b.lvl]);
+  return M;
+}
+
+function fuell(M,box){// Flächenheuristik (App-Annahme)
+  const est=M.groups.reduce((s,g)=>{const n=g.cores.length;if(M.klemme==='hebel'){const k=n<=5?1:Math.ceil((n-2)/3);const z=HEBEL.sizes[n<=2?2:n<=3?3:5];return s+k*z.breite*z.laenge;}return s+Math.max(1,Math.ceil(n/2))*LUESTER.raster*LUESTER.tiefe;},0);
+  return(est+M.cores.length*FUELLGRAD.aderFlaeche)/(box.innen[0]*box.innen[1]);}
+/* 7) Prüfungen */
+function checks(M,W){
+  const cab=M.cables,cfg=M.cfg;const refsOf=c=>['c:'+c.id,...c.cores.map(k=>'a:'+k.id)];
+  const feeds=cab.filter(c=>c.art==='zuleitung');
+  if(!feeds.length)W('fehler','Keine Zuleitung','Ohne Zuleitung vom Sicherungskasten kommt kein Strom in die Dose. Tippe auf „Zuleitung“ und füge sie hinzu.');
+  if(feeds.length>1)W('fehler','Zwei Zuleitungen in einer Dose','Zwei Einspeisungen können zwei Stromkreise miteinander verbinden. Dann ist ein Kreis trotz ausgeschalteter Sicherung noch unter Spannung. Ist eine davon die Weiterführung, nimm „Weiter zur nächsten Dose“.',feeds.flatMap(refsOf));
+  const marked=M.cores.filter(k=>k.marked);
+  for(const k of marked){const c=M.cableById[k.cable];W('achtung',`Blaue Ader als ${k.fn==='S'?'Schaltdraht':k.fn==='K'?'Wechseldraht':'Phase'} („${c.kurz}“)`,`Blau ist für den Neutralleiter vorgesehen. Zum Schalter wird kein N gebraucht – dann darf die blaue Ader als Phase genutzt werden (DIN VDE 0100-510). Empfehlung aus der Praxis: an beiden Enden schwarz oder braun kennzeichnen (Isolierband), sonst hält sie später jemand für N. Alternative ohne blau: NYM-J 5×1,5 (braun, schwarz, grau).`,['a:'+k.id,'c:'+c.id]);}
+  for(const g of M.groups){if(g.fn==='S'){const sw=g.cores.filter(k=>M.cableById[k.cable].art==='schalter'),other=g.cores.length-sw.length;
+      if(sw.length&&!other)W('achtung',`${grpName(g.key)} schaltet nichts`,'Vom Schalter kommt eine geschaltete Phase zurück, aber keine Lampe hängt daran. Wähle bei einer Lampe „geschaltet von“ diesen Schalter – oder entferne die Taste.',g.cores.map(k=>'a:'+k.id));
+      if(!sw.length)W('fehler',`${grpName(g.key)} ohne Schalter`,'Lampen hängen an einem Schaltausgang, der in dieser Dose nicht vom Schalter kommt.',g.cores.map(k=>'a:'+k.id));}
+    else if(g.cores.length===1&&g.fn!=='R')W('achtung',`${grpName(g.key)}: nur eine Ader`,'Diese Ader hat in der Dose kein Gegenstück. Sie wird trotzdem in eine eigene Klemme gesteckt, damit das blanke Ende isoliert ist. Prüfe, ob etwas fehlt.',g.cores.map(k=>'a:'+k.id));}
+  const lampsDauer=cab.filter(c=>c.art==='lampe'&&c.fnL[0]==='L');if(lampsDauer.length)W('hinweis','Lampe ohne Schalter',`${lampsDauer.map(c=>c.kurz).join(', ')} hängt an Dauerphase und ist immer an, solange die Sicherung an ist.`,lampsDauer.flatMap(refsOf));
+  const qs=[...new Set(cab.filter(c=>KABELTYPEN[c.typ]).map(c=>KABELTYPEN[c.typ].qs))];
+  if(qs.length>1){const thin=cab.filter(c=>KABELTYPEN[c.typ]&&KABELTYPEN[c.typ].qs===Math.min(...qs));
+    W('achtung','Querschnitt gemischt (1,5 und 2,5 mm²)',`Die Sicherung im Sicherungskasten muss die dünnste Leitung im Stromkreis schützen. Hängt 1,5 mm² an einer Dose mit 2,5-mm²-Zuleitung, richtet sich die Sicherung nach 1,5 mm² (Verlegeart und Länge entscheiden). Das mit der Elektrofachkraft klären.${M.klemme==='luester'?' Bei Lüsterklemmen: keine zwei unterschiedlich dicken Adern unter eine Schraube.':''}`,thin.flatMap(refsOf));}
+  const fq=feeds[0]&&KABELTYPEN[feeds[0].typ]?KABELTYPEN[feeds[0].typ].qs:null;
+  const thick=cab.filter(c=>fq&&KABELTYPEN[c.typ]&&KABELTYPEN[c.typ].qs>fq);if(thick.length)W('hinweis','Dickere Leitung hinter dünnerer Zuleitung',`${thick.map(c=>c.kurz).join(', ')} ist dicker als die Zuleitung. Das schadet nicht, bringt aber nichts: Belastbar ist nur so viel, wie die Zuleitung und ihre Sicherung erlauben.`,thick.flatMap(refsOf));
+  const sd=cab.filter(c=>c.art==='steckdose');if(sd.length&&cab.some(c=>c.art==='lampe'))W('hinweis','Steckdose und Licht im selben Stromkreis','Das ist erlaubt. Nachteil: Löst die Sicherung oder der FI wegen eines Geräts an der Steckdose aus, ist auch das Licht aus. Für Steckdosen bis 32 A ist ein 30-mA-FI Pflicht.',sd.flatMap(refsOf));
+  const res=M.cores.filter(k=>k.fn==='R');if(res.length)W('hinweis',`${res.length} Reserve-Ader${res.length>1?'n':''}`,`${res.map(k=>ADERFARBEN[k.col].name+' („'+M.cableById[k.cable].kurz+'“)').join(', ')}: wird nicht gebraucht. Nicht abisolieren und ordentlich in die Dose legen. Am anderen Ende genauso.`,res.map(k=>'a:'+k.id));
+  const chains=M.groups.filter(g=>M.clamps.filter(c=>c.grp===g.key).length>1);
+  for(const g of chains){const nk=M.clamps.filter(c=>c.grp===g.key).length;W('hinweis',`${grpName(g.key)}: ${g.cores.length} Adern → ${nk===2?'zwei':nk} ${M.klemme==='hebel'?'Klemmen':'Klemmstellen'}`,M.klemme==='hebel'?`Eine Hebelklemme hat höchstens 5 Plätze. Deshalb mehrere Klemmen, verbunden mit je einer kurzen ${g.fn==='PE'?'grün-gelben':g.fn==='N'?'blauen':'braunen oder schwarzen'} Brücke (Reststück einer Ader, gleicher Querschnitt).`:`Eine Klemmstelle nimmt nur ${LUESTER.leiterJeSeite} Ader je Seite. Deshalb mehrere Stellen, verbunden mit einer kurzen Drahtbrücke.`,M.clamps.filter(c=>c.grp===g.key).map(c=>'k:'+c.id));}
+  const dbl=M.klemme==='luester'?M.clamps.filter(c=>c.m>1):[];
+  if(dbl.length)W('achtung','Zwei Adern unter einer Schraube',`Bei ${dbl.map(c=>grpKurz(c.grp)).join(', ')} kommen mehr als 2 Adern zusammen. Mit 1 Ader je Klemmseite geht das mit Lüsterklemmen nicht – die Brücken belegen alle Plätze. Die App zeichnet deshalb 2 Adern je Seite. Das ist nur zulässig, wenn der Hersteller es erlaubt (gleicher Querschnitt). Sicherer: Hebelklemmen.`,dbl.map(c=>'k:'+c.id));
+  if(M.layout){const top=M.cables.filter(c=>M.layout.cables[c.id]&&M.layout.cables[c.id].side==='top');if(top.length)W('hinweis','Feuchtraum: Leitungen besser von unten oder seitlich',`Praxisregel: In feuchten Räumen (Stall, Keller, außen) Leitungen von unten oder von der Seite einführen, damit Wasser am Mantel nicht in die Dose läuft. Von oben kommen hier: ${top.map(c=>c.kurz).join(', ')}. Mit „Richtung“ kannst du das ändern.`,top.map(c=>'c:'+c.id));}
+  if(M.klemme==='luester')W('hinweis','Lüsterklemmen: Schrauben nachziehen','Lüsterklemmen halten nur, wenn die Schraube fest sitzt. Nach ein paar Minuten nachziehen, Zugprobe machen. Feindrähtige Adern nur mit Aderendhülse. Hebelklemmen sind für Einsteiger sicherer: man sieht, ob die Ader richtig steckt.',M.clamps.map(c=>'k:'+c.id));
+  const wt=cab.filter(c=>c.art==='weiter'&&c.fnL.length>1);if(wt.length)W('hinweis','Geschaltetes Licht wird weitergegeben',`„${wt.map(c=>c.kurz).join(', ')}“ nimmt zusätzlich die geschaltete Phase mit. In der nächsten Dose kommt sie auf der ${wt.map(c=>c.cores.filter(k=>k.fn==='S').map(k=>ADERFARBEN[k.col].name).join('/')).join(', ')}en Ader an.`,wt.flatMap(refsOf));
+  if(M.layout&&M.layout.crossings>0)W('hinweis',`${M.layout.crossings} Kreuzung${M.layout.crossings>1?'en':''} der Adern`,'Ganz ohne Kreuzung geht es bei dieser Kombination nicht. Das ist unkritisch – die Adern dürfen sich berühren. Wichtig ist nur, dass sie nicht unter Zug stehen und nicht über scharfe Kanten laufen.',[]);
+}
+
+/* 8) Anleitung */
+function coreLabel(M,k){const c=M.cableById[k.cable];return`${ADERFARBEN[k.col].name}${k.marked?' (markiert)':''} von „${c.kurz}“`;}
+function clampTxt(M,g){const cls=M.clamps.filter(c=>c.grp===g.key);if(M.klemme==='hebel'){const s=cls.map(c=>c.pol+'-fach').join(' + ');return cls.length>1?`${cls.length===2?'zwei':cls.length} Hebelklemmen (${s}) mit ${cls.length===2?'Brücke':'Brücken'}`:`eine Hebelklemme ${s}`;}const p=cls[0].pol;return p>1?`${p} Stellen der Lüsterklemme mit Drahtbrücke`:'eine Stelle der Lüsterklemme';}
+function buildSteps(M){
+  const S=[];const box=M.realBox;const L=M.layout;
+  S.push({titel:'Strom aus – und prüfen',text:['Sicherung des Stromkreises ausschalten und gegen Wiedereinschalten sichern (Zettel/Sperre).','Mit einem zweipoligen Spannungsprüfer an allen Adern feststellen, dass keine Spannung anliegt. Das macht die Elektrofachkraft.'],tip:'Die fünf Sicherheitsregeln gelten auch für „nur kurz eine Lampe anklemmen“.',refs:[]});
+  const used=M.cables.filter(c=>L&&L.cables[c.id]);
+  const entries=used.map(c=>{const g=L.cables[c.id];return`${entryName(g.side,g.ei,g.ek)}: ${c.name}`;});
+  S.push({titel:`Dose an die Wand, ${used.length} Einführungen öffnen`,text:[`${box.name} mm (${box.bsp}, ${box.ip}) mit zwei Schrauben befestigen.`,'Nur diese Membranen öffnen – mit einem kleinen Loch, das kleiner als die Leitung ist, damit die Membran dicht anliegt:'],list:entries,refs:used.map(c=>'e:'+c.id)});
+  const ord=[...used].sort((a,b)=>(a.art==='zuleitung'?-1:0)-(b.art==='zuleitung'?-1:0));
+  for(const c of ord){const g=L.cables[c.id];const cols=c.cores.map(k=>ADERFARBEN[k.col].name+(k.fn==='R'?' (Reserve)':''));
+    S.push({titel:`„${c.kurz}“ einführen und abmanteln`,text:[`${c.typ} ${c.name} durch die Einführung ${entryName(g.side,g.ei,g.ek)} schieben.`,`Mantel so abnehmen, dass er noch ${TEXTE.mantelInDose} in die Dose ragt. Adern dabei nicht einschneiden.`,`Adern auf ${TEXTE.aderLaenge} kürzen und ${M.klemme==='hebel'?HEBEL.abisolier:LUESTER.abisolier} mm abisolieren${c.cores.some(k=>k.fn==='R')?' (Reserve-Ader nicht)':''}.`],list:[`Adern: ${cols.join(', ')}`],refs:['c:'+c.id,'e:'+c.id,...c.cores.map(k=>'a:'+k.id)]});}
+  const marked=M.cores.filter(k=>k.marked);
+  if(marked.length)S.push({titel:'Blaue Schaltdrähte kennzeichnen',text:['Diese blauen Adern sind hier keine Neutralleiter. Ein Ring schwarzes oder braunes Isolierband direkt am Mantel – auch am anderen Ende beim Schalter:'],list:marked.map(k=>coreLabel(M,k)),refs:marked.map(k=>'a:'+k.id)});
+  const howH='Hebel ganz hochklappen, Ader bis zum Anschlag einstecken, Hebel zudrücken.';const howL='Ader bis zum Anschlag einstecken, Schraube fest anziehen.';
+  for(const g of M.groups){const f=FN[g.fn];const cls=M.clamps.filter(c=>c.grp===g.key);
+    let titel=g.fn==='PE'?'Schutzleiter zuerst verbinden':g.fn==='N'?'Neutralleiter verbinden':g.fn==='L'?'Dauerphase verbinden':grpName(g.key)+' verbinden';
+    const brs=M.bridges.filter(b=>b.grp===g.key);
+    const text=[`${g.cores.length} ${g.cores.length===1?'Ader':'Adern'} in ${clampTxt(M,g)}. ${M.klemme==='hebel'?howH:howL}`];
+    if(brs.length)text.push(M.klemme==='hebel'?`Zuerst die Brücke stecken: ein ca. 6 cm langes Aderstück (gleiche Farbe, gleicher Querschnitt) verbindet die Klemmen.`:`Die Stellen mit einem kurzen Drahtstück verbinden (Brücke).`);
+    if(g.fn==='PE')text.push('Der Schutzleiter kommt zuerst, damit er beim Arbeiten nie fehlt. Lass ihn etwas länger als die anderen Adern.');
+    S.push({titel,text,list:g.cores.map(k=>coreLabel(M,k)),refs:[...g.cores.map(k=>'a:'+k.id),...cls.map(c=>'k:'+c.id),...brs.map(b=>'b:'+b.id)],grp:g.key});}
+  const res=M.cores.filter(k=>k.fn==='R');
+  if(res.length)S.push({titel:'Reserve-Adern versorgen',text:['Nicht abisolieren, nicht abschneiden. Ordentlich an den Rand der Dose legen. Wer ganz sicher gehen will, steckt jede einzeln in eine eigene kleine Klemme.'],list:res.map(k=>coreLabel(M,k)),refs:res.map(k=>'a:'+k.id)});
+  S.push({titel:'Prüfen',text:['Zugprobe: an jeder Ader kräftig ziehen – keine darf herausrutschen.',`Kein blankes Kupfer außerhalb der Klemmen sichtbar.${M.klemme==='hebel'?' Alle Hebel unten.':' Alle Schrauben fest.'}`,'Adern locker falten, Klemmen in die Mitte legen, Deckel aufsetzen – nichts darf eingeklemmt werden.','Vor dem Einschalten misst die Elektrofachkraft: Schutzleiter durchgängig, Isolationswiderstand, dann Funktion.'],refs:[...M.clamps.map(c=>'k:'+c.id),...M.cores.map(k=>'a:'+k.id)]});
+  return S;
+}
+
+/* 9) Material */
+function buildMaterial(M){
+  const R=[];R.push([1,`${M.realBox.name} mm`,`${M.realBox.bsp}, ${M.realBox.einfGesamt} Einführungen, bis ${String(M.realBox.qsMax).replace('.',',')} mm², ${M.realBox.ip}${M.overflow?' – reicht NICHT, siehe Prüfen':''}`]);
+  if(M.klemme==='hebel'){const cnt={};for(const c of M.clamps)cnt[c.pol]=(cnt[c.pol]||0)+1;for(const p of Object.keys(cnt).sort())R.push([cnt[p],HEBEL.name(p),`${HEBEL.sizes[p].art}, 0,2–${HEBEL.qsMax} mm², ${HEBEL.abisolier} mm abisolieren`]);}
+  else{const pos=M.clamps.reduce((s,c)=>s+c.pol,0);R.push([pos,`Stellen ${LUESTER.name}`,`als Leiste, in ${M.clamps.length} Stücke schneiden`]);}
+  if(M.bridges.length){const byG={};for(const b of M.bridges)byG[b.grp]=(byG[b.grp]||0)+1;R.push([M.bridges.length,'Brücke ca. 6 cm',Object.entries(byG).map(([g,n])=>`${n}× ${grpKurz(g)}`).join(', ')+' – Reststück einer Ader, gleiche Farbe']);}
+  if(M.cores.some(k=>k.marked))R.push([1,'Isolierband schwarz oder braun','zum Kennzeichnen blauer Schaltdrähte']);
+  const t={};for(const c of M.cables)if(c.typ)t[c.typ]=(t[c.typ]||0)+1;for(const[k,n]of Object.entries(t))R.push([n+'×',k,'Länge vor Ort messen, je Ende 15 cm Reserve']);
+  R.push([2,'Schrauben + Dübel','passend zur Wand, für die Dose']);
+  return{rows:R,werkzeug:['Zweipoliger Spannungsprüfer','Abmantelwerkzeug','Abisolierzange','Seitenschneider',M.klemme==='luester'?'Schlitz-Schraubendreher 3 mm':'—'].filter(x=>x!=='—')};
+}
+
+/* 10) Erklärtexte für Antippen */
+function buildInfo(M){
+  const I={};
+  for(const c of M.cables){const L=M.layout&&M.layout.cables[c.id];
+    I['c:'+c.id]={t:`Leitung ${c.name}`,tags:[c.typ+(c.auto?' (automatisch)':'')],p:[`Kommt durch die Einführung ${L?entryName(L.side,L.ei,L.ek):'—'}.`,'Adern: '+c.cores.map(k=>`${ADERFARBEN[k.col].name} = ${k.fn==='R'?'Reserve':grpName(k.grp)}${k.marked?' (markieren!)':''}`).join(' · ')]};
+    I['e:'+c.id]={t:`Einführung ${L?entryName(L.side,L.ei,L.ek):''}`,tags:['Membran'],p:['Gummimembran in der Dosenwand. Mit einem kleinen Loch öffnen, Leitung durchschieben: Die Membran schließt dicht um den Mantel (Schutz gegen Wasser und Staub).',`Hier: ${c.name} (${c.typ}).`]};}
+  for(const k of M.cores){const c=M.cableById[k.cable];const cl=M.clamps.find(x=>x.cores.includes(k.id));
+    const others=cl?M.groups.find(g=>g.key===k.grp).cores.filter(o=>o.id!==k.id).map(o=>coreLabel(M,o)):[];
+    let fnTxt=FN[k.fn].txt;if(k.fn==='S'){const o=OUTS_CUR[k.grp.slice(2)];fnTxt=c.art==='schalter'?`Kommt vom ${o?o.label:'Schalter'} zurück und führt nur Strom, wenn er eingeschaltet ist.`:c.art==='weiter'?`Gibt die geschaltete Phase (${o?o.label:''}) an die nächste Dose weiter.`:`Bringt den Strom zur Lampe, wenn ${o?o.label:'der Schalter'} eingeschaltet ist.`;}
+    if(k.fn==='L'&&c.art==='schalter')fnTxt='Bringt die Dauerphase zum Schalter. Der Schalter gibt sie, wenn er an ist, über die andere Ader zurück.';
+    I['a:'+k.id]={t:`${ADERFARBEN[k.col].name[0].toUpperCase()+ADERFARBEN[k.col].name.slice(1)}e Ader · ${c.kurz}`,tags:[k.fn==='R'?'Reserve':grpName(k.grp),k.qs.toString().replace('.',',')+' mm²'],p:[fnTxt,k.marked?'Achtung: Blau, aber hier eine Phase. An beiden Enden schwarz oder braun kennzeichnen.':'',cl?`Klemme: ${M.klemme==='hebel'?HEBEL.name(cl.pol):LUESTER.name}${others.length?' zusammen mit '+others.join(', '):''}.`:''].filter(Boolean)};}
+  for(const cl of M.clamps){const g=M.groups.find(x=>x.key===cl.grp);
+    I['k:'+cl.id]={t:M.klemme==='hebel'?`${HEBEL.name(cl.pol)} · ${grpKurz(cl.grp)}`:`Lüsterklemme · ${grpKurz(cl.grp)}`,tags:[grpName(cl.grp)],p:[M.klemme==='hebel'?'Alle Plätze einer Hebelklemme sind innen miteinander verbunden. Deshalb kommen nur Adern mit derselben Funktion hinein.':'Jede Stelle ist ein Messingröhrchen mit zwei Schrauben. Alle Adern in einer Stelle sind verbunden.',`Hier: ${cl.cores.map(id=>coreLabel(M,M.coreById[id])).join(', ')}.`,FN[g.fn].txt]};}
+  for(const b of M.bridges)I['b:'+b.id]={t:'Brücke',tags:[grpName(b.grp)],p:['Kurzes Aderstück, das zwei Klemmen derselben Gruppe verbindet. Nötig, weil eine Klemme nicht genug Plätze hat. Gleiche Farbe und gleicher Querschnitt wie die übrigen Adern.']};
+  return I;
+}
+
+/* ---------------------------------------------------------------------
+   11) boxSVG(model, opts) → SVG-Markup (Einheit mm)
+   opts: {focus:Set<ref>|null, pulse:Set<ref>}
+   --------------------------------------------------------------------- */
+function pathD(segs){return segs.map((s,i)=>(i?'':`M${f1(s[0][0])} ${f1(s[0][1])}`)+`C${f1(s[1][0])} ${f1(s[1][1])} ${f1(s[2][0])} ${f1(s[2][1])} ${f1(s[3][0])} ${f1(s[3][1])}`).join('');}
+// Etiketten außen: echte Breiten, Überlappung per 1D-Verschiebung auflösen, Kabel möglichst gerade
+function labelLayout(M){if(M._lab)return M._lab;const[W,H]=M.box.innen;const t=M.box.wand;const L=M.layout;const out={};if(!L)return(M._lab=out);
+  for(const sd of SIDES){const ids=(M.st.order[sd]||[]).filter(id=>L.cables[id]);if(!ids.length)continue;const hz=sd==='top'||sd==='bottom';
+    const it=ids.map(id=>{const c=M.cableById[id],g=L.cables[id];const t1=c.name,t2=c.typ+(c.sub?' · '+c.sub:'');const w=Math.max(t1.length*2.3,t2.length*1.68)+7;
+      return{id,c,g,t1,t2,w,h:12.6,want:hz?g.Pe[0]:g.Pe[1]};});
+    const size=x=>hz?x.w+3:x.h+3;
+    it.forEach(x=>x.pos=x.want);
+    for(let r=0;r<40;r++){let mv=false;for(let j=1;j<it.length;j++){const a=it[j-1],b=it[j];const need=(size(a)+size(b))/2-(b.pos-a.pos);if(need>0){a.pos-=need/2;b.pos+=need/2;mv=true;}}if(!mv)break;}
+    for(const x of it){const g=x.g;const lat=x.pos;let P2;
+      if(sd==='top')P2=[lat,-t-26];else if(sd==='bottom')P2=[lat,H+t+26];else if(sd==='left')P2=[-t-8-x.w/2,lat];else P2=[W+t+8+x.w/2,lat];
+      out[x.id]={...x,P2,sd};}}
+  // Bounds
+  let x0=-t-20,y0=-t-20,x1=W+t+20,y1=H+t+20;
+  for(const k in out){const o=out[k];x0=Math.min(x0,o.P2[0]-o.w/2-4);x1=Math.max(x1,o.P2[0]+o.w/2+4);y0=Math.min(y0,o.P2[1]-o.h/2-10);y1=Math.max(y1,o.P2[1]+o.h/2+10);}
+  M._lab=out;M._labB={x:x0,y:y0,w:x1-x0,h:y1-y0};return out;}
+function boxBounds(M){labelLayout(M);if(M._labB)return M._labB;const[W,H]=M.box.innen;const t=M.box.wand;return{x:-t-30,y:-t-30,w:W+2*t+60,h:H+2*t+60};}
+// opts: {focus:Set|Array von Refs, step:Index (hebt Schritt hervor), doc:true (ohne Interaktion, für PDF/Druck)}
+function boxSVG(M,opts={}){OUTS_CUR=M.outMap;
+  const box=M.box,[W,H]=box.innen,t=box.wand,L=M.layout;const B=boxBounds(M);
+  let F=opts.focus?new Set(opts.focus):null;if(opts.step!=null&&M.steps[opts.step]){const r=M.steps[opts.step].refs;F=r.length?new Set(r):null;}
+  const DOC=!!opts.doc;
+  const hl=r=>F&&F.has(r)?' class="hl"':'';
+  let s=`<defs>
+  <pattern id="putz" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#ECE5D8"/><circle cx="3" cy="4" r=".5" fill="#d9d0bf"/><circle cx="10" cy="9" r=".6" fill="#dcd3c3"/><circle cx="7" cy="12" r=".4" fill="#d4cab8"/><circle cx="12" cy="2" r=".35" fill="#e2dacb"/></pattern>
+  <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1.4" stdDeviation="1.8" flood-color="#5a4626" flood-opacity=".28"/></filter>
+  <filter id="sh2" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy=".6" stdDeviation=".7" flood-color="#000" flood-opacity=".3"/></filter>
+  <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9E6E0"/><stop offset=".12" stop-color="#F4F2EE"/><stop offset="1" stop-color="#F1EEE9"/></linearGradient>
+  <linearGradient id="hbody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset="1" stop-color="#d9dee3"/></linearGradient>
+  <linearGradient id="brass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b98d35"/><stop offset=".5" stop-color="#e6c574"/><stop offset="1" stop-color="#b08530"/></linearGradient>
+  </defs>`;
+  s+=`<rect x="${B.x}" y="${B.y}" width="${B.w}" height="${B.h}" fill="url(#putz)"/>`;
+  // Dose: Schale
+  s+=`<rect x="${-t}" y="${-t}" width="${W+2*t}" height="${H+2*t}" rx="9" fill="#E4E1DB" stroke="#A9A397" stroke-width=".6" filter="url(#sh)"/>`;
+  s+=`<rect x="${-t+1}" y="${-t+1}" width="${W+2*t-2}" height="${H+2*t-2}" rx="8" fill="none" stroke="#F6F4F0" stroke-width=".8"/>`;
+  s+=`<rect x="0" y="0" width="${W}" height="${H}" rx="4" fill="url(#floor)" stroke="#C9C4BA" stroke-width=".5"/>`;
+  // Deckel-Schraubdome in den Ecken
+  for(const[x,y]of[[7,7],[W-7,7],[7,H-7],[W-7,H-7]])s+=`<circle cx="${x}" cy="${y}" r="5.2" fill="#DCD8D0" stroke="#BDB7AC" stroke-width=".5"/><circle cx="${x}" cy="${y}" r="2.3" fill="#9c968c"/><path d="M${x-1.4} ${y}h2.8M${x} ${y-1.4}v2.8" stroke="#E9E6E0" stroke-width=".5"/>`;
+  // Membran-Einführungen
+  const usedE={};if(L)for(const c of M.cables){const g=L.cables[c.id];if(g)usedE[g.side+g.ei]=c;}
+  for(const sd of SIDES){const k=box.einf[sd];for(let i=0;i<k;i++){const p=entryPos(box,sd,i,k);const hz=sd==='top'||sd==='bottom';const c=usedE[sd+i];
+    const mw=15,cx=p[0],cy=p[1];const ox=hz?0:(sd==='left'?-t/2:t/2),oy=hz?(sd==='top'?-t/2:t/2):0;
+    const rect=hz?`x="${cx-mw/2}" y="${cy+oy-t/2}" width="${mw}" height="${t}"`:`x="${cx+ox-t/2}" y="${cy-mw/2}" width="${t}" height="${mw}"`;
+    s+=`<g${c?` data-ref="e:${c.id}"`+hl('e:'+c.id):''}><rect ${rect} rx="1.6" fill="#3b3b3e"/>`;
+    if(!c){for(const r of[5.5,3.6,1.8])s+=`<ellipse cx="${cx+ox}" cy="${cy+oy}" rx="${hz?r:t*.32}" ry="${hz?t*.32:r}" fill="none" stroke="#5d5d61" stroke-width=".45"/>`;}
+    s+=`</g>`;}}
+  if(!L){s+=`<text x="${W/2}" y="${H/2}" text-anchor="middle" font-size="5" fill="#9A3A22" font-weight="700">Kein Platz</text>`;return s;}
+  // Leitungen außen + Beschriftung
+  const LB=labelLayout(M);const labels=[];
+  for(const id in LB){const o=LB[id],g=o.g,c=o.c,sd=o.sd;const hz=sd==='top'||sd==='bottom';const d=KABELTYPEN[c.typ]?KABELTYPEN[c.typ].d:9;const outv=[-g.n[0],-g.n[1]];
+    const Po=add2(g.Pe,outv,t);const P2=o.P2;
+    // Kabel läuft am Etikett vorbei bis zum Rand; seitlich: Etikett liegt auf dem Kabel
+    const Q=hz?[P2[0],P2[1]]:[sd==='left'?-t-8:W+t+8,P2[1]];
+    const P3=hz?[P2[0],sd==='top'?B.y-2:B.y+B.h+2]:[sd==='left'?B.x-2:B.x+B.w+2,P2[1]];
+    const bend=Math.abs(hz?Q[0]-Po[0]:Q[1]-Po[1])>0.5;
+    const path=`M${f1(g.E[0])} ${f1(g.E[1])}L${f1(Po[0])} ${f1(Po[1])}`+(bend?`C${f1(Po[0]+outv[0]*9)} ${f1(Po[1]+outv[1]*9)} ${f1(Q[0]-outv[0]*9)} ${f1(Q[1]-outv[1]*9)} ${f1(Q[0])} ${f1(Q[1])}`:`L${f1(Q[0])} ${f1(Q[1])}`)+`L${f1(P3[0])} ${f1(P3[1])}`;
+    g.outerPath=path;g.d=d;labels.push(o);}
+  // Ader-Zeichnung
+  const coreSvg=(k,segs,res)=>{const col=ADERFARBEN[k.col],w=ADER_D[k.qs]||2.9,d=pathD(segs);const ref='a:'+k.id;
+    let o=`<g data-ref="${ref}"${hl(ref)}${opts.pulse&&opts.pulse.has(ref)?' class="hl pulse"':''}><path d="${d}" fill="none" stroke="${col.dark}" stroke-width="${w+.5}" stroke-linecap="round"/>`;
+    o+=`<path d="${d}" fill="none" stroke="${col.hex}" stroke-width="${w}" stroke-linecap="round"/>`;
+    if(col.stripe)o+=`<path d="${d}" fill="none" stroke="${col.stripe}" stroke-width="${w*.98}" stroke-dasharray="2.4 2.4"/>`;
+    o+=`<path d="${d}" fill="none" stroke="#fff" stroke-opacity="${k.col==='sw'?.22:.3}" stroke-width="${w*.28}" stroke-linecap="round" transform="translate(-.35 -.35)"/>`;
+    if(k.marked){const p=bez(...segs[segs.length-1],.15);const p0=bez(...segs[0],.12);for(const q of[p0,p])o+=`<circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="${w*.62}" fill="#1c1c1e" stroke="#fff" stroke-width=".35"/>`;}
+    if(res){const e=segs[segs.length-1][3];o+=`<circle cx="${f1(e[0])}" cy="${f1(e[1])}" r="${w*.55}" fill="${col.hex}" stroke="${col.dark}" stroke-width=".4"/>`;}
+    else{const sg=segs[segs.length-1];const P=sg[3];const dx=P[0]-sg[2][0],dy=P[1]-sg[2][1];const dl=Math.hypot(dx,dy)||1;o+=`<path d="M${f1(P[0])} ${f1(P[1])}l${f1(dx/dl*3.2)} ${f1(dy/dl*3.2)}" stroke="#c87533" stroke-width="${w*.5}" stroke-linecap="round"/>`;}
+    if(!DOC)o+=`<path d="${d}" fill="none" stroke="transparent" stroke-width="7" pointer-events="stroke"/>`;return o+`</g>`;};
+  // Mantel (innen + außen), dann Adern, dann Klemmen
+  let sheaths='',cores='';
+  for(const c of M.cables){const g=L.cables[c.id];if(!g||!g.outerPath)continue;const ref='c:'+c.id;const d=g.d;
+    sheaths+=`<g data-ref="${ref}"${hl(ref)}><path d="${g.outerPath}" fill="none" stroke="#9f9f9f" stroke-width="${d+.8}"/><path d="${g.outerPath}" fill="none" stroke="#d6d6d4" stroke-width="${d}"/><path d="${g.outerPath}" fill="none" stroke="#efefed" stroke-width="${d*.28}" transform="translate(-.6 -.6)"/>`;
+    const e1=add2(g.E,g.l,d/2),e2=add2(g.E,g.l,-d/2);sheaths+=`<path d="M${f1(e1[0])} ${f1(e1[1])}L${f1(e2[0])} ${f1(e2[1])}" stroke="#8d8d8b" stroke-width=".8"/>${DOC?'':`<path d="${g.outerPath}" fill="none" stroke="transparent" stroke-width="${d+4}" pointer-events="stroke"/>`}</g>`;}
+  const coreList=[...M.cores].sort((a,b)=>(a.fn==='PE'?0:1)-(b.fn==='PE'?0:1));
+  for(const k of coreList){const g=L.cores[k.id];if(!g||!g.segs)continue;cores+=coreSvg(k,g.segs,g.res);}
+  // Brücken
+  let bridges='';
+  for(const b of L.bridges){const g=M.groups.find(x=>x.key===b.grp);const col=g.fn==='PE'?'gnge':g.fn==='N'?'bl':g.fn==='S'?'sw':g.fn==='K'?'gr':'br';
+    const k={id:'',col,qs:1.5};const ref='b:'+b.id;
+    bridges+=coreSvg(k,b.segs,false).replace(`data-ref="a:"`,`data-ref="${ref}"`).replace(hl('a:'),hl(ref));}
+  // Klemmen
+  let clamps='';
+  for(const cl of M.clamps){const g=L.clamps[cl.id];if(!g)continue;const ref='k:'+cl.id;const grp=M.groups.find(x=>x.key===cl.grp);const tagc=FN[grp.fn].tag;
+    clamps+=`<g data-ref="${ref}"${hl(ref)}>`;const TT=g.orient==='v'?' transform="matrix(0 1 1 0 0 0)"':'';const TP=p=>g.orient==='v'?[p[1],p[0]]:p;
+    clamps+=`<g${TT}>`;let tagAt=null;
+    if(cl.art==='hebel'){const y0=g.face==='up'?g.yFace:g.yFace-g.L;const pw=g.w/cl.pol;
+      clamps+=`<rect x="${f1(g.x0)}" y="${f1(y0)}" width="${f1(g.w)}" height="${g.L}" rx="1.8" fill="url(#hbody)" fill-opacity=".92" stroke="#8f98a1" stroke-width=".45" filter="url(#sh2)"/>`;
+      for(let i=0;i<cl.pol;i++){const x=g.x0+i*pw;const ly=g.face==='up'?y0+3.6:y0+1.2;
+        clamps+=`<rect x="${f1(x+.9)}" y="${f1(ly)}" width="${f1(pw-1.8)}" height="${f1(g.L-4.8)}" rx="1.2" fill="#F08A1C" stroke="#b9640e" stroke-width=".4"/>`;
+        const ry=g.face==='up'?ly+g.L-7.2:ly+1.6;clamps+=`<rect x="${f1(x+pw*.28)}" y="${f1(ry)}" width="${f1(pw*.44)}" height="1.6" rx=".6" fill="#ffb15f"/>`;
+        const hy=g.face==='up'?g.yFace+.9:g.yFace-.9;clamps+=`<ellipse cx="${f1(x+pw/2)}" cy="${f1(hy)}" rx="${f1(Math.min(1.9,pw*.3))}" ry=".75" fill="#4b5258"/>`;}
+      tagAt=TP([g.cx,y0+g.L/2]);}
+    else{const y0=g.yFace;const pw=LUESTER.raster;
+      clamps+=`<rect x="${f1(g.x0)}" y="${f1(y0)}" width="${f1(g.w)}" height="${g.L}" rx="1.2" fill="#f7f5ef" fill-opacity=".9" stroke="#a9a59a" stroke-width=".5" filter="url(#sh2)"/>`;
+      for(let j=0;j<cl.pol;j++){const x=g.x0+j*pw;clamps+=`<rect x="${f1(x+pw*.22)}" y="${f1(y0+1)}" width="${f1(pw*.56)}" height="${g.L-2}" rx="1" fill="url(#brass)"/>`;
+        for(const yy of[y0+g.L*.27,y0+g.L*.73])clamps+=`<circle cx="${f1(x+pw/2)}" cy="${f1(yy)}" r="2.5" fill="#d2d4d6" stroke="#7d8186" stroke-width=".4"/><path d="M${f1(x+pw/2-1.8)} ${f1(yy)}h3.6" stroke="#5b5f63" stroke-width=".6"/>`;
+        if(j)clamps+=`<path d="M${f1(x)} ${f1(y0+.5)}v${g.L-1}" stroke="#cfcac0" stroke-width=".6"/>`;}
+      tagAt=TP([g.cx,y0+g.L/2]);}
+    clamps+=`</g>`;
+    {const tw=Math.max(9,grpKurz(cl.grp).length*2.9+4);const[tx,ty]=tagAt;
+      clamps+=`<rect x="${f1(tx-tw/2)}" y="${f1(ty-2.9)}" width="${f1(tw)}" height="5.8" rx="2.9" fill="${tagc}" stroke="#fff" stroke-width=".5"/>${grp.fn==='PE'?`<rect x="${f1(tx-tw/2+1.2)}" y="${f1(ty-.9)}" width="${f1(tw-2.4)}" height="1.8" fill="#f2d22e" opacity=".6"/>`:''}<text x="${f1(tx)}" y="${f1(ty+1.45)}" text-anchor="middle" font-size="4" font-weight="800" fill="#fff" style="paint-order:stroke" stroke="${tagc}" stroke-width=".6">${esc(grpKurz(cl.grp))}</text>`;}
+    clamps+=`</g>`;}
+  // Beschriftung (Etiketten an den Leitungsenden)
+  let lab='';
+  for(const{id,P2,t1,t2,w}of labels){const ref='c:'+id;
+    lab+=`<g data-ref="${ref}"${hl(ref)}><rect x="${f1(P2[0]-w/2)}" y="${f1(P2[1]-6.3)}" width="${f1(w)}" height="12.6" rx="4" fill="#FFFDF9" stroke="#1A1A1A" stroke-width=".55"/><text x="${f1(P2[0])}" y="${f1(P2[1]-.8)}" text-anchor="middle" font-size="4.3" font-weight="800" fill="#1A1A1A">${esc(t1)}</text><text x="${f1(P2[0])}" y="${f1(P2[1]+4.1)}" text-anchor="middle" font-size="3.1" font-weight="600" fill="#6B655C">${esc(t2)}</text></g>`;}
+  s+=sheaths+cores+bridges+clamps+lab;
+  // Maß der Dose
+  s+=`<text x="${W/2}" y="${H+t+4.5}" text-anchor="middle" font-size="3.4" font-weight="700" fill="#8a8274">${esc((M.overflow?'zu klein! ':'')+M.realBox.name+' mm · '+M.realBox.bsp)}</text>`;
+  // Hervorhebung ohne externes CSS
+  if(F)s=`<style>.dz-f [data-ref]:not(.hl){opacity:.16}</style><g class="dz-f">${s}</g>`;
+  return s;
+}
+
+return{boxModel,boxSVG,boxBounds,outputsOf,entryName,_costOf:costOf,
+  KABELTYPEN,DOSEN,HEBEL,LUESTER,LAYOUT,FUELLGRAD,ADERFARBEN,RICHTUNG_STANDARD,SIDE_DE,ART_DE,ICON,esc};
+})();
+/* ---------- Abzweigdose: Dosen-Editor (Overlay) ---------- */
+const DZ_BSP=[
+  {t:'Licht: Schalter + 3 Lampen',s:'Eine Zuleitung, ein Schalter, drei Lampen',cfg:{klemme:'hebel',dose:'auto',bloecke:[{id:'b1',art:'zuleitung',kabel:'auto',seite:'auto'},{id:'b2',art:'schalter',schaltart:'aus',kabel:'auto',seite:'auto'},{id:'b3',art:'lampe',anzahl:3,an:'b2',kabel:'auto',seite:'auto'}]}},
+  {t:'Serienschalter, 2 Lampengruppen, weiter',s:'Taste 1 und Taste 2 schalten je eine Gruppe, Dauerstrom geht weiter',cfg:{klemme:'hebel',dose:'auto',bloecke:[{id:'b1',art:'zuleitung',kabel:'auto',seite:'auto'},{id:'b2',art:'schalter',schaltart:'serie',kabel:'auto',seite:'auto'},{id:'b3',art:'lampe',anzahl:2,an:'b2:a',kabel:'auto',seite:'auto'},{id:'b4',art:'lampe',anzahl:1,an:'b2:b',kabel:'auto',seite:'auto'},{id:'b5',art:'weiter',mit:[],kabel:'auto',seite:'auto'}]}},
+  {t:'Volle Dose: 8 Leitungen',s:'Zuleitung, 2 Schalter, 4 Lampen, Steckdose',cfg:{klemme:'hebel',dose:'auto',bloecke:[{id:'b1',art:'zuleitung',kabel:'auto',seite:'auto'},{id:'b2',art:'schalter',schaltart:'serie',kabel:'auto',seite:'auto'},{id:'b3',art:'schalter',schaltart:'aus',kabel:'auto',seite:'auto'},{id:'b4',art:'lampe',anzahl:2,an:'b2:a',kabel:'auto',seite:'auto'},{id:'b5',art:'lampe',anzahl:1,an:'b2:b',kabel:'auto',seite:'auto'},{id:'b6',art:'lampe',anzahl:1,an:'b3',kabel:'auto',seite:'auto'},{id:'b7',art:'steckdose',kabel:'auto',seite:'auto'}]}}];
+const DZ={d:null,cfg:null,M:null,tab:'leitungen',step:0,focus:null,focusKey:null,boxKey:'',view:'bild',V:{s:3,tx:0,ty:0},nid:100,cache:{}};
+const dz=id=>document.getElementById('dz-'+id);
+/* Was hängt im Schaltplan an der Dose? Daraus eine Startbelegung machen. */
+function dosePrefill(d){const other=new Map();
+  for(const w of S.wires){const A=termOf(w.a),B=termOf(w.b);if(!A||!B)continue;let o=null;if(A.d.id===d.id&&B.d.id!==d.id)o=B.d;else if(B.d.id===d.id&&A.d.id!==d.id)o=A.d;if(o)other.set(o.id,o);}
+  const bl=[];let n=1;const sw=[];let feed=false;
+  for(const o of other.values()){const t=o.type,ty=TYPES[t];
+    if(ty.rail||['uv','zs','hak','abzk','sls'].includes(t)){if(!feed){bl.push({id:'b'+n++,art:'zuleitung',kabel:'auto',seite:'auto'});feed=true;}}
+    else if(t==='schalter'||t==='kombi'){const id='b'+n++;sw.push(id);bl.push({id,art:'schalter',schaltart:'aus',kabel:'auto',seite:'auto'});}
+    else if(['steckdose','dsteck','herd'].includes(t))bl.push({id:'b'+n++,art:'steckdose',kabel:'auto',seite:'auto'});
+    else if(t==='adose')bl.push({id:'b'+n++,art:'weiter',mit:[],kabel:'auto',seite:'auto'});}
+  const lamps=[...other.values()].filter(o=>['lampe','leiste'].includes(o.type)).length;
+  if(lamps)bl.push({id:'b'+n++,art:'lampe',anzahl:lamps,an:sw[0]||'dauer',kabel:'auto',seite:'auto'});
+  if(!bl.length)return{cfg:JSON.parse(JSON.stringify(DZ_BSP[0].cfg)),from:false};
+  if(!feed)bl.unshift({id:'b'+n++,art:'zuleitung',kabel:'auto',seite:'auto'});
+  return{cfg:{klemme:'hebel',dose:'auto',bloecke:bl},from:true};}
+function doseModel(d){if(!d.box)return null;const k=JSON.stringify(d.box);if(DZ.cache[d.id]&&DZ.cache[d.id].k===k)return DZ.cache[d.id].M;let M=null;try{M=DOSE.boxModel(JSON.parse(k));}catch(e){console.error(e);}DZ.cache[d.id]={k,M};return M;}
+function openDose(id){const d=byId(id);if(!d)return;DZ.d=d;
+  if(!d.box){const p=dosePrefill(d);d.box=p.cfg;changed(false);if(p.from)toast('Aus dem Schaltplan übernommen: was an der Dose angeschlossen ist. Prüfe Leitungen und Schalter.','info',4500);}
+  DZ.cfg=d.box;DZ.nid=100+DZ.cfg.bloecke.length*3;DZ.tab='leitungen';DZ.step=0;DZ.focus=null;DZ.focusKey=null;DZ.boxKey='';
+  const el=$('#dosev');el.innerHTML=`<div id="dz-bar"><b class="ttl">${esc(d.label||'Abzweigdose')}</b><div class="vseg" id="dz-kmode"><button data-dz="klemme" data-v="hebel">Hebelklemme</button><button data-dz="klemme" data-v="luester">Lüsterklemme</button></div><div class="vseg"><button data-dz="view" data-v="bild">Bild</button><button data-dz="view" data-v="plan">Klemmenplan</button></div><span class="sp"></span><button class="btn" data-dz="reset">Alles zeigen</button><button class="btn pri" data-dz="close">Fertig</button></div>
+  <div id="dz-main"><div id="dz-stage"><svg id="dz-stg" xmlns="http://www.w3.org/2000/svg"><g id="dz-vp"></g></svg><div id="dz-sum"></div><div id="dz-zoom"><button class="btn sq" data-dz="zin" aria-label="Vergrößern">+</button><button class="btn sq" data-dz="zout" aria-label="Verkleinern">−</button><button class="btn sq" data-dz="zfit" aria-label="Ganze Dose" style="font-size:15px">⤢</button></div><div id="dz-info"></div></div>
+  <div id="dz-panel"><div id="dz-tabs"></div><div id="dz-pc"></div></div></div>`;
+  el.style.display='block';dzRender();}
+function closeDose(){$('#dosev').style.display='none';$('#dosev').innerHTML='';DZ.d=null;render();renderPanel();}
+function dzSave(){DZ.d.box=JSON.parse(JSON.stringify(DZ.cfg));changed(false);DZ.cfg=DZ.d.box;}
+function dzRender(save){if(save)dzSave();const M=DZ.M=doseModel(DZ.d);if(!M){dz('pc').innerHTML='<div class="card">Diese Belegung kann nicht berechnet werden.</div>';return;}
+  const key=M.box.innen.join('x')+M.box.id+DZ.view;
+  if(DZ.tab==='anleitung'){DZ.step=Math.min(DZ.step,M.steps.length-1);DZ.focus=new Set(M.steps[DZ.step].refs);if(!DZ.focus.size)DZ.focus=null;}
+  dzSum();dzDraw();if(key!==DZ.boxKey){DZ.boxKey=key;dzFit();}
+  dzTabs();dzPanel();
+  document.querySelectorAll('#dosev [data-dz="klemme"]').forEach(b=>b.classList.toggle('on',b.dataset.v===M.klemme));
+  document.querySelectorAll('#dosev [data-dz="view"]').forEach(b=>b.classList.toggle('on',b.dataset.v===DZ.view));}
+const dzHasPlan=()=>typeof DOSE.boxPlanSVG==='function';
+function dzDraw(){const M=DZ.M;dz('vp').innerHTML=(DZ.view==='plan'&&dzHasPlan())?DOSE.boxPlanSVG(M,{focus:DZ.focus}):DOSE.boxSVG(M,{focus:DZ.focus});dzApply();}
+function dzBounds(){const M=DZ.M;return (DZ.view==='plan'&&dzHasPlan()&&DOSE.boxPlanBounds)?DOSE.boxPlanBounds(M):DOSE.boxBounds(M);}
+function dzApply(){dz('vp').setAttribute('transform',`translate(${DZ.V.tx} ${DZ.V.ty}) scale(${DZ.V.s})`);}
+function dzFit(){const r=dz('stage').getBoundingClientRect();const B=dzBounds();const padT=dz('sum').offsetHeight+16,pad=8;const s=Math.min((r.width-2*pad)/B.w,(r.height-padT-pad)/B.h);DZ.V.s=s;DZ.V.tx=(r.width-B.w*s)/2-B.x*s;DZ.V.ty=padT+(r.height-padT-pad-B.h*s)/2-B.y*s;dzApply();}
+function dzZoom(f,cx,cy){const ns=Math.max(.5,Math.min(40,DZ.V.s*f));const k=ns/DZ.V.s;DZ.V.tx=cx-(cx-DZ.V.tx)*k;DZ.V.ty=cy-(cy-DZ.V.ty)*k;DZ.V.s=ns;dzApply();}
+function dzKl(M){if(M.klemme==='hebel'){const c={};M.clamps.forEach(x=>c[x.pol]=(c[x.pol]||0)+1);return Object.entries(c).map(([p,n])=>`${n}× ${p}-fach`).join(', ');}return `${M.clamps.reduce((s,c)=>s+c.pol,0)} Lüster-Stellen`;}
+function dzSum(){const M=DZ.M,z=M.size;dz('sum').innerHTML=`<b>${esc(z.name)} mm${M.overflow?' – zu klein':''}</b> <span class="s">· ${z.belegt}/${z.einfuehrungen} Einführungen · ${dzKl(M)}</span>`;}
+function dzTabs(){const W=DZ.M.warnings;const nf=W.filter(w=>w.lvl==='fehler').length,na=W.filter(w=>w.lvl==='achtung').length;
+  const bd=nf?`<span class="bd">${nf}</span>`:na?`<span class="bd w">${na}</span>`:`<span class="bd ok">✓</span>`;
+  dz('tabs').innerHTML=[['leitungen','Leitungen'],['anleitung','Anleitung'],['pruefen','Prüfen'+bd],['material','Material']].map(([k,t])=>`<button data-dz="tab" data-v="${k}" class="${DZ.tab===k?'on':''}">${t}</button>`).join('');}
+function dzKabelOpt(b){const cab=DZ.M.cables.find(c=>c.block===b.id);const autoT=cab?cab.typ:'';return`<option value="auto"${!b.kabel||b.kabel==='auto'?' selected':''}>Automatisch${autoT&&(!b.kabel||b.kabel==='auto')?': '+autoT:''}</option>`+Object.keys(DOSE.KABELTYPEN).map(k=>`<option${b.kabel===k?' selected':''}>${k}</option>`).join('');}
+function dzSide(b){const v=b.seite||'auto';const std=DOSE.RICHTUNG_STANDARD[b.art];return`<div class="seg">${[['auto','Auto'],['top','↑'],['right','→'],['bottom','↓'],['left','←']].map(([k,t])=>`<button data-dz="seite" data-id="${b.id}" data-v="${k}" class="${v===k?'on':''}" ${k==='auto'?`title="Standard: ${DOSE.SIDE_DE[std]}"`:''} aria-label="${k==='auto'?'Automatisch':DOSE.SIDE_DE[k]}">${t}</button>`).join('')}</div>`;}
+function dzCard(b){const M=DZ.M,outs=M.outs;const cabs=M.cables.filter(c=>c.block===b.id);
+  let sub='';if(b.art==='lampe')sub=cabs.map(c=>c.kurz).join(', ')+' · '+(b.an==='dauer'?'Dauerlicht':(outs.find(o=>o.key===b.an)||{}).label||'');else sub=cabs.map(c=>c.name).join(' / ');
+  const title=b.art==='schalter'?({aus:'Ausschalter',serie:'Serienschalter',wechsel:'Wechselschaltung'}[b.schaltart||'aus']):DOSE.ART_DE[b.art];
+  let h=`<div class="card${DZ.focusKey===b.id?' f':''}" data-blk="${b.id}"><div class="bh" data-dz="fokus" data-id="${b.id}"><div class="ic"><svg viewBox="0 0 24 24">${DOSE.ICON[b.art]}</svg></div><div class="t"><b>${esc(title)}</b><span>${esc(sub)}</span></div><button class="del" data-dz="del" data-id="${b.id}" aria-label="Entfernen">×</button></div>`;
+  if(b.art==='lampe'){h+=`<div class="row"><label>Anzahl</label><div class="step"><button data-dz="anz" data-id="${b.id}" data-v="-1" aria-label="Weniger">−</button><b>${b.anzahl||1}</b><button data-dz="anz" data-id="${b.id}" data-v="1" aria-label="Mehr">+</button></div></div>`;
+    h+=`<div class="row"><label>geschaltet von</label><div class="grow"><select class="txt" data-dz="an" data-id="${b.id}">${outs.map(o=>`<option value="${o.key}"${b.an===o.key?' selected':''}>${esc(o.label)}</option>`).join('')}<option value="dauer"${b.an==='dauer'?' selected':''}>kein Schalter (immer an)</option></select></div></div>`;}
+  if(b.art==='schalter')h+=`<div class="row"><label>Art</label><div class="grow seg">${[['aus','Aus'],['serie','Serie'],['wechsel','Wechsel']].map(([k,t])=>`<button data-dz="schaltart" data-id="${b.id}" data-v="${k}" class="${(b.schaltart||'aus')===k?'on':''}">${t}</button>`).join('')}</div></div>`;
+  if(b.art==='weiter')h+=`<div class="row"><label>nimmt mit</label><div class="grow"><label class="ck"><input type="checkbox" checked disabled> Dauerstrom (L, N, PE)</label>${outs.map(o=>`<label class="ck"><input type="checkbox" data-dz="mit" data-id="${b.id}" data-v="${o.key}"${(b.mit||[]).includes(o.key)?' checked':''}> Licht von ${esc(o.label)}</label>`).join('')}</div></div>`;
+  h+=`<div class="row"><label>Leitung</label><div class="grow"><select class="txt" data-dz="kabel" data-id="${b.id}">${dzKabelOpt(b)}</select></div></div>`;
+  h+=`<div class="row"><label>Richtung in der Dose</label><div class="grow">${dzSide(b)}</div></div>`;
+  return h+`</div>`;}
+function dzPanel(){const pc=dz('pc'),M=DZ.M,C=DZ.cfg;
+  if(DZ.tab==='leitungen'){
+    let h=`<div class="h">Dose</div><div class="card"><div class="row" style="margin-top:0"><label>Größe</label><div class="grow seg">${[['auto','Auto'],...DOSE.DOSEN.map(d=>[d.id,String(d.innen[0])])].map(([k,t])=>`<button data-dz="dose" data-v="${k}" class="${(C.dose||'auto')===k?'on':''}">${t}</button>`).join('')}</div></div>
+      <div class="row"><label>Klemmen</label><div class="grow seg"><button data-dz="klemme" data-v="hebel" class="${M.klemme==='hebel'?'on':''}">Hebelklemme</button><button data-dz="klemme" data-v="luester" class="${M.klemme==='luester'?'on':''}">Lüsterklemme</button></div></div></div>`;
+    h+=`<div class="h">Was hängt an der Dose?</div>`+C.bloecke.map(dzCard).join('');
+    h+=`<div class="h">Hinzufügen</div><div class="chips">${['zuleitung','lampe','schalter','steckdose','weiter'].map(a=>`<button class="chip" data-dz="add" data-v="${a}"><svg viewBox="0 0 24 24">${DOSE.ICON[a]}</svg>${a==='weiter'?'Weiter zur nächsten Dose':DOSE.ART_DE[a]}</button>`).join('')}</div>`;
+    h+=`<div class="h">Vorlagen</div>`+DZ_BSP.map((b,i)=>`<button class="bsp" data-dz="bsp" data-v="${i}"><b>${esc(b.t)}</b>${esc(b.s)}</button>`).join('')+`<button class="bsp" data-dz="fromplan"><b>Aus dem Schaltplan übernehmen</b>Liest, was im Schaltplan an dieser Dose angeschlossen ist</button>`;
+    pc.innerHTML=h;}
+  else if(DZ.tab==='anleitung'){const St=M.steps,i=DZ.step,st=St[i];
+    let h=`<div class="sc"><div class="n">Schritt ${i+1} von ${St.length}</div><h3>${esc(st.titel)}</h3>${st.text.map(t=>`<p>${esc(t)}</p>`).join('')}${st.list?`<ul>${st.list.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}${st.tip?`<div class="tip">${esc(st.tip)}</div>`:''}</div>
+      <div class="nav"><button class="btn" data-dz="prev" ${i===0?'disabled':''}>← Zurück</button><button class="btn pri" data-dz="next" ${i===St.length-1?'disabled':''}>Weiter →</button></div><div class="h">Alle Schritte</div>`;
+    h+=St.map((s,j)=>`<button class="sl ${j===i?'on':j<i?'done':''}" data-dz="go" data-v="${j}"><i>${j<i?'✓':j+1}</i><span>${esc(s.titel)}</span></button>`).join('');pc.innerHTML=h;}
+  else if(DZ.tab==='pruefen'){const W=M.warnings;const lv={fehler:'Fehler',achtung:'Achtung',hinweis:'Hinweis'};
+    pc.innerHTML=(W.length?'':`<div class="card">Alles in Ordnung. Keine Hinweise.</div>`)+W.map((w,i)=>`<button class="wn ${w.lvl}${DZ.focusKey==='w'+i?' f':''}" data-dz="warn" data-v="${i}"><span class="l">${lv[w.lvl]}</span><b>${esc(w.titel)}</b><p>${esc(w.warum)}</p></button>`).join('')+DZ_NOTE;}
+  else{const m=M.material;pc.innerHTML=`<div class="h">Für diese Dose</div><table class="m">${m.rows.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}<small>${esc(r[2])}</small></td></tr>`).join('')}</table><div class="h">Werkzeug</div><table class="m">${m.werkzeug.map(w=>`<tr><td>•</td><td>${esc(w)}</td></tr>`).join('')}</table>`+DZ_NOTE;}}
+const DZ_NOTE=`<div class="ph">Dosen und Klemmen: Herstellerangaben (Spelsberg Abox, WAGO 221). Füllgrad, Mantellänge in der Dose und Aderreserve sind Praxis- bzw. App-Annahmen. Vor dem Einschalten prüft eine Elektrofachkraft.</div>`;
+function dzFocus(refs,key){DZ.focus=refs&&refs.length?new Set(refs):null;DZ.focusKey=key||null;dzHideInfo(true);dzDraw();dzPanel();}
+const dzBlk=id=>DZ.cfg.bloecke.find(b=>b.id===id);
+function dzClick(e){const t=e.target.closest('[data-dz]');if(!t)return;e.stopPropagation();const a=t.dataset.dz,id=t.dataset.id,v=t.dataset.v;const b=id?dzBlk(id):null;const C=DZ.cfg;
+  if(a==='close'){closeDose();return;}
+  if(a==='tab'){DZ.tab=v;DZ.focusKey=null;DZ.focus=null;dzHideInfo(true);dzRender();dz('panel').scrollTop=0;return;}
+  if(a==='view'){DZ.view=v;if(v==='plan'&&!dzHasPlan()){DZ.view='bild';toast('Der Klemmenplan kommt noch.','info');}dzRender();return;}
+  if(a==='reset'){DZ.focus=null;DZ.focusKey=null;if(DZ.tab==='anleitung')DZ.tab='leitungen';dzHideInfo(true);dzRender();return;}
+  if(a==='zin'||a==='zout'){const r=dz('stg').getBoundingClientRect();dzZoom(a==='zin'?1.35:1/1.35,r.width/2,r.height/2);return;}
+  if(a==='zfit'){dzFit();return;}
+  if(a==='xinfo'){dzHideInfo();return;}
+  if(a==='seite'){b.seite=v;dzRender(true);}
+  else if(a==='del'){C.bloecke=C.bloecke.filter(x=>x.id!==id);for(const x of C.bloecke){if(x.an&&x.an.split(':')[0]===id)x.an='dauer';if(x.mit)x.mit=x.mit.filter(k=>k.split(':')[0]!==id);}DZ.focus=null;DZ.focusKey=null;dzRender(true);}
+  else if(a==='anz'){b.anzahl=Math.max(1,Math.min(8,(b.anzahl||1)+(+v)));dzRender(true);}
+  else if(a==='schaltart'){b.schaltart=v;for(const x of C.bloecke){if(x.an&&x.an.split(':')[0]===id)x.an=v==='serie'?id+':a':id;if(x.mit)x.mit=x.mit.filter(k=>k.split(':')[0]!==id);}dzRender(true);}
+  else if(a==='add'){const nb={id:'b'+(++DZ.nid),art:v,kabel:'auto',seite:'auto'};while(dzBlk(nb.id))nb.id='b'+(++DZ.nid);if(v==='lampe'){nb.anzahl=1;const o=DOSE.outputsOf(C)[0];nb.an=o?o.key:'dauer';}if(v==='schalter')nb.schaltart='aus';if(v==='weiter')nb.mit=[];C.bloecke.push(nb);dzRender(true);setTimeout(()=>{const el=document.querySelector(`#dosev [data-blk="${nb.id}"]`);el&&el.scrollIntoView({behavior:'smooth',block:'center'});},30);}
+  else if(a==='bsp'){DZ.cfg.bloecke=JSON.parse(JSON.stringify(DZ_BSP[+v].cfg.bloecke));DZ.focus=null;DZ.focusKey=null;DZ.step=0;dzRender(true);dz('panel').scrollTop=0;}
+  else if(a==='fromplan'){const p=dosePrefill(DZ.d);if(!p.from){toast('Im Schaltplan ist an dieser Dose noch nichts angeschlossen.','info');return;}DZ.cfg.bloecke=p.cfg.bloecke;dzRender(true);}
+  else if(a==='dose'){C.dose=v;dzRender(true);}
+  else if(a==='klemme'){C.klemme=v;dzRender(true);}
+  else if(a==='fokus'){if(DZ.focusKey===id){dzFocus(null);return;}const cabs=DZ.M.cables.filter(c=>c.block===id);dzFocus(cabs.flatMap(c=>['c:'+c.id,'e:'+c.id,...c.cores.map(k=>'a:'+k.id)]),id);}
+  else if(a==='prev'||a==='next'||a==='go'){DZ.step=a==='go'?+v:DZ.step+(a==='next'?1:-1);dzRender();}
+  else if(a==='warn'){const w=DZ.M.warnings[+v];if(DZ.focusKey==='w'+v){dzFocus(null);return;}dzFocus(w.refs,'w'+v);}}
+function dzChange(e){const t=e.target;const a=t.dataset.dz;e.stopPropagation();if(!a)return;const b=dzBlk(t.dataset.id);if(!b)return;
+  if(a==='kabel')b.kabel=t.value;else if(a==='an')b.an=t.value;else if(a==='mit'){b.mit=b.mit||[];if(t.checked)b.mit.push(t.dataset.v);else b.mit=b.mit.filter(k=>k!==t.dataset.v);}else return;dzRender(true);}
+function dzInfo(ref){const M=DZ.M,I=M.info[ref];if(!I)return;const el=dz('info');
+  el.innerHTML=`<button class="x" data-dz="xinfo" aria-label="Schließen">×</button><h3>${esc(I.t)}</h3><div>${I.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>${I.p.map(p=>`<p>${esc(p)}</p>`).join('')}`;el.style.display='block';
+  let refs=[ref];if(ref.startsWith('a:')){const k=M.coreById[ref.slice(2)];const cl=M.clamps.find(c=>c.cores.includes(k.id));refs.push('c:'+k.cable);if(cl)refs.push('k:'+cl.id);}
+  if(ref.startsWith('k:')){const cl=M.clampById[ref.slice(2)];refs.push(...cl.cores.map(i=>'a:'+i));M.bridges.filter(b=>b.a===cl.id||b.b===cl.id).forEach(b=>refs.push('b:'+b.id,'k:'+b.a,'k:'+b.b));}
+  if(ref.startsWith('c:')||ref.startsWith('e:')){const c=M.cableById[ref.slice(2)];refs.push('c:'+c.id,'e:'+c.id,...c.cores.map(k=>'a:'+k.id));}
+  DZ.focus=new Set(refs);DZ.focusKey=null;dzDraw();}
+function dzHideInfo(keep){const el=dz('info');if(el)el.style.display='none';if(keep)return;if(DZ.tab==='anleitung')dzRender();else{DZ.focus=null;dzDraw();}}
+(function(){const el=()=>$('#dosev');const PT=new Map();let G0=null,moved=false,downRef=null;
+  const snap=()=>{const p=[...PT.values()];if(!p.length)return null;const cx=p.reduce((s,q)=>s+q[0],0)/p.length,cy=p.reduce((s,q)=>s+q[1],0)/p.length;const d=p.length>1?Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]):0;return{cx,cy,d,s:DZ.V.s,tx:DZ.V.tx,ty:DZ.V.ty};};
+  document.addEventListener('DOMContentLoaded',()=>{});
+  const on=(t,f,o)=>document.addEventListener(t,e=>{const sv=e.target.closest&&e.target.closest('#dz-stg');if(sv||(t!=='pointerdown'&&PT.has(e.pointerId)))f(e,sv||dz('stg'));},o);
+  on('pointerdown',(e,sv)=>{e.stopPropagation();sv.setPointerCapture(e.pointerId);PT.set(e.pointerId,[e.clientX,e.clientY]);moved=PT.size>1;const r=e.target.closest('[data-ref]');downRef=r?r.dataset.ref:null;G0=snap();},true);
+  on('pointermove',(e,sv)=>{if(!PT.has(e.pointerId))return;e.stopPropagation();PT.set(e.pointerId,[e.clientX,e.clientY]);const g=snap();if(!G0)return;
+    if(Math.hypot(g.cx-G0.cx,g.cy-G0.cy)>6||Math.abs(g.d-G0.d)>6)moved=true;if(!moved)return;
+    const rc=sv.getBoundingClientRect();const k=G0.d&&g.d?g.d/G0.d:1;const ns=Math.max(.5,Math.min(40,G0.s*k));const kk=ns/G0.s;
+    DZ.V.s=ns;DZ.V.tx=(g.cx-rc.left)-((G0.cx-rc.left)-G0.tx)*kk;DZ.V.ty=(g.cy-rc.top)-((G0.cy-rc.top)-G0.ty)*kk;dzApply();},true);
+  const end=e=>{if(!PT.has(e.pointerId))return;e.stopPropagation();PT.delete(e.pointerId);if(!moved&&PT.size===0){if(downRef)dzInfo(downRef);else if(dz('info')&&dz('info').style.display==='block')dzHideInfo();}G0=PT.size?snap():null;if(!PT.size)moved=false;};
+  document.addEventListener('pointerup',end,true);document.addEventListener('pointercancel',end,true);
+  document.addEventListener('wheel',e=>{const sv=e.target.closest&&e.target.closest('#dz-stg');if(!sv)return;e.preventDefault();e.stopPropagation();const r=sv.getBoundingClientRect();dzZoom(Math.exp(-e.deltaY*.0022),e.clientX-r.left,e.clientY-r.top);},{passive:false,capture:true});
+  addEventListener('resize',()=>{if(DZ.d)dzFit();});})();
+/* Doku-Abschnitt für eine Dose */
+function doseDocHTML(d){const M=doseModel(d);if(!M)return'';const B=DOSE.boxBounds(M);
+  const pic=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${B.x} ${B.y} ${B.w} ${B.h}" style="width:100%;max-height:520px">${DOSE.boxSVG(M,{doc:true})}</svg>`;
+  let plan='';if(dzHasPlan()&&DOSE.boxPlanBounds){const P=DOSE.boxPlanBounds(M);plan=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${P.x} ${P.y} ${P.w} ${P.h}" style="width:100%;margin-top:8px">${DOSE.boxPlanSVG(M,{doc:true})}</svg>`;}
+  const st=M.steps.map((s,i)=>`<li><b>${esc(s.titel)}</b>${s.text.length?' – '+esc(s.text.join(' ')):''}${s.list?`<ul>${s.list.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}</li>`).join('');
+  const w=M.warnings.filter(x=>x.lvl!=='hinweis').map(x=>`<li><b>${esc(x.titel)}</b> – ${esc(x.warum)}</li>`).join('');
+  return `<h3>${esc(nm(d))} · ${esc(M.size.name)} mm · ${esc(dzKl(M))}</h3><div class="plan">${pic}${plan}</div><ol class="dsteps">${st}</ol>${w?`<div class="meta"><b>Zu beachten</b></div><ul>${w}</ul>`:''}`;}
+
+document.getElementById('dosev').addEventListener('click',dzClick);document.getElementById('dosev').addEventListener('change',dzChange);document.getElementById('dosev').addEventListener('input',e=>e.stopPropagation());
+/*DOSE-END*/
 /* ---------- Start ---------- */
 buildPal();applyView();fillRooms();ptoolsUI();
 (()=>{let o=null;try{o=JSON.parse($('#saved').textContent);}catch(_){}let lo=null;try{lo=JSON.parse(localStorage.getItem(LSK));}catch(_){}
