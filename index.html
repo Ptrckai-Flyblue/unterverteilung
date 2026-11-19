@@ -240,6 +240,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
 <div id="floors" data-k></div>
 <div id="docv" data-k></div>
 <div id="wallv" data-k></div>
+<div id="mini3" style="display:none;position:fixed;right:14px;top:132px;z-index:6;background:#FFFDF9;border-radius:16px;padding:6px;box-shadow:0 4px 18px rgba(0,0,0,.08);pointer-events:none"></div>
 <datalist id="roomlist" data-k></datalist>
 <div id="modal" data-k><div class="sheet" id="sheet"></div></div>
 <input type="file" id="file" accept=".json,application/json" style="display:none" data-k>
@@ -615,7 +616,7 @@ svg.addEventListener('pointerdown',e=>{
   if(ptrs.size===2){startPinch();return;}if(ptrs.size>2)return;
   const el=e.target.closest('[data-kind]');const kind=el?el.dataset.kind:'bg';const w=toWorld(e.clientX,e.clientY);
   if(VIEW==='plan'){planDown(e,el,w);return;}
-  if(VIEW==='3d'){act={v3:true,kind:el?el.dataset.kind:'bg',id:el?.dataset.id,i:el?.dataset.i,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId,v0:{tx:V.tx,ty:V.ty}};return;}
+  if(VIEW==='3d'){act={v3:true,pan:e.button===1||e.button===2||e.shiftKey,yaw0:R3.yaw,pitch0:R3.pitch,kind:el?el.dataset.kind:'bg',id:el?.dataset.id,i:el?.dataset.i,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId,v0:{tx:V.tx,ty:V.ty}};return;}
   act={kind,id:el?.dataset.id,key:el?.dataset.key,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId,v0:{tx:V.tx,ty:V.ty}};
   if(['item','lever','test'].includes(kind)){const d=byId(act.id);const p=getPos(d);act.off={x:w.x-p.x,y:w.y-p.y};}
 });
@@ -624,7 +625,7 @@ svg.addEventListener('pointermove',e=>{
   if(act?.kind==='pinch'){doPinch();return;}
   if(!act||act.pid!==e.pointerId)return;
   if(act.plan){planMove(e);return;}
-  if(act.v3){const dx=e.clientX-act.sx,dy=e.clientY-act.sy;if(!act.moved&&Math.hypot(dx,dy)<7)return;act.moved=true;V.tx=act.v0.tx+dx;V.ty=act.v0.ty+dy;applyView();return;}
+  if(act.v3){const dx=e.clientX-act.sx,dy=e.clientY-act.sy;if(!act.moved&&Math.hypot(dx,dy)<7)return;act.moved=true;if(act.pan){V.tx=act.v0.tx+dx;V.ty=act.v0.ty+dy;applyView();return;}R3.yaw=act.yaw0-dx*.4;R3.pitch=clamp(act.pitch0+dy*.3,18,78);req3();return;}
   const dx=e.clientX-act.sx,dy=e.clientY-act.sy;
   if(!act.moved){if(Math.hypot(dx,dy)<7)return;act.moved=true;
     if(act.kind==='lever'||act.kind==='test')act.kind='item';
@@ -637,10 +638,10 @@ svg.addEventListener('pointermove',e=>{
 });
 function endPtr(e,cancel){
   ptrs.delete(e.pointerId);
-  if(act?.kind==='pinch'){if(!ptrs.size)act=null;return;}
+  if(act?.kind==='pinch'){if(!ptrs.size){act=null;if(VIEW==='3d'&&R3.k0){R3.ui=clamp(1/Math.sqrt(V.k/R3.k0),.45,1.3);render3d();}}return;}
   if(!act||act.pid!==e.pointerId)return;const a=act;act=null;
   if(a.plan){planUp(a,e,cancel);return;}
-  if(a.v3){if(!a.moved&&!cancel){S.sel=a.kind==='p3dev'?{kind:'item',id:a.id}:a.kind==='p3wall'?{kind:'wall',room:a.id,i:+a.i}:a.kind==='p3room'?{kind:'room',id:a.id}:null;render();renderPanel();}return;}
+  if(a.v3){if(a.moved&&!a.pan){snap3();return;}if(!a.moved&&!cancel){S.sel=a.kind==='p3dev'?{kind:'item',id:a.id}:a.kind==='p3wall'?{kind:'wall',room:a.id,i:+a.i}:a.kind==='p3room'?{kind:'room',id:a.id}:a.kind==='p3riser'?{kind:'riser',id:a.id}:null;render();renderPanel();}return;}
   if(cancel){temp.setAttribute('d','');if(a.kind==='item'&&a.moved)dropItem(a.id);return;}
   if(!a.moved){onTap(a);return;}
   if(a.kind==='term'){temp.setAttribute('d','');const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-kind="term"]');if(el&&el.dataset.key!==a.key)connect(a.key,el.dataset.key);else render();}
@@ -867,7 +868,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'wadd':{const r=room(WV.room);const o=addOpening(r,WV.i,v);if(o)WV.sel=o.id;changed(false);renderWall();break;}
    case'wodel':S.plan.openings=S.plan.openings.filter(x=>x.id!==WV.sel);WV.sel=null;changed(false);renderWall();break;
    case'wolock':{const o=S.plan.openings.find(x=>x.id===WV.sel);if(o){o.lock=v;changed(false);renderWall();}break;}
-   case'r3rot':R3.rot=(R3.rot+1)%4;render();fit3d();break;case'r3all':R3.all=v==='1';render();fit3d();break;case'floor':setFloor(v);break;case'flmanage':openFloors();break;case'building':openBuilding();break;case'fladd':addFloor(v);break;case'fldel':delFloor(v);break;
+   case'r3rot':animYaw(Math.round(R3.yaw/45)*45+(+v||1)*90);break;case'r3walls':R3.walls=v;render3d();break;case'r3zones':R3.zones=!R3.zones;render3d();break;case'r3all':R3.all=v==='1';render();fit3d();break;case'floor':setFloor(v);break;case'flmanage':openFloors();break;case'building':openBuilding();break;case'fladd':addFloor(v);break;case'fldel':delFloor(v);break;
    case'flup':case'fldown':{const F=S.plan.floors,i=flIdx(v),j=a==='flup'?i+1:i-1;if(j>=0&&j<F.length){[F[i],F[j]]=[F[j],F[i]];changed(false);openFloors();}break;}case'tool':closeModal();setTool(v);break;case'pfinish':finishDraw();break;case'pcancel':PDRAW=null;setTool('select');break;
    case'tray':openTray();break;case'place':{closeModal();const it=byId(v);if(it){placeAtCenter(it);S.sel={kind:'item',id:it.id};changed(false);}break;}
    case'unplace':if(d){delete S.plan.pos[d.id];changed(false);}break;
@@ -1141,7 +1142,7 @@ function renderPaper(){const D=S.doc;const C=circuits();const M=materials();cons
   const PR=S.plan.rooms;h+=`<h2>3. Räume und Verbraucher</h2>${PR.length?`<table style="margin-bottom:10px"><tr><th>Etage</th><th>Raum</th><th>Raumart</th><th>Fläche</th><th>Besondere Regeln</th></tr>${PR.slice().sort((a,b)=>flIdx(a.fl)-flIdx(b.fl)).map(r=>`<tr><td>${esc(flName(r.fl))}</td><td><b>${esc(r.name)}</b></td><td>${esc(r.type)}</td><td>${fmt(polyArea(r.pts))} m²</td><td>${esc((RTYPES[r.type]||{}).short||'–')}</td></tr>`).join('')}</table>`:''}${cons.length?`<table><tr><th>Raum</th><th>Verbraucher</th><th>Art</th><th>Stromkreis</th></tr>${Object.entries(byRoom).sort((a,b)=>a[0]==='Ohne Raum'?1:b[0]==='Ohne Raum'?-1:a[0].localeCompare(b[0])).map(([r,ds])=>ds.map((d,i)=>`<tr>${i===0?`<td rowspan="${ds.length}"><b>${esc(r)}</b></td>`:''}<td>${cName(d)}</td><td>${esc(TYPES[d.type].name)}</td><td>${circOf(d)}</td></tr>`).join('')).join('')}</table>`:'<p>Keine Verbraucher im Plan.</p>'}`;
   h+=`<h2>4. Materialliste</h2><div class="tw"><table><tr><th>Pos.</th><th>Menge</th><th>Einheit</th><th>Bezeichnung</th><th>Hinweis</th></tr>${(()=>{let cat='',i=0;return M.rows.map(r=>{let x='';if(r.cat!==cat){cat=r.cat;x=`<tr class="catrow"><td colspan="5" style="background:#fafafa;font-weight:700">${esc(cat)}</td></tr>`;}i++;return x+`<tr><td>${i}</td><td style="text-align:right">${fmt(r.qty)}</td><td>${esc(r.unit)}</td><td>${esc(r.name)}</td><td>${esc(r.note||'')}</td></tr>`;}).join('');})()}</table></div>${M.missing?`<div class="meta" style="color:#9A3A22">Bei ${M.missing} Leitung${M.missing>1?'en':''} fehlt noch die Länge – bei der jeweiligen Sicherung bzw. beim Hauptschalter eintragen.</div>`:''}`;
   let sn=5;const FLS=S.plan.floors.filter(f=>flHasContent(f.id));for(const f of FLS.slice().reverse())h+=`<h2>${sn++}. Installationsplan ${esc(f.name)}</h2><div class="plan">${planDocSVG(f.id)}</div><div class="meta">${LEGEND_TXT}</div>`;
-  for(const f of FLS.slice().reverse()){const d3=doc3SVG(f.id);if(d3)h+=`<h2>${sn++}. 3D-Ansicht ${esc(f.name)}</h2><div class="plan">${d3}</div>`;}
+  for(const f of FLS.slice().reverse()){const d3=doc3SVG(f.id,45);if(d3)h+=`<h2>${sn++}. 3D-Ansicht ${esc(f.name)}</h2><div class="meta">Zwei Blickrichtungen. Senkrechte rote Linien: Leitungsführung nach Installationszone, schematisch.</div><div class="plan">${d3}</div><div class="plan" style="margin-top:10px">${doc3SVG(f.id,225)}</div>`;}
   const WVS=[];for(const r of S.plan.rooms.slice().sort((a,b)=>flIdx(b.fl)-flIdx(a.fl)))for(let i=0;i<r.pts.length;i++){if(!wallFrame(r,i))continue;if(devsOnWall(r,i).length||opsOnWall(r,i).length)WVS.push(`<div><h4>${esc(flName(r.fl))} · ${esc(r.name)} · Wand ${i+1}</h4>${wallSVG(r,i,{doc:true,k:48})}</div>`);}
   if(WVS.length)h+=`<h2>${sn++}. Wandansichten</h2><div class="meta">Blick von innen. Gelb: Installationszonen nach DIN 18015-3. Maße in Metern, Höhe = Mitte des Geräts über Fußboden.</div><div class="wgrid">${WVS.join('')}</div>`;
   if(FLS.length>1||S.plan.risers.length)h+=`<h2>${sn++}. Gebäudeansicht</h2><div class="plan">${buildingSVG(true)}</div>`;
@@ -1214,6 +1215,7 @@ function nextRoomName(){let n=S.plan.rooms.length+1;while(S.plan.rooms.some(r=>r
 function placeAtCenter(d){const r=svg.getBoundingClientRect();const vv=VIEW==='plan'?V:(VS.plan||{k:1,tx:r.width/2-300,ty:80});const off=(addOff++%5)*.5;
   S.plan.pos[d.id]=[snapv((r.width/2-vv.tx)/vv.k/PXM+off,.25),snapv((r.height*.4-vv.ty)/vv.k/PXM+off,.25),FL()];const rr=roomAt(S.plan.pos[d.id]);if(rr)d.room=rr.name;fillRooms();}
 function VSET(v){if(v===VIEW)return;VS[VIEW]={k:V.k,tx:V.tx,ty:V.ty};VIEW=v;S.sel=null;pend=null;PDRAW=null;PTOOL='select';if(MEAS)setMeas(false);
+  {const mi=$('#mini3');if(mi&&v!=='3d')mi.style.display='none';}
   $('#vSchema').classList.toggle('on',v==='schema');$('#vPlan').classList.toggle('on',v==='plan');$('#v3D').classList.toggle('on',v==='3d');$('#gridbg').style.display=v==='schema'?'':'none';
   temp.setAttribute('d','');if(VS[v]){Object.assign(V,VS[v]);applyView();}else fit();render();renderPanel();ptoolsUI();}
 function setFloor(id){if(!S.plan.floors.some(f=>f.id===id))return;S.plan.cur=id;PDRAW=PDRAW?{pts:[]}:null;S.sel=null;temp.setAttribute('d','');renderPanel();render();}
@@ -1355,7 +1357,7 @@ function finishDraw(){if(!PDRAW)return;const pts=PDRAW.pts;
   PDRAW=null;PTOOL='select';temp.setAttribute('d','');ptoolsUI();changed(false);}
 function setTool(t){PTOOL=t;PDRAW=['poly','duct','route'].includes(t)?{pts:[]}:null;S.sel=null;temp.setAttribute('d','');renderPanel();ptoolsUI();render();}
 function ptoolsUI(){floorsUI();const box=$('#ptools');if(VIEW==='schema'){box.style.display='none';return;}box.style.display='flex';
-  if(VIEW==='3d'){box.innerHTML=`<div class="hint">Wand antippen: Wandansicht mit Höhen. Gerät antippen: Details. Zwei Finger zoomen, ziehen verschiebt.</div><div class="tb"><button data-act="r3rot">↻ Drehen</button><button data-act="r3all" data-v="0" class="${R3.all?'':'on'}">Diese Etage</button><button data-act="r3all" data-v="1" class="${R3.all?'on':''}">Alle Etagen</button><button data-act="fit">Einpassen</button></div>`;return;}
+  if(VIEW==='3d'){const B=(act,v,on,t)=>`<button data-act="${act}" data-v="${v}" class="${on?'on':''}">${t}</button>`;box.innerHTML=`<div class="hint">Ein Finger: drehen und neigen. Zwei Finger: zoomen und schieben. Wand oder Gerät antippen für Details.</div><div class="tb"><button data-act="r3rot" data-v="-1" aria-label="Nach links drehen">↺</button><button data-act="r3rot" data-v="1" aria-label="Nach rechts drehen">↻</button>${B('r3walls','cut',R3.walls==='cut','Puppenhaus')}${B('r3walls','full',R3.walls==='full','Wände hoch')}${B('r3walls','low',R3.walls==='low','Flach')}${B('r3zones','',R3.zones,'Zonen')}${B('r3all','0',!R3.all,'Diese Etage')}${B('r3all','1',R3.all,'Alle Etagen')}<button data-act="fit">Einpassen</button></div>`;return;}
   const un=S.items.filter(d=>PLANNABLE(d)&&!S.plan.pos[d.id]).length;const b=(t,l)=>`<button data-act="tool" data-v="${t}" class="${PTOOL===t?'on':''}">${l}</button>`;
   let hint='';const n=PDRAW?PDRAW.pts.length:0;const here=flName(FL());
   if(PTOOL==='select')hint=!S.plan.rooms.some(r=>r.fl===FL())?`Etage „${esc(here)}“ ist noch leer. Tippe unten auf „Raum“ und wähle eine Form – Rechteck, L, U oder T – mit Maßen.${flIdx(FL())>0?' Die Etage darunter scheint blass durch.':''}`:'';
@@ -1507,38 +1509,257 @@ let WD=null;
   box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);})();
 
 /* ---------- 3D ---------- */
-const R3={rot:0,all:false};const S3=50,C30=Math.cos(Math.PI/6),S30=.5;
-function rot2(x,y){const t=R3.rot*Math.PI/2;return[x*Math.cos(t)-y*Math.sin(t),x*Math.sin(t)+y*Math.cos(t)];}
-function scene3(fls,doc){const P=S.plan;const zb={};let acc=0;for(const f of P.floors){zb[f.id]=acc;acc+=+f.h||2.5;}const zbase=zb[fls[0]];
-  const pts=[...P.rooms.filter(r=>fls.includes(r.fl)).flatMap(r=>r.pts),...Object.entries(P.pos).filter(([,p])=>fls.includes(p[2])).map(([,p])=>p)];if(!pts.length)return null;const bb=bbox(pts);const c=[(bb.x0+bb.x1)/2,(bb.y0+bb.y1)/2];
-  const pr=(x,y,z)=>{const [xr,yr]=rot2(x-c[0],y-c[1]);return{X:(xr-yr)*C30*S3,Y:(xr+yr)*S30*S3-z*S3,d:xr+yr};};const PT=q=>q.X.toFixed(1)+','+q.Y.toFixed(1);
-  const items=[];let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;const ext=q=>{minX=Math.min(minX,q.X);maxX=Math.max(maxX,q.X);minY=Math.min(minY,q.Y);maxY=Math.max(maxY,q.Y);};
-  fls.forEach((fl,li)=>{const z0=zb[fl]-zbase,h=flH(fl),L=li*1e5;const rooms=P.rooms.filter(r=>r.fl===fl);
-    for(const r of rooms){const q=r.pts.map(p=>pr(p[0],p[1],z0));q.forEach(ext);items.push({k:L-5e4,s:`<polygon points="${q.map(PT).join(' ')}" fill="#FFFDF9" stroke="#1A1A1A" stroke-width="2" stroke-linejoin="round"${doc?'':` data-kind="p3room" data-id="${r.id}"`}/>`});
-      const cc=labelPt(r);const qc=pr(cc[0],cc[1],z0);items.push({k:L-4e4,s:lblTxt(qc.X,qc.Y+4,esc(r.name),13,'#6B655C',800)});}
-    for(const r of rooms)for(let i=0;i<r.pts.length;i++){const F=wallFrame(r,i);if(!F)continue;const on=rot2(-F.n[0],-F.n[1]);const front=on[0]+on[1]>.01;
-      const a=F.a,b=F.b;const qa=pr(a[0],a[1],z0),qb=pr(b[0],b[1],z0),qa2=pr(a[0],a[1],z0+h),qb2=pr(b[0],b[1],z0+h);[qa2,qb2].forEach(ext);const dep=(qa.d+qb.d)/2;
-      if(front){const qa1=pr(a[0],a[1],z0+.12),qb1=pr(b[0],b[1],z0+.12);items.push({k:L+dep*100+40,s:`<polygon points="${[qa,qb,qb1,qa1].map(PT).join(' ')}" fill="#CFC6B5" stroke="#1A1A1A" stroke-width="1.2"/><polygon points="${[qa,qb,qb2,qa2].map(PT).join(' ')}" fill="none" stroke="#B5AB98" stroke-width="1.2" stroke-dasharray="5 5"${doc?'':` data-kind="p3wall" data-id="${r.id}" data-i="${i}"`} pointer-events="${doc?'none':'stroke'}"/>`});continue;}
-      const shade=on[0]>on[1]?'#EDE5D6':'#E2D8C6';let s=`<polygon points="${[qa,qb,qb2,qa2].map(PT).join(' ')}" fill="${shade}" fill-opacity=".93" stroke="#1A1A1A" stroke-width="1.6" stroke-linejoin="round"${doc?'':` data-kind="p3wall" data-id="${r.id}" data-i="${i}"`}/><path d="M${PT(qa2)}L${PT(qb2)}" stroke="#1A1A1A" stroke-width="3.5"/>`;
-      for(const o of opsOnWall(r,i)){const w=openWall0(o);const s0=w.s-o.w/2,s1=w.s+o.w/2;const p0=fromAlong(F,s0,0),p1=fromAlong(F,s1,0);const z1=z0+o.sill,z2=z0+o.sill+o.h;
-        s+=`<polygon points="${[pr(p0[0],p0[1],z1),pr(p1[0],p1[1],z1),pr(p1[0],p1[1],z2),pr(p0[0],p0[1],z2)].map(PT).join(' ')}" fill="${o.kind==='door'?'#D6CBB5':'#CFE2EE'}" stroke="#1A1A1A" stroke-width="1.3"/>`;}
-      items.push({k:L+dep*100,s});}
-    for(const [id,p] of Object.entries(P.pos)){if(p[2]!==fl)continue;const d=byId(id);if(!d)continue;const z=zOf(d);const q=pr(p[0],p[1],z0+z);ext(q);const isSel=!doc&&S.sel&&S.sel.kind==='item'&&S.sel.id===id;
-      let s='';if(!WALLMOUNT.has(d.type)&&z>.5){const qf=pr(p[0],p[1],z0);s+=`<path d="M${PT(qf)}L${PT(q)}" stroke="#A39A8A" stroke-width="1" stroke-dasharray="3 4"/><ellipse cx="${qf.X}" cy="${qf.Y}" rx="7" ry="3.5" fill="#CFC6B5"/>`;}
-      s+=`<g transform="translate(${q.X.toFixed(1)},${q.Y.toFixed(1)}) scale(.85)"${doc?'':` data-kind="p3dev" data-id="${id}"`}><circle r="20" fill="transparent"/>${isSel?'<circle r="19" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="4 4"/>':''}<circle r="14" fill="#FFFDF9" opacity=".85"/>${sym(d)}${lblTxt(0,30,esc(nm(d)),11,'#3B362E',700)}</g>`;
-      items.push({k:L+q.d*100+60,s});}
-    let top='';for(const k of P.ducts.filter(k=>k.fl===fl)){const q=k.pts.map(p=>pr(p[0],p[1],z0+h-.08));top+=`<polyline points="${q.map(PT).join(' ')}" fill="none" stroke="#9C9283" stroke-width="9" stroke-linecap="square" opacity=".8"/>`;}
-    for(const k of P.routes.filter(k=>k.fl===fl)){const q=k.pts.map(p=>pr(p[0],p[1],z0+h-.15));top+=`<polyline points="${q.map(PT).join(' ')}" fill="none" stroke="#1A1A1A" stroke-width="2.4" stroke-linejoin="round"/>`;}
-    for(const ri of P.risers.filter(r=>riserOn(r,fl))){const qa=pr(ri.x,ri.y,z0),qb=pr(ri.x,ri.y,z0+h);top+=`<path d="M${PT(qa)}L${PT(qb)}" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round"/>`;}
-    items.push({k:L+9e4,s:top});
-    if(fls.length>1){const fq=pr(bb.x0,bb.y1,z0+.1);items.push({k:L+9.5e4,s:lblTxt(fq.X-30,fq.Y,esc(flName(fl)),15,'#1A1A1A',800)});}});
-  items.sort((a,b)=>a.k-b.k);return{svg:items.map(i=>i.s).join(''),b:{x0:minX-60,y0:minY-50,x1:maxX+60,y1:maxY+50}};}
+/* scene3v2 – Schnitt-Isometrie für den Grundriss (Vanilla JS, SVG-String, keine Bibliothek)
+   scene3v2(plan, opts) -> {svg, b:{x0,y0,x1,y1}, cam} | null
+   plan: {floors:[{id,name,h}], rooms:[{id,fl,name,type,pts}], openings:[{fl,room,x,y,kind,w,h,sill,lock}],
+          pos:{id:[x,y,fl]}, routes:[{fl,pts}], ducts:[{fl,pts}], risers:[{x,y,from,to}]}
+   opts.devices: [{id,type,name,z}]  (z = Montagehöhe Mitte, wie zOf())                                   */
+(function(G){
+const WALLMOUNT=new Set(['schalter','steckdose','dsteck','kombi','herd','uv','zs','hak','abzk']);
+// Plakettengröße [Breite, Höhe, Tiefe] in m (bewusst etwas größer als real, damit lesbar)
+const DSIZE={uv:[.6,.75,.14],zs:[.55,1.0,.2],hak:[.32,.42,.14],herd:[.22,.22,.05],abzk:[.16,.16,.07]};
+const DDEF=[.2,.2,.035];
+const FLOORCOL={'Wohnraum':'#E8D9BD','Schlafraum':'#E8D9BD','Kinderzimmer':'#E8D9BD','Büro':'#E8D9BD','Küche':'#E3DED3','Flur':'#E6DCCB','Treppenhaus':'#E6DCCB',
+ 'WC':'#D9E2E1','Bad / Dusche':'#D9E2E1','Hauswirtschaft':'#DEE1D9','Keller (trocken)':'#E4E0D8','Keller (feucht)':'#DCE2DF','Garage':'#E0DCD3','Werkstatt':'#E0DCD3',
+ 'Außenbereich':'#D9DCC6','Stall / Landwirtschaft':'#E2D5AE','Lager (Heu/Stroh)':'#E6D8A9','Sonstiges':'#E6DFD2'};
+const INK='#1A1A1A',PAPER='#F6F1E9',ACC='#B4472C',CROWN='#2B2622';
+const sock=(x,y,n)=>{let s='';for(let i=0;i<n;i++){const o=x+(i-(n-1)/2)*20;s+=`<path d="M${o-9} ${y}A9 9 0 0 0 ${o+9} ${y}" stroke="#1A1A1A" stroke-width="2.2" fill="#FFFDF9"/><path d="M${o-9} ${y}H${o+9}M${o} ${y}V${y-8}" stroke="#1A1A1A" stroke-width="2.2" fill="none"/>`;}return s;};
+function defSym(d){const S1='stroke="#1A1A1A" stroke-width="2.2"';
+  switch(d.type){
+  case'lampe':return `<circle r="11" ${S1} fill="#FFFDF9"/><path d="M-7.8 -7.8L7.8 7.8M7.8 -7.8L-7.8 7.8" ${S1} fill="none"/>`;
+  case'leiste':return `<path d="M-26 0H26" stroke="#1A1A1A" stroke-width="3.2"/><path d="M-26 -8V8M26 -8V8" ${S1} fill="none"/>`;
+  case'schalter':return `<circle r="4.5" fill="#1A1A1A"/><path d="M3 -3L14 -14L18 -10" ${S1} fill="none"/>`;
+  case'steckdose':return sock(0,-2,1);case'dsteck':return sock(0,-2,2);
+  case'kombi':return sock(9,-2,1)+`<circle cx="-13" r="4" fill="#1A1A1A"/><path d="M-10.5 -2.5L-3 -10L0 -7" ${S1} fill="none"/>`;
+  case'herd':return `<rect x="-13" y="-13" width="26" height="26" ${S1} fill="#FFFDF9"/>`+[[-5,-5],[5,-5],[0,5]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.2" fill="#1A1A1A"/>`).join('');
+  case'adose':case'wago':return `<circle r="7" ${S1} fill="#FFFDF9"/><circle r="3" fill="#1A1A1A"/>`;
+  case'abzk':return `<rect x="-15" y="-10" width="30" height="20" ${S1} fill="#FFFDF9"/><circle r="3.5" fill="#1A1A1A"/>`;
+  case'uv':case'zs':return `<rect x="-24" y="-10" width="48" height="20" fill="#FFFDF9" ${S1}/><path d="M-18 10L-4 -10M-8 10L6 -10M2 10L16 -10" stroke="#1A1A1A" stroke-width="2"/>`;
+  case'hak':return `<rect x="-22" y="-12" width="44" height="24" fill="#1A1A1A"/><text y="4" text-anchor="middle" font-size="9.5" font-weight="800" fill="#F6F1E9">HAK</text>`;
+  default:return `<circle r="8" ${S1} fill="#FFFDF9"/>`;}}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f1=v=>(Math.round(v*10)/10).toString();
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const segDist=(p,a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],L2=dx*dx+dy*dy;const t=L2?clamp(((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L2,0,1):0;return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);};
+const pip=(p,pts)=>{let c=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const a=pts[i],b=pts[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])c=!c;}return c;};
+const area=pts=>{let s=0;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];s+=a[0]*b[1]-b[0]*a[1];}return s/2;};
+const mix=(c1,c2,t)=>{const h=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));const a=h(c1),b=h(c2);return '#'+a.map((v,i)=>Math.round(v+(b[i]-v)*clamp(t,0,1)).toString(16).padStart(2,'0')).join('');};
+
+function scene3v2(plan,opts={}){
+  const O=Object.assign({yaw:45,pitch:42,scale:60,walls:'cut',cutH:1.15,lowH:.28,tIn:.09,tExt:.22,slab:.24,explode:true,
+    zones:true,labels:true,ghosts:true,doc:false,sel:null,devices:[],sym:defSym,isWall:d=>WALLMOUNT.has(d.type),idp:'v3',floorGap:1.6},opts);
+  const fls=(O.floors||plan.floors.map(f=>f.id)).filter(id=>plan.rooms.some(r=>r.fl===id));
+  if(!fls.length)return null;
+  const Z=O.ui||1;const S=O.scale,th=O.yaw*Math.PI/180,ph=O.pitch*Math.PI/180;
+  const fx=-Math.sin(th),fy=-Math.cos(th),rx=Math.cos(th),ry=-Math.sin(th),sp=Math.sin(ph),cp=Math.cos(ph);
+  const allR=plan.rooms.filter(r=>fls.includes(r.fl)&&r.pts&&r.pts.length>=3);
+  let X0=1e9,Y0=1e9,X1=-1e9,Y1=-1e9;for(const r of allR)for(const p of r.pts){X0=Math.min(X0,p[0]);X1=Math.max(X1,p[0]);Y0=Math.min(Y0,p[1]);Y1=Math.max(Y1,p[1]);}
+  const cx=(X0+X1)/2,cy=(Y0+Y1)/2;
+  const U=(x,y)=>(x-cx)*rx+(y-cy)*ry, Vd=(x,y)=>(x-cx)*fx+(y-cy)*fy;
+  let ZO=0;const bb={x0:1e9,y0:1e9,x1:-1e9,y1:-1e9};
+  const P=(x,y,z)=>{const X=U(x,y)*S,Y=(-Vd(x,y)*sp-(z+ZO)*cp)*S;return [X,Y];};
+  const ext=q=>{if(q[0]<bb.x0)bb.x0=q[0];if(q[0]>bb.x1)bb.x1=q[0];if(q[1]<bb.y0)bb.y0=q[1];if(q[1]>bb.y1)bb.y1=q[1];};
+  const PS=qs=>qs.map(q=>f1(q[0])+','+f1(q[1])).join(' ');
+  const fH=id=>+(plan.floors.find(f=>f.id===id)||{}).h||2.5;
+  const fIdx=id=>plan.floors.findIndex(f=>f.id===id);const riserOn=(ri,fl)=>{const a=fIdx(ri.from),b=fIdx(ri.to),i=fIdx(fl);return i>=Math.min(a,b)&&i<=Math.max(a,b);};
+  // Licht (Kamera-bezogen: von links oben vorn)
+  const LA=-.45,LB=.55;const lit=(mx,my)=>{const dr=mx*rx+my*ry,df=mx*fx+my*fy;return clamp(.42+.75*(LA*dr-LB*df),0,1);};
+  const devById={};for(const d of O.devices||[])devById[d.id]=d;
+  const sym=O.sym||defSym;
+  let defs='',gid=0;const roomLbl=[];const pre=[];const out=[];const overlay=[];const labels=[];const marks=[];
+  // ---------- Etagenhöhen (gestapelt oder auseinandergezogen) ----------
+  const order=plan.floors.map(f=>f.id).filter(id=>fls.includes(id));
+  const zoff={};{let acc=0,prevTop=null;const natural={};for(const f of plan.floors){natural[f.id]=acc;acc+=fH(f.id);}
+    const z00=natural[order[0]];
+    for(const id of order){const rs=allR.filter(r=>r.fl===id);let vmin=1e9,vmax=-1e9;for(const r of rs)for(const p of r.pts){const v=Vd(p[0],p[1]);vmin=Math.min(vmin,v);vmax=Math.max(vmax,v);}
+      let z=natural[id]-z00;
+      if(O.explode&&prevTop!=null){const yBot=(-vmin*sp+(O.slab+O.tExt)*cp)*S;const need=(yBot-prevTop+O.floorGap*S)/(cp*S);z=Math.max(z+O.floorGap,need);}
+      zoff[id]=z;prevTop=(-vmax*sp-(z+fH(id)+.3)*cp)*S;}}
+
+  for(const fl of order){
+    ZO=zoff[fl];const H=fH(fl);const rooms=allR.filter(r=>r.fl===fl);const ops=(plan.openings||[]).filter(o=>o.fl===fl);
+    const floorL=[],items=[],ov=[];
+    // ---------- Raumgeometrie: Kanten, geteilte Wände, Gehrungen ----------
+    const G=rooms.map(r=>{const p=r.pts,n=p.length,sg=area(p)>0?1:-1;
+      const E=p.map((a,i)=>{const b=p[(i+1)%n],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1e-9,u=[(b[0]-a[0])/L,(b[1]-a[1])/L];const nn=sg>0?[-u[1],u[0]]:[u[1],-u[0]];
+        let cov=0;for(const r2 of rooms){if(r2===r)continue;for(let j=0;j<r2.pts.length;j++){const c=r2.pts[j],d=r2.pts[(j+1)%r2.pts.length];
+          const dc=Math.abs((c[0]-a[0])*nn[0]+(c[1]-a[1])*nn[1]),dd=Math.abs((d[0]-a[0])*nn[0]+(d[1]-a[1])*nn[1]);if(dc>.03||dd>.03)continue;
+          const tc=(c[0]-a[0])*u[0]+(c[1]-a[1])*u[1],td=(d[0]-a[0])*u[0]+(d[1]-a[1])*u[1];cov+=Math.max(0,Math.min(L,Math.max(tc,td))-Math.max(0,Math.min(tc,td)));}}
+        const shared=cov>.5*L;return{a,b,L,u,n:nn,shared,out:shared?0:O.tExt,inn:O.tIn};});
+      const isect=(e1,o1,e2,o2,v)=>{const c1=e1.n[0]*e1.a[0]+e1.n[1]*e1.a[1]+o1,c2=e2.n[0]*e2.a[0]+e2.n[1]*e2.a[1]+o2;const det=e1.n[0]*e2.n[1]-e1.n[1]*e2.n[0];
+        if(Math.abs(det)<1e-6)return[v[0]+e2.n[0]*o2,v[1]+e2.n[1]*o2];const q=[(c1*e2.n[1]-c2*e1.n[1])/det,(e1.n[0]*c2-e2.n[0]*c1)/det];
+        if(Math.hypot(q[0]-v[0],q[1]-v[1])>4*Math.max(Math.abs(o1),Math.abs(o2),.05))return[v[0]+e2.n[0]*o2,v[1]+e2.n[1]*o2];return q;};
+      const mo=[],mi=[];for(let j=0;j<n;j++){const ep=E[(j-1+n)%n],ec=E[j];mo[j]=isect(ep,-ep.out,ec,-ec.out,p[j]);mi[j]=isect(ep,ep.inn,ec,ec.inn,p[j]);}
+      E.forEach((e,i)=>{const al=q=>(q[0]-e.a[0])*e.u[0]+(q[1]-e.a[1])*e.u[1];e.so=[al(mo[i]),al(mo[(i+1)%n])];e.si=[al(mi[i]),al(mi[(i+1)%n])];
+        // Übergang Außenwand <-> Innenwand: Außenwand läuft rechtwinklig durch, Innenwand stößt stumpf an (keine Kerbe in der Krone)
+        for(const [k,o] of [[0,(i-1+n)%n],[1,(i+1)%n]]){const f=E[o];if(e.shared===f.shared)continue;
+          if(!e.shared){e.so[k]=k?e.L:0;e.si[k]=k?e.L:0;}
+          else{const v=k?e.b:e.a;const c2=f.n[0]*v[0]+f.n[1]*v[1]+f.inn;const den=e.u[0]*f.n[0]+e.u[1]*f.n[1];if(Math.abs(den)<1e-6)continue;
+            const cut=(o2)=>{const p0=[e.a[0]+e.n[0]*o2,e.a[1]+e.n[1]*o2];return (c2-(f.n[0]*p0[0]+f.n[1]*p0[1]))/den;};e.so[k]=cut(-e.out);e.si[k]=cut(e.inn);}}});
+      return{r,E,mo,mi};});
+    const wallOf=(p)=>{let best=null,bd=.45;for(const g of G){const inside=pip(p,g.r.pts);g.E.forEach((e,i)=>{const d=segDist(p,e.a,e.b)-(inside?.02:0);if(d<bd){bd=d;best={g,e,i};}});}return best;};
+    const occl=e=>{if(e.occ!==undefined)return e.occ;e.occ=false;for(const t of [.25,.5,.75])for(let d=.4;d<14;d+=.4){const q=[e.a[0]+(e.b[0]-e.a[0])*t-e.n[0]*.05+fx*d,e.a[1]+(e.b[1]-e.a[1])*t-e.n[1]*.05+fy*d];if(rooms.some(r=>pip(q,r.pts))){e.occ=true;return true;}}return false;};
+    const wallH=e=>{const nf=e.n[0]*fx+e.n[1]*fy;if(!e.shared&&nf<=.2&&O.walls!=='low'&&occl(e))return Math.min(O.cutH,H);if(O.walls==='full')return e.shared||nf<=.2?H:O.lowH;if(O.walls==='low')return O.lowH;
+      if(e.shared)return Math.abs(nf)<.2?H:Math.min(O.cutH,H);return nf>.2?O.lowH:H;};
+    // ---------- Bodenplatte + Bodenschatten ----------
+    for(const g of G){const op=g.mo;for(const [k,a] of [[.42,.022],[.32,.024],[.22,.026],[.13,.03],[.06,.035]]){const sh=op.map(q=>P(q[0]+(rx*.45+fx*.55)*k,q[1]+(ry*.45+fy*.55)*k,-O.slab));floorL.push(`<polygon points="${PS(sh)}" fill="${INK}" opacity="${a}" stroke="${INK}" stroke-opacity="${a}" stroke-width="${f1(k*S*.5)}" stroke-linejoin="round"/>`);}}
+    const slabF=[];for(const g of G){const n=g.mo.length;g.E.forEach((e,i)=>{if(e.shared)return;const nf=-(e.n[0]*fx+e.n[1]*fy);if(nf>=-1e-6)return;const a=g.mo[i],b=g.mo[(i+1)%n];
+      const q=[P(a[0],a[1],0),P(b[0],b[1],0),P(b[0],b[1],-O.slab),P(a[0],a[1],-O.slab)];q.forEach(ext);slabF.push({d:Vd((a[0]+b[0])/2,(a[1]+b[1])/2),s:`<polygon points="${PS(q)}" fill="${mix('#A99E8A','#D2C8B6',lit(-e.n[0],-e.n[1]))}" stroke="${INK}" stroke-width="1" stroke-linejoin="round"/>`});});}
+    slabF.sort((p,q)=>q.d-p.d);floorL.push(...slabF.map(s=>s.s));
+    for(const g of G){const r=g.r;const q=g.mo.map(p=>P(p[0],p[1],0));floorL.push(`<polygon points="${PS(q)}" fill="${CROWN}"/>`);}
+    for(const g of G){const r=g.r;const q=r.pts.map(p=>P(p[0],p[1],0));q.forEach(ext);const col=FLOORCOL[r.type]||'#E6DFD2';
+      floorL.push(`<polygon points="${PS(q)}" fill="${col}" stroke="${mix(col,INK,.25)}" stroke-width=".8"${O.doc?'':` data-kind="p3room" data-id="${esc(r.id)}"`}/>`);}
+    // Kontaktschatten (Ambient Occlusion) entlang der Wandfüße
+    for(const g of G)g.E.forEach((e,i)=>{const h=wallH(e);if(h<.5)return;const s0=Math.max(0,e.si[0]),s1=Math.min(e.L,e.si[1]);if(s1-s0<.05)return;const dd=.55;
+      const pa=[e.a[0]+e.u[0]*s0+e.n[0]*e.inn,e.a[1]+e.u[1]*s0+e.n[1]*e.inn],pb=[e.a[0]+e.u[0]*s1+e.n[0]*e.inn,e.a[1]+e.u[1]*s1+e.n[1]*e.inn];
+      const pc=[pb[0]+e.n[0]*dd-e.u[0]*Math.min(dd,(s1-s0)/2)*0,pb[1]+e.n[1]*dd],pd=[pa[0]+e.n[0]*dd,pa[1]+e.n[1]*dd];
+      const m0=[(pa[0]+pb[0])/2,(pa[1]+pb[1])/2],m1=[m0[0]+e.n[0]*dd,m0[1]+e.n[1]*dd];const A=P(m0[0],m0[1],0),B=P(m1[0],m1[1],0);const id=`${O.idp}ao${gid++}`;
+      defs+=`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${f1(A[0])}" y1="${f1(A[1])}" x2="${f1(B[0])}" y2="${f1(B[1])}"><stop offset="0" stop-color="${INK}" stop-opacity="${h>=H-.01?.2:.13}"/><stop offset="1" stop-color="${INK}" stop-opacity="0"/></linearGradient>`;
+      floorL.push(`<polygon points="${PS([pa,pb,pc,pd].map(p=>P(p[0],p[1],0)))}" fill="url(#${id})" pointer-events="none"/>`);});
+    // Türaufschlag auf dem Boden
+    for(const o of ops){if(o.kind!=='door')continue;const w=wallOf([o.x,o.y]);if(!w)continue;const e=w.e;const s=(o.x-e.a[0])*e.u[0]+(o.y-e.a[1])*e.u[1];
+      const right=(o.lock||'rechts')==='rechts';const hs=right?s+o.w/2:s-o.w/2;const dir=right?-1:1;const hp=[e.a[0]+e.u[0]*hs+e.n[0]*e.inn,e.a[1]+e.u[1]*hs+e.n[1]*e.inn];
+      const pts=[];for(let k=0;k<=12;k++){const t=k/12*Math.PI/2;const vx=e.u[0]*dir*Math.cos(t)+e.n[0]*Math.sin(t),vy=e.u[1]*dir*Math.cos(t)+e.n[1]*Math.sin(t);pts.push(P(hp[0]+vx*o.w,hp[1]+vy*o.w,0));}
+      const hq=P(hp[0],hp[1],0);const lf=P(hp[0]+e.n[0]*o.w,hp[1]+e.n[1]*o.w,0);
+      floorL.push(`<path d="M${f1(hq[0])},${f1(hq[1])}L${PS([lf]).replace(',',' ')}M${PS(pts).split(' ').join('L')}" fill="none" stroke="${INK}" stroke-opacity=".38" stroke-width="1" stroke-dasharray="3 3"/>`);}
+    // Raumnamen: Punkt weit weg von Wänden, vordere (verdeckende) Wände zählen stärker
+    const cot=cp/Math.max(sp,.2);
+    for(const g of G){const r=g.r;const b=r.pts.reduce((a,p)=>[Math.min(a[0],p[0]),Math.min(a[1],p[1]),Math.max(a[2],p[0]),Math.max(a[3],p[1])],[1e9,1e9,-1e9,-1e9]);let best=null,bd=-1e9;
+      for(let i=1;i<14;i++)for(let j=1;j<14;j++){const q=[b[0]+(b[2]-b[0])*i/14,b[1]+(b[3]-b[1])*j/14];if(!pip(q,r.pts))continue;
+        let m=1e9;for(const e of g.E){const d=segDist(q,e.a,e.b);const nf=e.n[0]*fx+e.n[1]*fy;m=Math.min(m,nf>.2?d-wallH(e)*cot*nf:d*1.0);}if(m>bd){bd=m;best=q;}}
+      if(best)roomLbl.push({t:r.name,q:P(best[0],best[1],0)});}
+    // ---------- Wandstücke (Prismen) ----------
+    const prism=(fp,z0,z1,o)=>{items.push({fp,z0,z1,...o});};
+    const ghosts=[];const seen=new Set();
+    for(const g of G){const r=g.r;g.E.forEach((e,i)=>{const h=wallH(e);
+      const at=(s,off,rng)=>{const ss=s<=1e-6?rng[0]:s>=e.L-1e-6?rng[1]:clamp(s,rng[0],rng[1]);return[e.a[0]+e.u[0]*ss+e.n[0]*off,e.a[1]+e.u[1]*ss+e.n[1]*off];};
+      const fp=(s0,s1)=>[at(s0,-e.out,e.so),at(s1,-e.out,e.so),at(s1,e.inn,e.si),at(s0,e.inn,e.si)];
+      const myOps=ops.filter(o=>segDist([o.x,o.y],e.a,e.b)<Math.max(.25,e.out+e.inn+.05)).map(o=>{const s=(o.x-e.a[0])*e.u[0]+(o.y-e.a[1])*e.u[1];return{o,s0:clamp(s-o.w/2,0,e.L),s1:clamp(s+o.w/2,0,e.L)};}).filter(q=>q.s1-q.s0>.05).sort((p,q)=>p.s0-q.s0);
+      const meta={kind:'wall',room:r.id,i,e,full:h>=H-1e-6};
+      let cur=0;const W=(s0,s1,z0,z1)=>{if(s1-s0>.005&&z1-z0>.005)prism(fp(s0,s1),z0,z1,meta);};
+      for(const q of myOps){if(q.s0<cur)continue;W(cur,q.s0,0,h);const o=q.o,top=o.sill+o.h;
+        if(o.sill>0)W(q.s0,q.s1,0,Math.min(o.sill,h));if(top<h)W(q.s0,q.s1,top,h);
+        if(o.kind==='window'&&o.sill<h){const m=(e.inn-e.out)/2,tw=.03;items.push({fp:[at(q.s0,m-tw,[-9,99]),at(q.s1,m-tw,[-9,99]),at(q.s1,m+tw,[-9,99]),at(q.s0,m+tw,[-9,99])],z0:o.sill,z1:Math.min(top,h),kind:'glass',e});}
+        cur=q.s1;}
+      W(cur,e.L,0,h);
+      // Geisterkontur der abgesenkten Wand
+      if(h<H-1e-6&&O.ghosts){const k=[e.a,e.b].map(p=>p.map(v=>v.toFixed(2)).join(',')).sort().join('|');if(!seen.has(k)){seen.add(k);
+        const A=P(e.a[0],e.a[1],H),B=P(e.b[0],e.b[1],H),A0=P(e.a[0],e.a[1],h),B0=P(e.b[0],e.b[1],h);let s=`M${f1(A0[0])},${f1(A0[1])}L${f1(A[0])},${f1(A[1])}L${f1(B[0])},${f1(B[1])}L${f1(B0[0])},${f1(B0[1])}`;
+        for(const q of myOps){const o=q.o,z1=o.sill+o.h;if(z1<=h)continue;const zb=Math.max(o.sill,h);const c=[[q.s0,zb],[q.s0,z1],[q.s1,z1],[q.s1,zb]].map(([s,z])=>P(e.a[0]+e.u[0]*s,e.a[1]+e.u[1]*s,z));s+=`M${PS(c).split(' ').join('L')}${o.sill>=h?'Z':''}`;}
+        ghosts.push(`<path d="${s}" fill="none" stroke="#8F8574" stroke-opacity=".38" stroke-width="1" stroke-dasharray="3 5" pointer-events="none"/>`);}}});}
+    // ---------- Geräte ----------
+    for(const [id,p] of Object.entries(plan.pos||{})){if(p[2]!==fl)continue;const d=devById[id];if(!d)continue;const z=+d.z||0;const isSel=O.sel&&O.sel===id;
+      if(O.isWall(d)){const w=wallOf(p);if(w){const e=w.e,[dw,dh,dd]=DSIZE[d.type]||DDEF;const s=clamp((p[0]-e.a[0])*e.u[0]+(p[1]-e.a[1])*e.u[1],dw/2+.02,e.L-dw/2-.02);
+        const at=(ss,off)=>[e.a[0]+e.u[0]*ss+e.n[0]*off,e.a[1]+e.u[1]*ss+e.n[1]*off];const o0=e.inn+.004,o1=e.inn+dd;
+        const z0=Math.max(.02,z-dh/2),z1=Math.min(H-.02,z0+dh);const h=wallH(e);const facing=(e.n[0]*fx+e.n[1]*fy)<-.05;
+        const hidden=(e.n[0]*fx+e.n[1]*fy)>.25&&h>O.lowH+.01&&h>z0+.02;const cen=at(s,o1+.01);const sc=P(cen[0],cen[1],(z0+z1)/2);ext(sc);
+        items.push({fp:[at(s-dw/2,o0),at(s+dw/2,o0),at(s+dw/2,o1),at(s-dw/2,o1)],z0,z1,kind:'dev',d,e,s,o0,o1,facing,hidden,h,H,isSel,sc,big:!!DSIZE[d.type]});
+        marks.push({d,sc,hidden,isSel});continue;}}
+      // frei / Decke
+      const q=P(p[0],p[1],z);ext(q);items.push({fp:[[p[0]-.08,p[1]-.08],[p[0]+.08,p[1]-.08],[p[0]+.08,p[1]+.08],[p[0]-.08,p[1]+.08]],z0:z-.1,z1:Math.min(H,z+.1),kind:'free',d,p,z,H,isSel,sc:q});
+      const g0=P(p[0],p[1],0);floorL.push(`<ellipse cx="${f1(g0[0])}" cy="${f1(g0[1])}" rx="${f1(.22*S)}" ry="${f1(.22*S*sp)}" fill="${INK}" opacity=".12"/>`);
+      marks.push({d,sc:q,hidden:false,isSel});}
+    for(const ri of plan.risers||[]){if(!riserOn(ri,fl))continue;const r=.06;items.push({fp:[[ri.x-r,ri.y-r],[ri.x+r,ri.y-r],[ri.x+r,ri.y+r],[ri.x-r,ri.y+r]],z0:0,z1:H,kind:'riser',ri,H});}
+    // ---------- Painter: topologische Sortierung über Grundrissüberdeckung ----------
+    for(const it of items){it.q=it.fp.map(p=>[U(p[0],p[1]),Vd(p[0],p[1])]);it.u0=Math.min(...it.q.map(q=>q[0]));it.u1=Math.max(...it.q.map(q=>q[0]));
+      const vs=it.q.map(q=>q[1]);it.v0=Math.min(...vs);it.v1=Math.max(...vs);it.y0=(-it.v1*sp-(it.z1+ZO)*cp)*S;it.y1=(-it.v0*sp-(it.z0+ZO)*cp)*S;it.dep=(it.v0+it.v1)/2;}
+    const vAt=(q,u)=>{let lo=1e9,hi=-1e9;for(let i=0;i<q.length;i++){const a=q[i],b=q[(i+1)%q.length];if((a[0]-u)*(b[0]-u)>0)continue;if(Math.abs(b[0]-a[0])<1e-9){lo=Math.min(lo,a[1],b[1]);hi=Math.max(hi,a[1],b[1]);continue;}const t=(u-a[0])/(b[0]-a[0]);const v=a[1]+t*(b[1]-a[1]);lo=Math.min(lo,v);hi=Math.max(hi,v);}return lo<=hi?[lo,hi]:null;};
+    const N=items.length,adj=items.map(()=>[]),indeg=new Array(N).fill(0);
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const A=items[i],B=items[j];const lo=Math.max(A.u0,B.u0),hi=Math.min(A.u1,B.u1);if(hi-lo<1e-4)continue;if(Math.min(A.y1,B.y1)-Math.max(A.y0,B.y0)<.01)continue;
+      let rel=0;for(const t of [.5,.2,.8,.05,.95]){const u=lo+(hi-lo)*t;const a=vAt(A.q,u),b=vAt(B.q,u);if(!a||!b)continue;
+        if(a[1]<=b[0]+1e-4){rel=1;break;}if(b[1]<=a[0]+1e-4){rel=-1;break;}
+        // ineinander (z. B. Glas in Laibung): höheres Teil später
+        if(A.z0>=B.z1-1e-4){rel=-1;break;}if(B.z0>=A.z1-1e-4){rel=1;break;}
+        const ca=(a[0]+a[1])/2,cb=(b[0]+b[1])/2;if(Math.abs(ca-cb)>1e-4){rel=ca<cb?1:-1;break;}}
+      // rel=1: A vorne -> B zuerst
+      if(rel===1){adj[j].push(i);indeg[i]++;}else if(rel===-1){adj[i].push(j);indeg[j]++;}}
+    const done=new Array(N).fill(false),seq=[];let ready=[];for(let i=0;i<N;i++)if(!indeg[i])ready.push(i);
+    while(seq.length<N){if(!ready.length){let b=-1;for(let i=0;i<N;i++)if(!done[i]&&(b<0||items[i].dep>items[b].dep))b=i;ready.push(b);}
+      ready.sort((a,b)=>items[b].dep-items[a].dep);const i=ready.shift();if(done[i])continue;done[i]=true;seq.push(i);for(const j of adj[i]){if(--indeg[j]===0&&!done[j])ready.push(j);}}
+    // ---------- Zeichnen ----------
+    const face=(pts,fill,extra='')=>`<polygon points="${PS(pts)}" fill="${fill}" stroke="${INK}" stroke-width="1" stroke-opacity=".75" stroke-linejoin="round"${extra}/>`;
+    const sides=(it,col)=>{let s='';const q=it.fp,sg=area(q)>0?1:-1;for(let k=0;k<q.length;k++){const a=q[k],b=q[(k+1)%q.length];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<1e-4)continue;
+        const m=sg>0?[(b[1]-a[1])/L,-(b[0]-a[0])/L]:[-(b[1]-a[1])/L,(b[0]-a[0])/L];if(m[0]*fx+m[1]*fy>=-1e-6)continue;
+        const pts=[P(a[0],a[1],it.z0),P(b[0],b[1],it.z0),P(b[0],b[1],it.z1),P(a[0],a[1],it.z1)];pts.forEach(ext);s+=col(m,pts,a,b);}return s;};
+    for(const i of seq){const it=items[i];let s='';
+      if(it.kind==='wall'){const e=it.e;const tag=O.doc?'':` data-kind="p3wall" data-id="${esc(it.room)}" data-i="${it.i}"`;
+        s+=sides(it,(m,pts,a,b)=>{const inner=(m[0]*e.n[0]+m[1]*e.n[1])>.7;const base=inner?mix('#C7BBA5','#F5EFE4',lit(m[0],m[1])):mix('#BDB09A','#E9E1D2',lit(m[0],m[1]));let f=face(pts,base,tag);
+          if(inner&&O.zones&&it.full){for(const [za,zb] of [[H-.45,H-.15],[.15,.3]]){const z0=Math.max(za,it.z0),z1=Math.min(zb,it.z1);if(z1-z0<.01)continue;f+=`<polygon points="${PS([P(a[0],a[1],z0),P(b[0],b[1],z0),P(b[0],b[1],z1),P(a[0],a[1],z1)])}" fill="${ACC}" fill-opacity=".09" pointer-events="none"/>`;}}return f;});
+        const top=it.fp.map(p=>P(p[0],p[1],it.z1));top.forEach(ext);s+=`<polygon points="${PS(top)}" fill="${CROWN}" stroke="${CROWN}" stroke-width=".8" stroke-linejoin="round"${tag}/>`;}
+      else if(it.kind==='glass'){const pts=it.fp;const a=pts[0],b=pts[1];const mid=k=>[(pts[k][0]+pts[3-k][0])/2,(pts[k][1]+pts[3-k][1])/2];const A=mid(0),B=mid(1);
+        const q=[P(A[0],A[1],it.z0),P(B[0],B[1],it.z0),P(B[0],B[1],it.z1),P(A[0],A[1],it.z1)];q.forEach(ext);
+        s+=`<polygon points="${PS(q)}" fill="#BFD8E6" fill-opacity=".55" stroke="#3E5866" stroke-width="1.4" stroke-linejoin="round"/>`;
+        const mz=(it.z0+it.z1)/2,M=[(A[0]+B[0])/2,(A[1]+B[1])/2];const l=[P(M[0],M[1],it.z0),P(M[0],M[1],it.z1)],l2=[P(A[0],A[1],mz),P(B[0],B[1],mz)];
+        s+=`<path d="M${f1(l[0][0])},${f1(l[0][1])}L${f1(l[1][0])},${f1(l[1][1])}M${f1(l2[0][0])},${f1(l2[0][1])}L${f1(l2[1][0])},${f1(l2[1][1])}" stroke="#3E5866" stroke-width=".9" stroke-opacity=".6"/>`;
+        const g1=P(A[0]+(B[0]-A[0])*.15,A[1]+(B[1]-A[1])*.15,it.z1-.1),g2=P(A[0]+(B[0]-A[0])*.45,A[1]+(B[1]-A[1])*.45,it.z0+.1);s+=`<path d="M${f1(g1[0])},${f1(g1[1])}L${f1(g2[0])},${f1(g2[1])}" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>`;}
+      else if(it.kind==='dev'){const e=it.e,d=it.d;const tag=O.doc?'':` data-kind="p3dev" data-id="${esc(d.id)}"`;
+        // Leitungsweg senkrecht in die obere Installationszone
+        if(O.zones){const zt=H-.3;if(it.z1<zt){const off=e.inn+.003,c=[e.a[0]+e.u[0]*it.s+e.n[0]*off,e.a[1]+e.u[1]*it.s+e.n[1]*off];const zs=Math.min(zt,it.h);
+          const A=P(c[0],c[1],it.z1),B=P(c[0],c[1],zs),C=P(c[0],c[1],zt);
+          if(!it.hidden){if(zs>it.z1)s+=`<path d="M${f1(A[0])},${f1(A[1])}L${f1(B[0])},${f1(B[1])}" stroke="${ACC}" stroke-width="2.2" stroke-linecap="round"/>`;
+            if(zt>Math.max(zs,it.z1)+.01)s+=`<path d="M${f1((zs>it.z1?B:A)[0])},${f1((zs>it.z1?B:A)[1])}L${f1(C[0])},${f1(C[1])}" stroke="${ACC}" stroke-width="1.4" stroke-dasharray="3 4" stroke-opacity=".7"/>`;}}}
+        if(!it.hidden){s+=sides(it,(m,pts)=>face(pts,(m[0]*e.n[0]+m[1]*e.n[1])>.7?(it.big?'#F2EEE6':'#FFFDF9'):mix('#BDB4A4','#E4DDD0',lit(m[0],m[1])),tag));
+          const top=it.fp.map(p=>P(p[0],p[1],it.z1));s+=face(top,'#EDE8DE',tag);
+          if(it.big&&it.facing){const fr=(ss,zz)=>{const c=[e.a[0]+e.u[0]*ss+e.n[0]*(it.o1+.002),e.a[1]+e.u[1]*ss+e.n[1]*(it.o1+.002)];return P(c[0],c[1],zz);};const [dw]=DSIZE[d.type];const m=.04;
+            s+=`<polygon points="${PS([fr(it.s-dw/2+m,it.z0+m),fr(it.s+dw/2-m,it.z0+m),fr(it.s+dw/2-m,it.z1-m),fr(it.s-dw/2+m,it.z1-m)])}" fill="none" stroke="${INK}" stroke-opacity=".5" stroke-width=".9"/>`;}}}
+      else if(it.kind==='free'){const p=it.p;const fl0=P(p[0],p[1],0),q=it.sc;
+        s+=`<path d="M${f1(fl0[0])},${f1(fl0[1])}L${f1(q[0])},${f1(q[1])}" stroke="#8F8574" stroke-width="1" stroke-dasharray="2 4" stroke-opacity=".8"/>`;
+        if(it.z<it.H-.02){const t=P(p[0],p[1],it.H);s+=`<path d="M${f1(t[0])},${f1(t[1])}L${f1(q[0])},${f1(q[1])}" stroke="${INK}" stroke-width="1.4"/><circle cx="${f1(t[0])}" cy="${f1(t[1])}" r="3" fill="${INK}"/>`;}}
+      if(it.kind==='riser'){const A=P(it.ri.x,it.ri.y,0),B=P(it.ri.x,it.ri.y,it.H);s+=`<path d="M${f1(A[0])},${f1(A[1])}L${f1(B[0])},${f1(B[1])}" stroke="${INK}" stroke-width="6" stroke-linecap="round"${O.doc?'':` data-kind="p3riser" data-id="${esc(it.ri.id||'')}"`}/><path d="M${f1(A[0]-1.2)},${f1(A[1])}L${f1(B[0]-1.2)},${f1(B[1])}" stroke="#fff" stroke-opacity=".35" stroke-width="1.2"/>`;}
+      if(it.kind==='dev'||it.kind==='free'){if(!it.hidden){const q=it.sc,k=.7*Z;s+=`<g transform="translate(${f1(q[0])},${f1(q[1])}) scale(${k})"${O.doc?'':` data-kind="p3dev" data-id="${esc(it.d.id)}"`}><circle r="22" fill="transparent"/><circle r="17" fill="#FFFDF9" stroke="${it.isSel?ACC:INK}" stroke-width="${it.isSel?4:1.6}"/><g transform="scale(.72)">${sym(it.d)}</g></g>`;}}
+      out.push(s);}
+    // ---------- Overlay je Etage ----------
+    out.unshift(...[]);
+    for(const k of (plan.ducts||[]).filter(k=>k.fl===fl)){const q=k.pts.map(p=>P(p[0],p[1],H-.08));ov.push(`<polyline points="${PS(q)}" fill="none" stroke="#9C9283" stroke-width="9" stroke-linecap="square" opacity=".8"/>`);}
+    for(const k of (plan.routes||[]).filter(k=>k.fl===fl)){const q=k.pts.map(p=>P(p[0],p[1],H-.15));ov.push(`<polyline points="${PS(q)}" fill="none" stroke="${PAPER}" stroke-width="6" stroke-linejoin="round" stroke-opacity=".8"/><polyline points="${PS(q)}" fill="none" stroke="${ACC}" stroke-width="2.6" stroke-linejoin="round"/>`);}
+    ov.push(...ghosts);
+    if(O.ghosts)for(const m of marks.filter(m=>!m.hidden&&m.fl===undefined)){const q=m.sc;ov.push(`<circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="${f1(17*.7*Z)}" fill="none" stroke="${INK}" stroke-opacity=".35" stroke-width="1.1" stroke-dasharray="3 3" pointer-events="none"/>`);}
+    if(O.ghosts)for(const m of marks.filter(m=>m.hidden&&m.fl===undefined)){m.fl=fl;const q=m.sc;ov.push(`<g transform="translate(${f1(q[0])},${f1(q[1])}) scale(${f1(.7*Z*100)/100})" opacity=".5"${O.doc?'':` data-kind="p3dev" data-id="${esc(m.d.id)}"`}><circle r="17" fill="#FFFDF9" fill-opacity=".6" stroke="${INK}" stroke-width="1.6" stroke-dasharray="4 3"/><g transform="scale(.72)">${sym(m.d)}</g></g>`);}
+    marks.forEach(m=>{if(m.fl===undefined)m.fl=fl;});
+    out.splice(out.length-seq.length,0,...floorL);out.push(...ov);
+    if(order.length>1){const vmin=Math.min(...rooms.flatMap(r=>r.pts.map(p=>U(p[0],p[1]))));const yy=rooms.flatMap(r=>r.pts.map(p=>P(p[0],p[1],0)[1]));const ym=(Math.min(...yy)+Math.max(...yy))/2;
+      const fname=(plan.floors.find(f=>f.id===fl)||{}).name||fl;labels.push(`<text x="${f1(vmin*S-40)}" y="${f1(ym)}" text-anchor="end" font-size="26" font-weight="800" fill="${INK}">${esc(fname)}</text>`);ext([vmin*S-40-fname.length*15,ym]);}
+  }
+  // Steigleitungen: Verbindung zwischen auseinandergezogenen Etagen
+  for(const ri of plan.risers||[]){const ids=order;let last=null;for(const fl of ids){if(!riserOn(ri,fl))continue;ZO=zoff[fl];const A=P(ri.x,ri.y,-O.slab),B=P(ri.x,ri.y,fH(fl));
+      if(last)pre.push(`<path d="M${f1(last[0])},${f1(last[1])}L${f1(A[0])},${f1(A[1])}" stroke="${INK}" stroke-width="2" stroke-dasharray="6 5" opacity=".55" pointer-events="none"/>`);last=B;}}
+  // ---------- Beschriftungen mit Kollisionsvermeidung ----------
+  if(O.labels){const boxes=marks.map(m=>[m.sc[0]-13*Z,m.sc[1]-13*Z,m.sc[0]+13*Z,m.sc[1]+13*Z]);const hit=b=>boxes.some(c=>b[0]<c[2]&&b[2]>c[0]&&b[1]<c[3]&&b[3]>c[1]);
+    for(const R of roomLbl){const t=R.t.toUpperCase(),w=(t.length*9.6+10)*Z,h=18*Z;for(const [dx,dy] of [[0,0],[0,22],[0,-22],[40,0],[-40,0],[0,44]]){const lx=R.q[0]+dx*Z,ly=R.q[1]+dy*Z;const bx=[lx-w/2,ly-h/2,lx+w/2,ly+h/2];if(hit(bx))continue;boxes.push(bx);
+      labels.push(`<text x="${f1(lx)}" y="${f1(ly+5*Z)}" text-anchor="middle" font-size="${f1(14*Z)}" font-weight="800" letter-spacing="1.6" fill="#6B655C" stroke="${PAPER}" stroke-width="${f1(4*Z)}" stroke-opacity=".85" paint-order="stroke" pointer-events="none">${esc(t)}</text>`);break;}}
+    for(const m of [...marks].sort((a,b)=>a.hidden-b.hidden)){const t=m.d.name||m.d.type;const w=(t.length*5.9+6)*Z,h=13*Z;const [x,y]=m.sc;const a1=15*Z,a2=14*Z,a3=30*Z;
+      const cand=[[x,y+a1+h/2],[x,y-a1-h/2],[x+a2+w/2,y],[x-a2-w/2,y],[x,y+a3+h/2],[x+a2+w/2,y+a2],[x-a2-w/2,y+a2]];
+      for(const [lx,ly] of cand){const b=[lx-w/2,ly-h/2,lx+w/2,ly+h/2];if(hit(b))continue;boxes.push(b);ext([b[0],b[1]]);ext([b[2],b[3]]);
+        labels.push(`<text x="${f1(lx)}" y="${f1(ly+4*Z)}" text-anchor="middle" font-size="${f1(10.5*Z)}" font-weight="700" fill="${m.hidden?'#8F8574':'#3B362E'}" stroke="${PAPER}" stroke-width="${f1(3.5*Z)}" paint-order="stroke" pointer-events="none">${esc(t)}</text>`);break;}}}
+  const svg=`<defs>${defs}</defs>`+pre.join('')+out.join('')+labels.join('');
+  const pad=30;return{svg,b:{x0:bb.x0-pad,y0:bb.y0-pad,x1:bb.x1+pad,y1:bb.y1+pad},cam:{yaw:O.yaw,pitch:O.pitch}};
+}
+// Komplettes SVG (z. B. für Doku/PDF)
+scene3v2.standalone=function(plan,opts={}){const sc=scene3v2(plan,Object.assign({doc:true},opts));if(!sc)return'';const b=sc.b;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${f1(b.x0)} ${f1(b.y0)} ${f1(b.x1-b.x0)} ${f1(b.y1-b.y0)}" font-family="Manrope, system-ui, sans-serif"><rect x="${f1(b.x0)}" y="${f1(b.y0)}" width="${f1(b.x1-b.x0)}" height="${f1(b.y1-b.y0)}" fill="${opts.bg||'#fff'}"/>${sc.svg}</svg>`;};
+// Mini-Grundriss mit Blickrichtung (Orientierung)
+scene3v2.mini=function(plan,fl,yaw,size=96){const rs=plan.rooms.filter(r=>r.fl===fl);if(!rs.length)return'';let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const r of rs)for(const p of r.pts){x0=Math.min(x0,p[0]);x1=Math.max(x1,p[0]);y0=Math.min(y0,p[1]);y1=Math.max(y1,p[1]);}
+  const k=(size-28)/Math.max(x1-x0,y1-y0),ox=size/2-(x0+x1)/2*k,oy=size/2-(y0+y1)/2*k;const th=yaw*Math.PI/180,fx=-Math.sin(th),fy=-Math.cos(th);
+  const R=size/2-6,ex=size/2-fx*R,ey=size/2-fy*R;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">${rs.map(r=>`<polygon points="${r.pts.map(p=>f1(p[0]*k+ox)+','+f1(p[1]*k+oy)).join(' ')}" fill="#FFFDF9" stroke="${INK}" stroke-width="1.4"/>`).join('')}
+  <path d="M${f1(ex)},${f1(ey)}L${f1(ex+fx*16-fy*9)},${f1(ey+fy*16+fx*9)}M${f1(ex)},${f1(ey)}L${f1(ex+fx*16+fy*9)},${f1(ey+fy*16-fx*9)}" stroke="${ACC}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${f1(ex)}" cy="${f1(ey)}" r="4.5" fill="${ACC}"/></svg>`;};
+scene3v2.defSym=defSym;scene3v2.WALLMOUNT=WALLMOUNT;
+G.scene3v2=scene3v2;})(typeof window!=='undefined'?window:globalThis);
+
+const R3={yaw:45,pitch:42,walls:'cut',zones:true,all:false,ui:1,k0:0};let R3RAF=0;
+function opts3(doc){const devs=S.items.filter(d=>S.plan.pos[d.id]).map(d=>({id:d.id,type:d.type,name:nm(d),z:zOf(d)}));return{yaw:R3.yaw,pitch:R3.pitch,walls:R3.walls,zones:R3.zones,ui:doc?1:R3.ui,sel:!doc&&S.sel&&S.sel.kind==='item'?S.sel.id:null,devices:devs,sym,isWall:d=>WALLMOUNT.has(d.type)||d.type==='adose'};}
+function req3(){if(!R3RAF)R3RAF=requestAnimationFrame(()=>{R3RAF=0;render3d();});}
+function animYaw(to){const from=R3.yaw,t0=performance.now();const step=t=>{const q=Math.min(1,(t-t0)/200),e=1-Math.pow(1-q,3);R3.yaw=from+(to-from)*e;render3d();if(q<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+function snap3(){const n=Math.round(R3.yaw/45)*45;if(Math.abs(n-R3.yaw)<10)animYaw(n);}
+
 function fls3(){const F=S.plan.floors;if(!R3.all)return[FL()];return F.map(f=>f.id).filter(id=>flHasContent(id));}
-function render3d(){const sc=scene3(fls3(),false);Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
+function render3d(){const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
+  const mi=$('#mini3');if(mi){const m=VIEW==='3d'?scene3v2.mini(S.plan,FL(),R3.yaw,84):'';mi.innerHTML=m;mi.style.display=m?'block':'none';}
   if(!sc)Ldev.innerHTML=lblTxt(0,0,'Diese Etage ist noch leer – im Grundriss Räume anlegen.',16,'#6B655C',700);}
-function fit3d(){const sc=scene3(fls3(),false);const r=svg.getBoundingClientRect();if(!sc){V.k=1;V.tx=r.width/2;V.ty=r.height/2;applyView();return;}const b=sc.b;const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const W=r.width-pw-20,H=r.height-150;
-  V.k=clamp(Math.min(W/(b.x1-b.x0),H/(b.y1-b.y0)),.15,2.5);V.tx=10+(W-(b.x1-b.x0)*V.k)/2-b.x0*V.k;V.ty=60+(H-(b.y1-b.y0)*V.k)/2-b.y0*V.k;applyView();}
-function doc3SVG(fl){const sc=scene3([fl],true);if(!sc)return'';const b=sc.b;return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${b.x0} ${b.y0} ${b.x1-b.x0} ${b.y1-b.y0}"><defs><pattern id="dhatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fff"/><rect width="2.2" height="6" fill="#1A1A1A"/></pattern></defs><rect x="${b.x0}" y="${b.y0}" width="${b.x1-b.x0}" height="${b.y1-b.y0}" fill="#fff"/>${sc.svg.split('url(#hatch)').join('url(#dhatch)')}</svg>`;}
+function fit3d(){R3.ui=1;const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});const r=svg.getBoundingClientRect();if(!sc){V.k=1;V.tx=r.width/2;V.ty=r.height/2;applyView();render3d();return;}const b=sc.b;const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const W=r.width-pw-20,H=r.height-170;
+  V.k=clamp(Math.min(W/(b.x1-b.x0),H/(b.y1-b.y0)),.1,3);V.tx=10+(W-(b.x1-b.x0)*V.k)/2-b.x0*V.k;V.ty=70+(H-(b.y1-b.y0)*V.k)/2-b.y0*V.k;R3.k0=V.k;applyView();render3d();}
+function doc3SVG(fl,yaw){const o={...opts3(true),floors:[fl],doc:true,idp:'d'+fl+'_'+(yaw??45),bg:'#fff',yaw:yaw??45,pitch:40,walls:'cut',zones:true};const v=scene3v2.standalone(S.plan,o);if(!v)return'';return v.replace('<svg ','<svg ').split('url(#hatch)').join('url(#dhatch)').replace(/(<svg[^>]*>)/,'$1<defs><pattern id="dhatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fff"/><rect width="2.2" height="6" fill="#1A1A1A"/></pattern></defs>');}
 
 /* ---------- Start ---------- */
 buildPal();applyView();fillRooms();ptoolsUI();
