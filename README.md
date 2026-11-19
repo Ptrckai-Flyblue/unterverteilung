@@ -12,6 +12,9 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 - Sofortige Fehlerprüfung mit Begründung
 - Etagen (Keller, EG, OG …) mit Geschosshöhe, Steigleitungen mit Höhe in der Kabellänge, Gebäudeansicht von der Seite
 - Grundriss: Räume beliebiger Form, Raumarten mit Regeln (Bad, Stall, Außen …), Geräte mit Normsymbolen, Kabelkanal, Leitungswege mit Länge
+- Räume aus Vorlagen (Rechteck, L, U, T) mit Maßen, Wände am Griff verschieben, Wand teilen, Türen und Fenster
+- Wandansicht von innen mit Installationszonen nach DIN 18015-3, Geräte auf Höhe ziehen
+- 3D-Schrägansicht (eine oder alle Etagen, 90° drehen), 3D-Bild und Wandansichten in der Doku
 - Phasenschiene, Abzweigkasten, Abzweigdose, Lichtleiste, Doppel- und Kombisteckdose, Schutzart IP
 - Räume, Kabel je Stromkreis, Dokumentation mit Installationsplan als PDF, Materialliste als CSV
 

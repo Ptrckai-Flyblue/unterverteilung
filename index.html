@@ -36,6 +36,11 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:"Manrope",-apple-syst
 select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236e6e73' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center}
 .two{display:flex;gap:8px}.two>*{flex:1}
 /* Doku */
+#wallv{position:fixed;inset:0;z-index:34;background:#EFE8DC;overflow:auto;-webkit-overflow-scrolling:touch;display:none;-webkit-user-select:none;user-select:none}
+#wallv .dbar{position:sticky;top:0;z-index:2;display:flex;gap:8px;align-items:center;padding:10px 14px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto}
+#wallv .dbar b{font-size:17px;margin-right:auto;white-space:nowrap}
+#wallv input.txt{-webkit-user-select:text;user-select:text}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wgrid h4{margin:6px 0 2px;font-size:12px}
 #docv{position:fixed;inset:0;z-index:35;background:#e9e9ee;overflow:auto;-webkit-overflow-scrolling:touch;display:none;-webkit-user-select:text;user-select:text}
 #docv .dbar{position:sticky;top:0;z-index:2;display:flex;gap:8px;align-items:center;padding:10px 14px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto}
 #docv .dbar b{font-size:17px;margin-right:auto;white-space:nowrap}
@@ -196,7 +201,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
   <button class="btn" data-act="undo" id="undoBtn" disabled>↶ Zurück</button>
   <button class="btn" data-act="doc">Doku</button>
   <div class="sp"></div>
-  <div class="vseg" role="tablist"><button data-act="view" data-v="schema" class="on" id="vSchema">Schaltplan</button><button data-act="view" data-v="plan" id="vPlan">Grundriss</button></div>
+  <div class="vseg" role="tablist"><button data-act="view" data-v="schema" class="on" id="vSchema">Schaltplan</button><button data-act="view" data-v="plan" id="vPlan">Grundriss</button><button data-act="view" data-v="3d" id="v3D">3D</button></div>
   <button class="btn" data-act="more">Mehr …</button>
 </header>
 <main id="stage" data-k>
@@ -234,6 +239,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
 <div id="ptools" data-k></div>
 <div id="floors" data-k></div>
 <div id="docv" data-k></div>
+<div id="wallv" data-k></div>
 <datalist id="roomlist" data-k></datalist>
 <div id="modal" data-k><div class="sheet" id="sheet"></div></div>
 <input type="file" id="file" accept=".json,application/json" style="display:none" data-k>
@@ -415,7 +421,7 @@ const INFO={
 const LOADS=[[0,'Nichts eingesteckt'],[10,'Handy-Ladegerät · 10 W'],[2000,'Wasserkocher · 2 kW'],[4000,'Wasserkocher + Föhn · 4 kW'],[5000,'Heizlüfter + Wasserkocher · 5 kW']];
 
 /* ---------- Zustand ---------- */
-const emptyPlan=()=>({floors:[{id:'f1',name:'Keller',h:2.5},{id:'f2',name:'EG',h:2.75}],cur:'f1',rooms:[],ducts:[],routes:[],risers:[],pos:{}});
+const emptyPlan=()=>({floors:[{id:'f1',name:'Keller',h:2.5},{id:'f2',name:'EG',h:2.75}],cur:'f1',rooms:[],ducts:[],routes:[],risers:[],openings:[],pos:{},z:{}});
 let S={items:[],wires:[],nid:1,rooms:[],doc:{},extras:[],plan:emptyPlan()};
 let RT={n:null,flow:new Set(),powered:new Map(),cur:new Map(),housing:new Set(),P:0};
 let OL={}; let tick=null; let GH=null; let pend=null; let addOff=0;
@@ -563,6 +569,7 @@ function markBox(d){const m=MARK[d.id];if(!m)return'';const s=sz(d);const c=m===
 function selBox(d){const s=sz(d);return `<rect x="-5" y="-5" width="${s.w+10}" height="${s.h+10}" rx="9" fill="none" stroke="#1A1A1A" stroke-width="2.5" pointer-events="none"/>`;}
 function render(){
   if(VIEW==='plan'){renderPlan();return;}
+  if(VIEW==='3d'){render3d();return;}
   const sel=S.sel;let se='',sd='',sw='',st='';
   const drag=act&&act.moved&&act.kind==='item'?act.id:null;
   for(const d of S.items){const ty=TYPES[d.type];if(!ty.enclosure)continue;const p=getPos(d);se+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})">${encDraw(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
@@ -608,6 +615,7 @@ svg.addEventListener('pointerdown',e=>{
   if(ptrs.size===2){startPinch();return;}if(ptrs.size>2)return;
   const el=e.target.closest('[data-kind]');const kind=el?el.dataset.kind:'bg';const w=toWorld(e.clientX,e.clientY);
   if(VIEW==='plan'){planDown(e,el,w);return;}
+  if(VIEW==='3d'){act={v3:true,kind:el?el.dataset.kind:'bg',id:el?.dataset.id,i:el?.dataset.i,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId,v0:{tx:V.tx,ty:V.ty}};return;}
   act={kind,id:el?.dataset.id,key:el?.dataset.key,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId,v0:{tx:V.tx,ty:V.ty}};
   if(['item','lever','test'].includes(kind)){const d=byId(act.id);const p=getPos(d);act.off={x:w.x-p.x,y:w.y-p.y};}
 });
@@ -616,6 +624,7 @@ svg.addEventListener('pointermove',e=>{
   if(act?.kind==='pinch'){doPinch();return;}
   if(!act||act.pid!==e.pointerId)return;
   if(act.plan){planMove(e);return;}
+  if(act.v3){const dx=e.clientX-act.sx,dy=e.clientY-act.sy;if(!act.moved&&Math.hypot(dx,dy)<7)return;act.moved=true;V.tx=act.v0.tx+dx;V.ty=act.v0.ty+dy;applyView();return;}
   const dx=e.clientX-act.sx,dy=e.clientY-act.sy;
   if(!act.moved){if(Math.hypot(dx,dy)<7)return;act.moved=true;
     if(act.kind==='lever'||act.kind==='test')act.kind='item';
@@ -631,6 +640,7 @@ function endPtr(e,cancel){
   if(act?.kind==='pinch'){if(!ptrs.size)act=null;return;}
   if(!act||act.pid!==e.pointerId)return;const a=act;act=null;
   if(a.plan){planUp(a,e,cancel);return;}
+  if(a.v3){if(!a.moved&&!cancel){S.sel=a.kind==='p3dev'?{kind:'item',id:a.id}:a.kind==='p3wall'?{kind:'wall',room:a.id,i:+a.i}:a.kind==='p3room'?{kind:'room',id:a.id}:null;render();renderPanel();}return;}
   if(cancel){temp.setAttribute('d','');if(a.kind==='item'&&a.moved)dropItem(a.id);return;}
   if(!a.moved){onTap(a);return;}
   if(a.kind==='term'){temp.setAttribute('d','');const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-kind="term"]');if(el&&el.dataset.key!==a.key)connect(a.key,el.dataset.key);else render();}
@@ -647,7 +657,7 @@ function doPinch(){const v=[...ptrs.values()];if(v.length<2)return;const [a,b]=v
 svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)));},{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 function zoomAt(mx,my,f){const wx=(mx-V.tx)/V.k,wy=(my-V.ty)/V.k;V.k=clamp(V.k*f,.2,3);V.tx=mx-wx*V.k;V.ty=my-wy*V.k;applyView();}
-function fit(){if(VIEW==='plan'){fitPlan();return;}if(!S.items.length){V.k=1;V.tx=40;V.ty=30;applyView();return;}let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+function fit(){if(VIEW==='plan'){fitPlan();return;}if(VIEW==='3d'){fit3d();return;}if(!S.items.length){V.k=1;V.tx=40;V.ty=30;applyView();return;}let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   for(const d of S.items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);y0=Math.min(y0,p.y-20);x1=Math.max(x1,p.x+s.w);y1=Math.max(y1,p.y+s.h+(d.type==='hak'?75:24));}
   for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
   y0-=56;y1+=50;const r=svg.getBoundingClientRect();const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;
@@ -677,7 +687,7 @@ function touch(d){const n=buildNets();const k=d.id+':PE';
   const f=units().filter(u=>u.closed&&isFI(u)).filter(u=>!buildNets({open:u.id}).get(k).phases.size).sort((a,b)=>a.idn-b.idn)[0];
   if(f){trip(f,'Fehlerstrom',`<b>${esc(uName(f))} hat ausgelöst</b>Du hast das Gehäuse von ${esc(nm(d))} berührt. Strom floss durch deinen Körper zur Erde, nicht über N zurück. Der FI hat das in ca. 20–40 ms erkannt. Du bist geschützt.`,'warn');changed();}
   else toast(`<b>Lebensgefahr</b>Das Gehäuse von ${esc(nm(d))} steht unter 230 V: kein Schutzleiter angeschlossen und kein FI im Stromkreis. Der Strom fließt ungebremst durch den Körper. Genau dafür gibt es PE und FI.`,'danger',12000);}
-function delItem(d){delete S.plan.pos[d.id];S.wires=S.wires.filter(w=>!w.a.startsWith(d.id+':')&&!w.b.startsWith(d.id+':'));
+function delItem(d){delete S.plan.pos[d.id];delete S.plan.z[d.id];S.wires=S.wires.filter(w=>!w.a.startsWith(d.id+':')&&!w.b.startsWith(d.id+':'));
   if(TYPES[d.type].enclosure)for(const c of S.items)if(c.mount?.enc===d.id){const p=getPos(c);c.x=p.x;c.y=p.y;c.mount=null;}
   S.items=S.items.filter(i=>i!==d);S.sel=null;changed();}
 function addType(type){const ty=TYPES[type];const d=newItem(type);let where='';
@@ -708,7 +718,7 @@ const seg=(act,opts,cur)=>`<div class="seg">${opts.map(([v,l])=>`<button data-ac
 function renderPanel(){const P=$('#panel');const s=S.sel;
   if(!s){P.style.display='none';document.body.classList.remove('pp');return;}
   let h='';
-  if(['room','duct','route','riser'].includes(s.kind)){const r=planPanel(s);if(r===null){S.sel=null;P.style.display='none';document.body.classList.remove('pp');return;}P.innerHTML=r;P.style.display='block';document.body.classList.add('pp');return;}
+  if(['room','duct','route','riser','wall','opening'].includes(s.kind)){const r=planPanel(s);if(r===null){S.sel=null;P.style.display='none';document.body.classList.remove('pp');return;}P.innerHTML=r;P.style.display='block';document.body.classList.add('pp');return;}
   if(s.kind==='wire'){const w=S.wires.find(x=>x.id===s.id);if(!w){S.sel=null;P.style.display='none';return;}
     const tn=k=>{const o=termOf(k);return o?`${esc(nm(o.d))} · ${esc(o.t.label||o.t.role)}`:'';};
     h+=`<div class="ph"><div><div class="pt">Leitung</div><div class="ps sub">${tn(w.a)} → ${tn(w.b)}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
@@ -759,7 +769,7 @@ function openCheck(){const R=check();const c=l=>R.filter(r=>r.lvl===l).length;co
   modal(h);}
 function openHelp(){modal(`<div class="mh"><h2>Hilfe</h2><button class="btn" data-act="mclose">Schließen</button></div><div class="help">
 <h3>Einstieg</h3><ul><li><b>Geführt aufbauen</b> (unter „Mehr“): Schritt für Schritt einen Lichtkreis verdrahten. Die zwei Anschlüsse jedes Schritts leuchten auf.</li><li><b>Weg des Stroms</b>: Lampe, Steckdose oder Herd antippen – der Weg vom Hausanschluss bis zum Verbraucher wird hervorgehoben.</li><li>Die großen Zahlen 1–4 auf der Fläche zeigen die Reihenfolge: Hausanschluss → Zählerschrank → Unterverteilung → Verbraucher.</li></ul>
-<h3>Grundriss</h3><ul><li>Oben auf <b>Grundriss</b> umschalten. Unten wählst du das Werkzeug: <b>Raum ▭</b> aufziehen (rastet auf 0,5 m) oder <b>Raum mit Ecken</b> für jede Form, Ecke für Ecke.</li><li>Raum antippen: Name, Raumart und Maße ändern. Ecken ziehen ändert die Form.</li><li><b>Geräte</b> zeigt alles, was noch nicht im Grundriss steht. Ein Gerät, das du in einen Raum ziehst, bekommt diesen Raum automatisch.</li><li><b>Kabelkanal</b> und <b>Leitung</b> zeichnest du Punkt für Punkt. Eine Leitung ordnest du einer Sicherung zu, ihre Länge geht in die Doku.</li><li><b>Etagen</b>: Oben links wechselst du zwischen Keller, EG, OG … Unter „Etagen“ legst du weitere an und stellst die Geschosshöhe ein. Die Etage darunter scheint blass durch.</li><li><b>Steigleitung</b>: Stelle antippen, an der die Leitung durch die Decke geht, dann Ziel-Etage wählen. Zeichnest du eine Leitung auf beiden Etagen bis zu diesem Symbol, zählt die Höhe automatisch zur Länge.</li><li><b>Gebäude</b> zeigt alle Etagen von der Seite – mit Hausanschluss, Verteilungen und Steigleitungen.</li><li>Die Raumart bringt Regeln mit, z. B. Bad oder Stall. „Prüfen“ meldet fehlende FI oder zu niedrige Schutzart.</li></ul>
+<h3>Grundriss</h3><ul><li>Oben auf <b>Grundriss</b> umschalten. Unten wählst du das Werkzeug: <b>Raum ▭</b> aufziehen (rastet auf 0,5 m) oder <b>Raum mit Ecken</b> für jede Form, Ecke für Ecke.</li><li>Raum antippen: Name, Raumart und Maße ändern. Ecken ziehen ändert die Form.</li><li><b>Geräte</b> zeigt alles, was noch nicht im Grundriss steht. Ein Gerät, das du in einen Raum ziehst, bekommt diesen Raum automatisch.</li><li><b>Kabelkanal</b> und <b>Leitung</b> zeichnest du Punkt für Punkt. Eine Leitung ordnest du einer Sicherung zu, ihre Länge geht in die Doku.</li><li><b>Raum</b>: Form wählen (Rechteck, L, U, T) und Maße eintragen. Griff in der Wandmitte ziehen verschiebt eine Wand. Eine Wand antippen: Wandansicht, Tür, Fenster, Wand teilen.</li><li><b>Wandansicht</b>: Blick von innen auf die Wand mit Installationszonen. Geräte auf Höhe und Abstand ziehen oder Maße eintippen.</li><li><b>3D</b>: oben umschalten. Drehen in 90°-Schritten, eine oder alle Etagen.</li><li><b>Etagen</b>: Oben links wechselst du zwischen Keller, EG, OG … Unter „Etagen“ legst du weitere an und stellst die Geschosshöhe ein. Die Etage darunter scheint blass durch.</li><li><b>Steigleitung</b>: Stelle antippen, an der die Leitung durch die Decke geht, dann Ziel-Etage wählen. Zeichnest du eine Leitung auf beiden Etagen bis zu diesem Symbol, zählt die Höhe automatisch zur Länge.</li><li><b>Gebäude</b> zeigt alle Etagen von der Seite – mit Hausanschluss, Verteilungen und Steigleitungen.</li><li>Die Raumart bringt Regeln mit, z. B. Bad oder Stall. „Prüfen“ meldet fehlende FI oder zu niedrige Schutzart.</li></ul>
 <h3>Aufbauen</h3><ul><li><b>Bauteile</b> antippen und Gerät wählen. Hutschienengeräte rasten automatisch ein: SLS, Zähler und PEN-Aufteilung im Zählerschrank, der Rest in der Unterverteilung.</li><li>Bauteil ziehen zum Verschieben. Über einer Hutschiene zeigt ein blauer Rahmen, wo es einrastet. Ziehst du einen Schrank, wandert alles darin mit.</li></ul>
 <h3>Verbinden</h3><ul><li>Vom Anschluss (Punkt) zum anderen Anschluss ziehen – oder ersten Punkt antippen, dann den zweiten.</li><li>Die Aderfarbe wird passend gewählt. Leitung antippen zum Ändern oder Löschen.</li><li>Gelb leuchtende Punkte und Leitungen führen Spannung. Weiße laufende Striche zeigen, wo Strom fließt.</li></ul>
 <h3>Schalten und Fehler</h3><ul><li>Hebel antippen schaltet ein und aus. Ausgelöste Geräte zeigen ein rotes Ausrufezeichen.</li><li>Bei Lampe, Steckdose und Herd kannst du Kurzschluss und Körperschluss auslösen. Bei der Steckdose wählst du die Last, damit testest du Überlast.</li><li><b>Prüfen</b> findet typische Verdrahtungsfehler.</li></ul>
@@ -844,8 +854,21 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'savepage':savePage();break;case'export':exportFile();break;case'import':$('#file').click();break;
    case'clear':S={items:[],wires:[],nid:1,sel:null,rooms:[],doc:{},extras:[],plan:emptyPlan()};OL={};closeModal();changed();fit();break;
    case'meas':setMeas(!MEAS);break;
-   case'view':VSET(v);break;case'floor':setFloor(v);break;case'flmanage':openFloors();break;case'building':openBuilding();break;case'fladd':addFloor(v);break;case'fldel':delFloor(v);break;
-   case'flup':case'fldown':{const F=S.plan.floors,i=flIdx(v),j=a==='flup'?i+1:i-1;if(j>=0&&j<F.length){[F[i],F[j]]=[F[j],F[i]];changed(false);openFloors();}break;}case'tool':setTool(v);break;case'pfinish':finishDraw();break;case'pcancel':PDRAW=null;setTool('select');break;
+   case'view':VSET(v);break;case'troom':openTemplates();break;case'tshape':TPL.shape=v;openTemplates();break;case'tinsert':insertTemplate();break;
+   case'rrot':{const r=room(S.sel?.id);if(r){rotateRoom(r);changed(false);}break;}
+   case'wview':if(S.sel?.kind==='wall')openWall(S.sel.room,S.sel.i);break;case'opwall':{const o=S.plan.openings.find(x=>x.id===S.sel?.id);const w=o&&openWall0(o);if(w){openWall(w.r.id,w.i);WV.sel=o.id;renderWall();}break;}
+   case'waddp':{const r=room(S.sel?.room);if(r){const o=addOpening(r,S.sel.i,v);if(o)S.sel={kind:'opening',id:o.id};changed(false);}break;}
+   case'wsplit':{const r=room(S.sel?.room);if(r){const i=S.sel.i,a=r.pts[i],b=r.pts[(i+1)%r.pts.length];const m=[snapv((a[0]+b[0])/2,.25),snapv((a[1]+b[1])/2,.25)];r.pts.splice(i+1,0,m,[...m]);S.sel={kind:'room',id:r.id};changed(false);toast('Wand geteilt. Jetzt eine Hälfte am Griff nach außen oder innen ziehen.','info',4000);}break;}
+   case'opkind':{const o=S.plan.openings.find(x=>x.id===S.sel?.id);if(o){o.kind=v;if(v==='window'){o.w=1;o.h=1.2;o.sill=.9;}else{o.w=.9;o.h=2;o.sill=0;}changed(false);}break;}
+   case'oplock':{const o=S.plan.openings.find(x=>x.id===S.sel?.id);if(o){o.lock=v;changed(false);}break;}
+   case'opdel':S.plan.openings=S.plan.openings.filter(x=>x.id!==S.sel?.id);S.sel=null;changed(false);break;
+   case'wprev':case'wnext':{const r=room(WV.room);const n=r.pts.length;let i=WV.i;for(let k=0;k<n;k++){i=(i+(a==='wnext'?1:n-1))%n;if(wallFrame(r,i))break;}WV.i=i;WV.sel=null;renderWall();break;}
+   case'wclose':closeWall();break;case'wsel':WV.sel=v;renderWall();break;
+   case'wadd':{const r=room(WV.room);const o=addOpening(r,WV.i,v);if(o)WV.sel=o.id;changed(false);renderWall();break;}
+   case'wodel':S.plan.openings=S.plan.openings.filter(x=>x.id!==WV.sel);WV.sel=null;changed(false);renderWall();break;
+   case'wolock':{const o=S.plan.openings.find(x=>x.id===WV.sel);if(o){o.lock=v;changed(false);renderWall();}break;}
+   case'r3rot':R3.rot=(R3.rot+1)%4;render();fit3d();break;case'r3all':R3.all=v==='1';render();fit3d();break;case'floor':setFloor(v);break;case'flmanage':openFloors();break;case'building':openBuilding();break;case'fladd':addFloor(v);break;case'fldel':delFloor(v);break;
+   case'flup':case'fldown':{const F=S.plan.floors,i=flIdx(v),j=a==='flup'?i+1:i-1;if(j>=0&&j<F.length){[F[i],F[j]]=[F[j],F[i]];changed(false);openFloors();}break;}case'tool':closeModal();setTool(v);break;case'pfinish':finishDraw();break;case'pcancel':PDRAW=null;setTool('select');break;
    case'tray':openTray();break;case'place':{closeModal();const it=byId(v);if(it){placeAtCenter(it);S.sel={kind:'item',id:it.id};changed(false);}break;}
    case'unplace':if(d){delete S.plan.pos[d.id];changed(false);}break;
    case'ip':d.ip=v;changed(false);break;case'phside':d.side=v;changed();break;case'phspan':{d.span=+v;if(d.mount){const e=byId(d.mount.enc);const L=TYPES[e.type].rails[d.mount.rail].len;d.mount.slot=Math.min(d.mount.slot,L-d.span);}changed();break;}
@@ -876,6 +899,17 @@ document.addEventListener('change',e=>{const i=e.target;if(i.tagName!=='SELECT'|
 document.addEventListener('input',e=>{const i=e.target;const a=i.dataset.act;if(a==='docf'){S.doc[i.dataset.v]=i.value;docDirty();}
   else if(a==='xname'||a==='xqty'||a==='xunit'){const x=S.extras[+i.dataset.v];if(!x)return;x[a==='xname'?'name':a==='xqty'?'qty':'unit']=a==='xqty'?i.value:i.value;docDirty();}});
 document.addEventListener('input',e=>{const i=e.target;if(i.dataset.act!=='label')return;const d=byId(S.sel?.id);if(!d)return;d.label=i.value;render();clearTimeout(sT);sT=setTimeout(saveLocal,400);});
+document.addEventListener('input',e=>{const i=e.target;if(i.dataset.act!=='tf')return;TPL[i.dataset.v]=['W','D','a','b'].includes(i.dataset.v)?Math.max(.5,+String(i.value).replace(',','.')||0):i.value;const pv=$('#tprev');if(pv)pv.innerHTML=tplPreview(TPL,130);});
+document.addEventListener('change',e=>{const i=e.target;const a=i.dataset.act;if(!a)return;const num=()=>+String(i.value).replace(',','.');
+  if(a==='tf'&&i.tagName==='SELECT'){TPL.type=i.value;return;}
+  if(['wds','wdz','wow','woh','wos','wosill','wmid'].includes(a)&&WV){const r=room(WV.room),F=wallFrame(r,WV.i),h=flH(r.fl);
+    if(a==='wmid'){WV.mid=i.checked;renderWall();return;}
+    const d=byId(WV.sel),o=S.plan.openings.find(x=>x.id===WV.sel);const v=num();if(!isFinite(v))return;
+    if(d&&a==='wds'){const p=fromAlong(F,clamp(v,.05,F.L-.05),.08);S.plan.pos[d.id]=[p[0],p[1],S.plan.pos[d.id][2]];}
+    if(d&&a==='wdz')S.plan.z[d.id]=clamp(v,0,h);
+    if(o){if(a==='wow')o.w=clamp(v,.3,F.L-.1);if(a==='woh')o.h=clamp(v,.3,h);if(a==='wosill')o.sill=clamp(v,0,h-o.h);if(a==='wos'){const p=fromAlong(F,clamp(v,o.w/2,F.L-o.w/2),0);o.x=p[0];o.y=p[1];}}
+    changed(false);renderWall();return;}
+  if(['opw','oph','opsill'].includes(a)){const o=S.plan.openings.find(x=>x.id===S.sel?.id);if(!o)return;const v=num();if(!isFinite(v))return;if(a==='opw')o.w=clamp(v,.3,5);if(a==='oph')o.h=clamp(v,.3,4);if(a==='opsill')o.sill=clamp(v,0,3);changed(false);}});
 document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if((e.key==='Delete'||e.key==='Backspace')&&S.sel){e.preventDefault();if(S.sel.kind==='wire'){S.wires=S.wires.filter(x=>x.id!==S.sel.id);S.sel=null;changed();}else{const d=byId(S.sel.id);if(d)delItem(d);}}
   if(e.key==='Escape'){pend=null;S.sel=null;closeModal();render();renderPanel();}});
 addEventListener('resize',()=>{});
@@ -1107,6 +1141,9 @@ function renderPaper(){const D=S.doc;const C=circuits();const M=materials();cons
   const PR=S.plan.rooms;h+=`<h2>3. Räume und Verbraucher</h2>${PR.length?`<table style="margin-bottom:10px"><tr><th>Etage</th><th>Raum</th><th>Raumart</th><th>Fläche</th><th>Besondere Regeln</th></tr>${PR.slice().sort((a,b)=>flIdx(a.fl)-flIdx(b.fl)).map(r=>`<tr><td>${esc(flName(r.fl))}</td><td><b>${esc(r.name)}</b></td><td>${esc(r.type)}</td><td>${fmt(polyArea(r.pts))} m²</td><td>${esc((RTYPES[r.type]||{}).short||'–')}</td></tr>`).join('')}</table>`:''}${cons.length?`<table><tr><th>Raum</th><th>Verbraucher</th><th>Art</th><th>Stromkreis</th></tr>${Object.entries(byRoom).sort((a,b)=>a[0]==='Ohne Raum'?1:b[0]==='Ohne Raum'?-1:a[0].localeCompare(b[0])).map(([r,ds])=>ds.map((d,i)=>`<tr>${i===0?`<td rowspan="${ds.length}"><b>${esc(r)}</b></td>`:''}<td>${cName(d)}</td><td>${esc(TYPES[d.type].name)}</td><td>${circOf(d)}</td></tr>`).join('')).join('')}</table>`:'<p>Keine Verbraucher im Plan.</p>'}`;
   h+=`<h2>4. Materialliste</h2><div class="tw"><table><tr><th>Pos.</th><th>Menge</th><th>Einheit</th><th>Bezeichnung</th><th>Hinweis</th></tr>${(()=>{let cat='',i=0;return M.rows.map(r=>{let x='';if(r.cat!==cat){cat=r.cat;x=`<tr class="catrow"><td colspan="5" style="background:#fafafa;font-weight:700">${esc(cat)}</td></tr>`;}i++;return x+`<tr><td>${i}</td><td style="text-align:right">${fmt(r.qty)}</td><td>${esc(r.unit)}</td><td>${esc(r.name)}</td><td>${esc(r.note||'')}</td></tr>`;}).join('');})()}</table></div>${M.missing?`<div class="meta" style="color:#9A3A22">Bei ${M.missing} Leitung${M.missing>1?'en':''} fehlt noch die Länge – bei der jeweiligen Sicherung bzw. beim Hauptschalter eintragen.</div>`:''}`;
   let sn=5;const FLS=S.plan.floors.filter(f=>flHasContent(f.id));for(const f of FLS.slice().reverse())h+=`<h2>${sn++}. Installationsplan ${esc(f.name)}</h2><div class="plan">${planDocSVG(f.id)}</div><div class="meta">${LEGEND_TXT}</div>`;
+  for(const f of FLS.slice().reverse()){const d3=doc3SVG(f.id);if(d3)h+=`<h2>${sn++}. 3D-Ansicht ${esc(f.name)}</h2><div class="plan">${d3}</div>`;}
+  const WVS=[];for(const r of S.plan.rooms.slice().sort((a,b)=>flIdx(b.fl)-flIdx(a.fl)))for(let i=0;i<r.pts.length;i++){if(!wallFrame(r,i))continue;if(devsOnWall(r,i).length||opsOnWall(r,i).length)WVS.push(`<div><h4>${esc(flName(r.fl))} · ${esc(r.name)} · Wand ${i+1}</h4>${wallSVG(r,i,{doc:true,k:48})}</div>`);}
+  if(WVS.length)h+=`<h2>${sn++}. Wandansichten</h2><div class="meta">Blick von innen. Gelb: Installationszonen nach DIN 18015-3. Maße in Metern, Höhe = Mitte des Geräts über Fußboden.</div><div class="wgrid">${WVS.join('')}</div>`;
   if(FLS.length>1||S.plan.risers.length)h+=`<h2>${sn++}. Gebäudeansicht</h2><div class="plan">${buildingSVG(true)}</div>`;
   h+=`<h2>${sn}. Schaltplan</h2><div class="plan">${planSVG()}</div><div class="meta">Leiterfarben: braun L1 · schwarz L2 · grau L3 · blau N · grün-gelb PE</div>`;
   h+=`<div class="sig"><div>Ort, Datum</div><div>Unterschrift Elektrofachkraft</div></div>`;
@@ -1144,11 +1181,11 @@ function centroid(pts){let a=0,cx=0,cy=0;for(let i=0;i<pts.length;i++){const [x1
 /* Etagen */
 function normPlan(pl){pl=pl&&typeof pl==='object'?pl:{};const P={floors:[],rooms:[],ducts:[],routes:[],risers:[],pos:{},...pl};
   if(!Array.isArray(P.floors)||!P.floors.length)P.floors=[{id:'f1',name:'Keller',h:2.5},{id:'f2',name:'EG',h:2.75}];
-  for(const k of ['rooms','ducts','routes','risers'])if(!Array.isArray(P[k]))P[k]=[];
+  for(const k of ['rooms','ducts','routes','risers','openings'])if(!Array.isArray(P[k]))P[k]=[];if(!P.z||typeof P.z!=='object')P.z={};
   const def=(P.floors.find(f=>f.name==='EG')||P.floors[0]).id;
   for(const k of ['rooms','ducts','routes'])for(const x of P[k])if(!P.floors.some(f=>f.id===x.fl))x.fl=def;
   for(const id in P.pos){const p=P.pos[id];if(!Array.isArray(p)){delete P.pos[id];continue;}if(!P.floors.some(f=>f.id===p[2]))P.pos[id]=[p[0],p[1],def];}
-  P.risers=P.risers.filter(r=>P.floors.some(f=>f.id===r.from)&&P.floors.some(f=>f.id===r.to));
+  P.risers=P.risers.filter(r=>P.floors.some(f=>f.id===r.from)&&P.floors.some(f=>f.id===r.to));P.openings=P.openings.filter(o=>P.rooms.some(r=>r.id===o.room));
   if(!P.floors.some(f=>f.id===P.cur))P.cur=P.floors[0].id;return P;}
 const FL=()=>S.plan.cur;
 const flIdx=id=>S.plan.floors.findIndex(f=>f.id===id);
@@ -1177,7 +1214,7 @@ function nextRoomName(){let n=S.plan.rooms.length+1;while(S.plan.rooms.some(r=>r
 function placeAtCenter(d){const r=svg.getBoundingClientRect();const vv=VIEW==='plan'?V:(VS.plan||{k:1,tx:r.width/2-300,ty:80});const off=(addOff++%5)*.5;
   S.plan.pos[d.id]=[snapv((r.width/2-vv.tx)/vv.k/PXM+off,.25),snapv((r.height*.4-vv.ty)/vv.k/PXM+off,.25),FL()];const rr=roomAt(S.plan.pos[d.id]);if(rr)d.room=rr.name;fillRooms();}
 function VSET(v){if(v===VIEW)return;VS[VIEW]={k:V.k,tx:V.tx,ty:V.ty};VIEW=v;S.sel=null;pend=null;PDRAW=null;PTOOL='select';if(MEAS)setMeas(false);
-  $('#vSchema').classList.toggle('on',v==='schema');$('#vPlan').classList.toggle('on',v==='plan');$('#gridbg').style.display=v==='plan'?'none':'';
+  $('#vSchema').classList.toggle('on',v==='schema');$('#vPlan').classList.toggle('on',v==='plan');$('#v3D').classList.toggle('on',v==='3d');$('#gridbg').style.display=v==='schema'?'':'none';
   temp.setAttribute('d','');if(VS[v]){Object.assign(V,VS[v]);applyView();}else fit();render();renderPanel();ptoolsUI();}
 function setFloor(id){if(!S.plan.floors.some(f=>f.id===id))return;S.plan.cur=id;PDRAW=PDRAW?{pts:[]}:null;S.sel=null;temp.setAttribute('d','');renderPanel();render();}
 const sock=(x,y,n)=>{let s='';for(let i=0;i<n;i++){const o=x+(i-(n-1)/2)*20;s+=`<path d="M${o-9} ${y}A9 9 0 0 0 ${o+9} ${y}" stroke="#1A1A1A" stroke-width="2.2" fill="#FFFDF9"/><path d="M${o-9} ${y}H${o+9}M${o} ${y}V${y-8}" stroke="#1A1A1A" stroke-width="2.2" fill="none"/>`;}return s;};
@@ -1200,10 +1237,17 @@ function planStr(doc,fl=FL()){const P=S.plan,sel=doc?null:S.sel;const X=v=>v*PXM
   const fi=flIdx(fl);if(!doc&&fi>0){const lo=P.floors[fi-1].id;for(const r of P.rooms.filter(r=>r.fl===lo)){rooms+=`<polygon points="${r.pts.map(p=>X(p[0])+','+X(p[1])).join(' ')}" fill="none" stroke="#C9BFAE" stroke-width="2.5" stroke-dasharray="7 6" pointer-events="none"/>`;}}
   for(const r of P.rooms.filter(r=>r.fl===fl)){const pts=r.pts.map(p=>X(p[0])+','+X(p[1])).join(' ');const isSel=sel&&sel.kind==='room'&&sel.id===r.id;
     rooms+=`<polygon points="${pts}" fill="${isSel?'#F3EDE2':'#FFFDF9'}" fill-opacity=".92" stroke="#1A1A1A" stroke-width="${isSel?5:4}" stroke-linejoin="round"${doc?'':` data-kind="proom" data-id="${r.id}" style="cursor:move"`}/>`;
-    r.pts.forEach((p,i)=>{const q=r.pts[(i+1)%r.pts.length];const L=Math.hypot(q[0]-p[0],q[1]-p[1]);if(L<.3)return;const mx=X((p[0]+q[0])/2),my=X((p[1]+q[1])/2);const c=centroid(r.pts);const nx=X(c[0])-mx,ny=X(c[1])-my,nl=Math.hypot(nx,ny)||1;
-      rooms+=lblTxt(mx+nx/nl*14,my+ny/nl*14+4,fmt(L,2)+' m',10,'#6B655C',600);});
+    r.pts.forEach((p,i)=>{const q=r.pts[(i+1)%r.pts.length];const L=Math.hypot(q[0]-p[0],q[1]-p[1]);if(L<.3)return;const mx=X((p[0]+q[0])/2),my=X((p[1]+q[1])/2);const WF=wallFrame(r,i);const nx=WF?WF.n[0]:0,ny=WF?WF.n[1]:0,nl=1,off=doc?14:30;
+      rooms+=lblTxt(mx+nx/nl*off,my+ny/nl*off+4,fmt(L,2)+' m',10,'#6B655C',600);});
     const c=labelPt(r);rooms+=lblTxt(X(c[0]),X(c[1])-10,esc(r.name),15,'#1A1A1A',800)+lblTxt(X(c[0]),X(c[1])+6,esc(r.type),11,'#6B655C',600)+lblTxt(X(c[0]),X(c[1])+20,fmt(polyArea(r.pts))+' m²',11,'#6B655C',600);
+    const showH=isSel||(sel&&sel.kind==='wall'&&sel.room===r.id);if(showH)r.pts.forEach((p,i)=>{const q=r.pts[(i+1)%r.pts.length];if(Math.hypot(q[0]-p[0],q[1]-p[1])<.3)return;const mx=X((p[0]+q[0])/2),my=X((p[1]+q[1])/2);const ws=sel&&sel.kind==='wall'&&sel.room===r.id&&sel.i===i;const ang=Math.atan2(q[1]-p[1],q[0]-p[0])*180/Math.PI;
+      top+=`${ws?`<path d="M${X(p[0])} ${X(p[1])}L${X(q[0])} ${X(q[1])}" stroke="#B4472C" stroke-width="9" opacity=".55" pointer-events="none"/>`:''}<g data-kind="pwall" data-id="${r.id}" data-i="${i}" transform="translate(${mx},${my}) rotate(${ang})" style="cursor:move"><rect x="-22" y="-16" width="44" height="32" fill="transparent"/><rect x="-13" y="-6" width="26" height="12" rx="6" fill="${ws?'#B4472C':'#FFFDF9'}" stroke="#1A1A1A" stroke-width="2.2"/></g>`;});
     if(isSel)r.pts.forEach((p,i)=>{top+=`<circle cx="${X(p[0])}" cy="${X(p[1])}" r="16" fill="transparent" data-kind="pcorner" data-id="${r.id}" data-i="${i}"/><circle cx="${X(p[0])}" cy="${X(p[1])}" r="7" fill="#1A1A1A" stroke="#F6F1E9" stroke-width="2.5" pointer-events="none"/>`;});}
+  for(const o of P.openings.filter(o=>o.fl===fl)){const w=openWall0(o);if(!w)continue;const F=w.F;const a=fromAlong(F,w.s-o.w/2,0),b=fromAlong(F,w.s+o.w/2,0);const isSel=sel&&sel.kind==='opening'&&sel.id===o.id;
+    rooms+=`<g${doc?'':` data-kind="popen" data-id="${o.id}" style="cursor:ew-resize"`}><path d="M${X(a[0])} ${X(a[1])}L${X(b[0])} ${X(b[1])}" stroke="#FFFDF9" stroke-width="7"/>`;
+    if(o.kind==='window'){const off=.05;rooms+=`<path d="M${X(a[0]+F.n[0]*off)} ${X(a[1]+F.n[1]*off)}L${X(b[0]+F.n[0]*off)} ${X(b[1]+F.n[1]*off)}M${X(a[0]-F.n[0]*off)} ${X(a[1]-F.n[1]*off)}L${X(b[0]-F.n[0]*off)} ${X(b[1]-F.n[1]*off)}" stroke="#1A1A1A" stroke-width="1.6"/>`;}
+    else{const hin=o.lock==='rechts'?a:b,oth=o.lock==='rechts'?b:a;const leaf=[hin[0]+F.n[0]*o.w,hin[1]+F.n[1]*o.w];rooms+=`<path d="M${X(hin[0])} ${X(hin[1])}L${X(leaf[0])} ${X(leaf[1])}" stroke="#1A1A1A" stroke-width="1.8"/><path d="M${X(leaf[0])} ${X(leaf[1])}A${o.w*PXM} ${o.w*PXM} 0 0 ${((leaf[0]-hin[0])*(oth[1]-hin[1])-(leaf[1]-hin[1])*(oth[0]-hin[0]))>0?1:0} ${X(oth[0])} ${X(oth[1])}" fill="none" stroke="#1A1A1A" stroke-width="1" stroke-dasharray="3 3"/>`;}
+    rooms+=`${isSel?`<path d="M${X(a[0])} ${X(a[1])}L${X(b[0])} ${X(b[1])}" stroke="#B4472C" stroke-width="5" opacity=".7"/>`:''}${doc?'':`<path d="M${X(a[0])} ${X(a[1])}L${X(b[0])} ${X(b[1])}" stroke="transparent" stroke-width="20"/>`}</g>`;}
   for(const k of P.ducts.filter(k=>k.fl===fl)){const pts=k.pts.map(p=>X(p[0])+','+X(p[1])).join(' ');const isSel=sel&&sel.kind==='duct'&&sel.id===k.id;
     lines+=`<polyline points="${pts}" fill="none" stroke="${isSel?'#1A1A1A':'#9C9283'}" stroke-width="13" stroke-linecap="square" stroke-linejoin="miter"/><polyline points="${pts}" fill="none" stroke="#EFE8DC" stroke-width="8" stroke-linecap="square"/>`;
     if(!doc)lines+=`<polyline points="${pts}" fill="none" stroke="transparent" stroke-width="22" data-kind="pduct" data-id="${k.id}"/>`;
@@ -1241,13 +1285,13 @@ function buildingSVG(forDoc){const P=S.plan,F=P.floors;const SC=40,W=680,L=70,R=
   F.forEach((f,i)=>{const y=fy[i];s+=`<rect x="${L}" y="${y.top}" width="${R-L}" height="${y.bot-y.top}" fill="#FFFDF9" stroke="#1A1A1A" stroke-width="3"/>`+`<text x="${L+8}" y="${y.top+18}" font-size="13" font-weight="800" fill="#1A1A1A">${esc(f.name)}</text><text x="${L+8}" y="${y.top+33}" font-size="10.5" font-weight="600" fill="#6B655C">${fmt(+f.h||2.5,2)} m</text>`;});
   for(const ri of P.risers){const [a,b]=riserSpan(ri);const X=sx(ri.x);const yt=fy[b].bot-.7*SC;s+=`<path d="M${X} ${fy[a].bot-8}V${yt}" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round"/><path d="M${X-6} ${yt+8}L${X} ${yt}L${X+6} ${yt+8}" stroke="#1A1A1A" stroke-width="3" fill="none"/>`+`<text x="${X+9}" y="${(fy[a].bot+yt)/2}" font-size="10" font-weight="800" fill="#1A1A1A">Steigleitung · ${fmt(heightBetween(a,b),2)} m</text>`;}
   const hak=S.items.find(d=>d.type==='hak'&&P.pos[d.id]);
-  for(const [id,p] of Object.entries(P.pos)){const d=byId(id);if(!d)continue;const i=flIdx(p[2]);if(i<0)continue;const f=F[i],y=fy[i];const hh=HGT[d.type]??.5;const yy=hh<0?y.top+(-hh)*SC:y.bot-hh*SC;const big=['hak','zs','uv','abzk'].includes(d.type);
+  for(const [id,p] of Object.entries(P.pos)){const d=byId(id);if(!d)continue;const i=flIdx(p[2]);if(i<0)continue;const f=F[i],y=fy[i];const yy=y.bot-zOf(d)*SC;const big=['hak','zs','uv','abzk'].includes(d.type);
     s+=`<g transform="translate(${sx(p[0])},${yy}) scale(${big?.8:.6})">${sym(d)}</g>`;if(big)s+=lblTxt(sx(p[0]),yy+22,esc(nm(d)),10,'#1A1A1A',800);}
-  if(hak){const p=P.pos[hak.id],i=flIdx(p[2]);const X=sx(p[0]),Y=fy[i].bot-HGT.hak*SC;s+=`<path d="M8 ${base+18}H${X}V${Y+10}" stroke="#1A1A1A" stroke-width="4" fill="none"/><text x="10" y="${base+14}" font-size="10" font-weight="800" fill="#1A1A1A">Netz</text>`;}
+  if(hak){const p=P.pos[hak.id],i=flIdx(p[2]);const X=sx(p[0]),Y=fy[i].bot-zOf(hak)*SC;s+=`<path d="M8 ${base+18}H${X}V${Y+10}" stroke="#1A1A1A" stroke-width="4" fill="none"/><text x="10" y="${base+14}" font-size="10" font-weight="800" fill="#1A1A1A">Netz</text>`;}
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block"><defs><pattern id="${forDoc?'dhatch':'hatch2'}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fff"/><rect width="2.2" height="6" fill="#1A1A1A"/></pattern></defs>${s.split('url(#hatch)').join(`url(#${forDoc?'dhatch':'hatch2'})`)}</svg>`;}
 function openBuilding(){modal(`<div class="mh"><h2>Gebäudeansicht</h2><button class="btn" data-act="mclose">Schließen</button></div><p style="font-size:14px;color:var(--sub);margin-top:0">Von der Seite: Etagen übereinander, Verteilungen, Geräte in typischer Höhe und Steigleitungen. Die Lage von links nach rechts entspricht dem Grundriss.</p>${buildingSVG(false)}`);}
 /* Etagen verwalten */
-function floorsUI(){const box=$('#floors');if(VIEW!=='plan'){box.style.display='none';return;}box.style.display='flex';
+function floorsUI(){const box=$('#floors');if(VIEW==='schema'){box.style.display='none';return;}box.style.display='flex';
   box.innerHTML=`<div class="vseg">${S.plan.floors.slice().reverse().map(f=>`<button data-act="floor" data-v="${f.id}" class="${f.id===FL()?'on':''}">${esc(f.name)}</button>`).join('')}</div><button class="btn" data-act="flmanage">Etagen</button><button class="btn" data-act="building">Gebäude</button>`;}
 function openFloors(){const F=S.plan.floors;modal(`<div class="mh"><h2>Etagen</h2><button class="btn" data-act="mclose">Fertig</button></div><p style="font-size:14px;color:var(--sub);margin-top:0">Von oben nach unten wie im Haus. Die Höhe ist die Geschosshöhe (Boden bis Boden), sie zählt bei Steigleitungen zur Kabellänge.</p>
   ${F.slice().reverse().map(f=>{const i=flIdx(f.id);return `<div class="xrow" style="padding:6px 0;border-bottom:1px solid var(--line)"><input class="txt" style="flex:2" data-act="flname" data-v="${f.id}" value="${esc(f.name)}" aria-label="Name"><input class="txt" style="flex:1" inputmode="decimal" data-act="flh" data-v="${f.id}" value="${fmt(+f.h||2.5,2)}" aria-label="Höhe in m"><span style="font-size:13px;color:var(--sub)">m</span><button class="btn" data-act="flup" data-v="${f.id}" ${i===F.length-1?'disabled':''}>Höher</button><button class="btn" data-act="fldown" data-v="${f.id}" ${i===0?'disabled':''}>Tiefer</button><button class="btn red" data-act="fldel" data-v="${f.id}" ${F.length<2?'disabled':''}>Löschen</button></div>`;}).join('')}
@@ -1266,6 +1310,8 @@ function planDown(e,el,w){const kind=el?el.dataset.kind:'bg';const m=pm(w);
   if(PTOOL==='rect'){act.kind='rect';act.a={x:snapv(m.x,.5),y:snapv(m.y,.5)};return;}
   if(PTOOL!=='select'){act.kind='drawtap';return;}
   if(kind==='pcorner'){act.kind='pcorner';act.id=el.dataset.id;act.i=+el.dataset.i;return;}
+  if(kind==='pwall'){const r=room(el.dataset.id),i=+el.dataset.i;const F=wallFrame(r,i);if(!F)return;act.kind='pwall';act.id=r.id;act.i=i;act.n=F.n;act.orig=r.pts.map(p=>[...p]);act.ops=opsOnWall(r,i).map(o=>[o,o.x,o.y]);act.devs=devsOnWall(r,i).map(d=>[d.id,[...S.plan.pos[d.id]]]);return;}
+  if(kind==='popen'){act.kind='popen';act.id=el.dataset.id;return;}
   if(kind==='pdev'){act.kind='pdev';act.id=el.dataset.id;const p=S.plan.pos[act.id];act.off={x:m.x-p[0],y:m.y-p[1]};return;}
   if(kind==='priser'){act.kind='priser';act.id=el.dataset.id;const r=S.plan.risers.find(x=>x.id===act.id);act.off={x:m.x-r.x,y:m.y-r.y};act.ox=r.x;act.oy=r.y;return;}
   if(kind==='proom'){const r=room(el.dataset.id);act.kind='proom';act.id=r.id;act.orig=r.pts.map(p=>[...p]);act.devs=Object.entries(S.plan.pos).filter(([,p])=>p[2]===r.fl&&pip(p,r.pts)).map(([id,p])=>[id,[...p]]);return;}
@@ -1275,17 +1321,22 @@ function planMove(e){const dx=e.clientX-act.sx,dy=e.clientY-act.sy;if(!act.moved
   if(['bg','drawtap','pduct','proute'].includes(act.kind)){V.tx=act.v0.tx+dx;V.ty=act.v0.ty+dy;applyView();return;}
   if(act.kind==='rect'){act.b={x:snapv(m.x,.5),y:snapv(m.y,.5)};drawPreview();return;}
   if(act.kind==='pcorner'){const r=room(act.id);if(r)r.pts[act.i]=[snapv(m.x,.25),snapv(m.y,.25)];req();return;}
+  if(act.kind==='pwall'){const r=room(act.id);const n=act.n;const dd=snapv((m.x-act.m0.x)*n[0]+(m.y-act.m0.y)*n[1],.25);const j=(act.i+1)%r.pts.length;r.pts=act.orig.map(p=>[...p]);r.pts[act.i]=[act.orig[act.i][0]+n[0]*dd,act.orig[act.i][1]+n[1]*dd];r.pts[j]=[act.orig[j][0]+n[0]*dd,act.orig[j][1]+n[1]*dd];
+    for(const [o,x,y] of act.ops){o.x=x+n[0]*dd;o.y=y+n[1]*dd;}for(const [id,p] of act.devs)S.plan.pos[id]=[p[0]+n[0]*dd,p[1]+n[1]*dd,p[2]];req();return;}
+  if(act.kind==='popen'){const o=S.plan.openings.find(x=>x.id===act.id);const w=openWall0(o);if(w){const s=clamp(snapv(along(w.F,[m.x,m.y]),.05),o.w/2+.02,w.F.L-o.w/2-.02);const q=fromAlong(w.F,s,0);o.x=q[0];o.y=q[1];}req();return;}
   if(act.kind==='pdev'){S.plan.pos[act.id]=[snapv(m.x-act.off.x,.25),snapv(m.y-act.off.y,.25),S.plan.pos[act.id][2]];req();return;}
   if(act.kind==='priser'){const r=S.plan.risers.find(x=>x.id===act.id);const nx=snapv(m.x-act.off.x,.25),ny=snapv(m.y-act.off.y,.25);for(const k of S.plan.routes)for(const p of k.pts)if(near(p,[r.x,r.y])&&riserOn(r,k.fl)){p[0]=nx;p[1]=ny;}r.x=nx;r.y=ny;req();return;}
   if(act.kind==='proom'){const r=room(act.id);const ddx=snapv(m.x-act.m0.x,.25),ddy=snapv(m.y-act.m0.y,.25);r.pts=act.orig.map(([x,y])=>[x+ddx,y+ddy]);for(const [id,p] of act.devs)S.plan.pos[id]=[p[0]+ddx,p[1]+ddy,p[2]];req();}}
 function planUp(a,e,cancel){
   if(!a.moved){if(a.kind==='drawtap'){addDrawPoint(a.m0);return;}if(a.kind==='rect'){temp.setAttribute('d','');return;}
-    S.sel=a.kind==='pdev'?{kind:'item',id:a.id}:a.kind==='proom'?{kind:'room',id:a.id}:a.kind==='pduct'?{kind:'duct',id:a.id}:a.kind==='proute'?{kind:'route',id:a.id}:a.kind==='priser'?{kind:'riser',id:a.id}:a.kind==='pcorner'?S.sel:null;render();renderPanel();return;}
+    S.sel=a.kind==='pwall'?{kind:'wall',room:a.id,i:a.i}:a.kind==='popen'?{kind:'opening',id:a.id}:a.kind==='pdev'?{kind:'item',id:a.id}:a.kind==='proom'?{kind:'room',id:a.id}:a.kind==='pduct'?{kind:'duct',id:a.id}:a.kind==='proute'?{kind:'route',id:a.id}:a.kind==='priser'?{kind:'riser',id:a.id}:a.kind==='pcorner'?S.sel:null;render();renderPanel();return;}
   if(a.kind==='rect'){temp.setAttribute('d','');if(!a.b)return;const x0=Math.min(a.a.x,a.b.x),x1=Math.max(a.a.x,a.b.x),y0=Math.min(a.a.y,a.b.y),y1=Math.max(a.a.y,a.b.y);
     if(x1-x0>=.5&&y1-y0>=.5){const r={id:'r'+(S.nid++),fl:FL(),name:nextRoomName(),type:'Wohnraum',pts:[[x0,y0],[x1,y0],[x1,y1],[x0,y1]]};S.plan.rooms.push(r);assignRooms();PTOOL='select';S.sel={kind:'room',id:r.id};ptoolsUI();changed(false);}else render();return;}
-  if(['pdev','proom','pcorner','priser'].includes(a.kind)){if(a.kind==='pcorner'){const r=room(a.id);if(r&&r.pts.length>3){const p=r.pts[a.i];const dup=r.pts.findIndex((q,j)=>j!==a.i&&Math.hypot(q[0]-p[0],q[1]-p[1])<.01);if(dup>=0)r.pts.splice(a.i,1);}}assignRooms();changed(false);}}
+  if(a.kind==='pdev')snapToWall(a.id);
+  if(['pdev','proom','pcorner','priser','pwall','popen'].includes(a.kind)){if(a.kind==='pwall'){const r=room(a.id);r.pts=r.pts.filter((p,k)=>{const q=r.pts[(k+1)%r.pts.length];return !(k!==a.i&&k!==(a.i+1)%r.pts.length&&Math.hypot(q[0]-p[0],q[1]-p[1])<.01&&r.pts.length>4);});}if(a.kind==='pcorner'){const r=room(a.id);if(r&&r.pts.length>3){const p=r.pts[a.i];const dup=r.pts.findIndex((q,j)=>j!==a.i&&Math.hypot(q[0]-p[0],q[1]-p[1])<.01);if(dup>=0)r.pts.splice(a.i,1);}}assignRooms();changed(false);}}
 function nearDev(p){let best=null,bd=.5;const cand=[...Object.values(S.plan.pos).filter(q=>q[2]===FL()),...S.plan.risers.filter(r=>riserOn(r)).map(r=>[r.x,r.y])];for(const q of cand){const dd=Math.hypot(q[0]-p[0],q[1]-p[1]);if(dd<bd){bd=dd;best=q;}}return best;}
-function addDrawPoint(m){if(PTOOL==='riser'){const p=[snapv(m.x,.25),snapv(m.y,.25)];const i=flIdx(FL()),F=S.plan.floors;if(F.length<2){toast('Für eine Steigleitung brauchst du mindestens zwei Etagen. Lege oben über „Etagen“ eine an.','info',4000);return;}
+function addDrawPoint(m){if(PTOOL==='opening'){const w=wallOfPoint([m.x,m.y],FL(),.6);if(!w){toast('Hier ist keine Wand. Tippe direkt auf eine Raumwand.','info',2500);return;}const F=wallFrame(w.r,w.i);const o=addOpening(w.r,w.i,'door',along(F,[m.x,m.y]));PTOOL='select';S.sel={kind:'opening',id:o.id};ptoolsUI();changed(false);return;}
+  if(PTOOL==='riser'){const p=[snapv(m.x,.25),snapv(m.y,.25)];const i=flIdx(FL()),F=S.plan.floors;if(F.length<2){toast('Für eine Steigleitung brauchst du mindestens zwei Etagen. Lege oben über „Etagen“ eine an.','info',4000);return;}
     const to=(F[i+1]||F[i-1]).id;const r={id:'s'+(S.nid++),x:p[0],y:p[1],from:FL(),to};S.plan.risers.push(r);PTOOL='select';PDRAW=null;S.sel={kind:'riser',id:r.id};ptoolsUI();changed(false);return;}
   if(!PDRAW)return;const st=PTOOL==='poly'?.5:.25;let p=[snapv(m.x,st),snapv(m.y,st)];
   if(PTOOL!=='poly'){const q=nearDev([m.x,m.y]);if(q)p=[q[0],q[1]];}
@@ -1303,17 +1354,19 @@ function finishDraw(){if(!PDRAW)return;const pts=PDRAW.pts;
     const k={id:'l'+(S.nid++),fl:FL(),ls,pts};S.plan.routes.push(k);S.sel={kind:'route',id:k.id};const lsd=byId(ls);if(lsd&&!(+lsd.len>0))lsd.len=Math.round(routeLenFor(ls)*10)/10;}
   PDRAW=null;PTOOL='select';temp.setAttribute('d','');ptoolsUI();changed(false);}
 function setTool(t){PTOOL=t;PDRAW=['poly','duct','route'].includes(t)?{pts:[]}:null;S.sel=null;temp.setAttribute('d','');renderPanel();ptoolsUI();render();}
-function ptoolsUI(){floorsUI();const box=$('#ptools');if(VIEW!=='plan'){box.style.display='none';return;}box.style.display='flex';
+function ptoolsUI(){floorsUI();const box=$('#ptools');if(VIEW==='schema'){box.style.display='none';return;}box.style.display='flex';
+  if(VIEW==='3d'){box.innerHTML=`<div class="hint">Wand antippen: Wandansicht mit Höhen. Gerät antippen: Details. Zwei Finger zoomen, ziehen verschiebt.</div><div class="tb"><button data-act="r3rot">↻ Drehen</button><button data-act="r3all" data-v="0" class="${R3.all?'':'on'}">Diese Etage</button><button data-act="r3all" data-v="1" class="${R3.all?'on':''}">Alle Etagen</button><button data-act="fit">Einpassen</button></div>`;return;}
   const un=S.items.filter(d=>PLANNABLE(d)&&!S.plan.pos[d.id]).length;const b=(t,l)=>`<button data-act="tool" data-v="${t}" class="${PTOOL===t?'on':''}">${l}</button>`;
   let hint='';const n=PDRAW?PDRAW.pts.length:0;const here=flName(FL());
-  if(PTOOL==='select')hint=!S.plan.rooms.some(r=>r.fl===FL())?`Etage „${esc(here)}“ ist noch leer. Tippe auf „Raum ▭“ und zieh ein Rechteck auf – oder „Raum mit Ecken“ für jede andere Form.${flIdx(FL())>0?' Die Etage darunter scheint blass durch.':''}`:'';
+  if(PTOOL==='select')hint=!S.plan.rooms.some(r=>r.fl===FL())?`Etage „${esc(here)}“ ist noch leer. Tippe unten auf „Raum“ und wähle eine Form – Rechteck, L, U oder T – mit Maßen.${flIdx(FL())>0?' Die Etage darunter scheint blass durch.':''}`:'';
+  if(PTOOL==='opening')hint='Tippe auf die Wand, in der die Tür oder das Fenster sitzt.';
   if(PTOOL==='rect')hint='Mit dem Finger ein Rechteck aufziehen. Es rastet auf 0,5 m ein.';
   if(PTOOL==='poly')hint=`Ecken nacheinander antippen (${n} gesetzt). Zum Schließen den ersten Punkt antippen oder „Fertig“.`;
   if(PTOOL==='duct')hint=`Punkte entlang des Kabelkanals antippen (${n} gesetzt), dann „Fertig“.`;
   if(PTOOL==='route')hint=`Weg der Leitung antippen (${n} Punkte${n>1?', '+fmt(polyLen(PDRAW.pts))+' m':''}). Punkte rasten an Geräten und Steigleitungen ein. Über mehrere Etagen: bis zur Steigleitung zeichnen, Etage wechseln, dort weiterzeichnen.`;
   if(PTOOL==='riser')hint='Tippe die Stelle an, an der die Leitung durch die Decke geht. Danach wählst du die Ziel-Etage.';
-  const fin=['poly','duct','route'].includes(PTOOL)?`<div><button class="btn" data-act="pfinish">Fertig</button><button class="btn" data-act="pcancel">Abbrechen</button></div>`:['rect','riser'].includes(PTOOL)?`<div><button class="btn" data-act="pcancel">Abbrechen</button></div>`:'';
-  box.innerHTML=`${hint?`<div class="hint">${hint}${fin}</div>`:''}<div class="tb">${b('select','Wählen')}${b('rect','Raum ▭')}${b('poly','Raum mit Ecken')}${b('duct','Kabelkanal')}${b('route','Leitung')}${b('riser','Steigleitung')}<button data-act="tray">Geräte${un?` (${un})`:''}</button></div>`;}
+  const fin=['poly','duct','route'].includes(PTOOL)?`<div><button class="btn" data-act="pfinish">Fertig</button><button class="btn" data-act="pcancel">Abbrechen</button></div>`:['rect','riser','opening'].includes(PTOOL)?`<div><button class="btn" data-act="pcancel">Abbrechen</button></div>`:'';
+  box.innerHTML=`${hint?`<div class="hint">${hint}${fin}</div>`:''}<div class="tb">${b('select','Wählen')}<button data-act="troom">Raum</button>${b('opening','Tür/Fenster')}${b('duct','Kabelkanal')}${b('route','Leitung')}${b('riser','Steigleitung')}<button data-act="tray">Geräte${un?` (${un})`:''}</button></div>`;}
 function openTray(){const un=S.items.filter(d=>PLANNABLE(d)&&!S.plan.pos[d.id]);
   modal(`<div class="mh"><h2>Geräte platzieren</h2><button class="btn" data-act="mclose">Schließen</button></div>${un.length?`<p style="font-size:14px;color:var(--sub);margin-top:0">Noch nicht im Grundriss. Antippen setzt das Gerät in die Mitte der Etage „${esc(flName(FL()))}“ – dann an seinen Platz ziehen.</p>`+un.map(d=>`<div class="mrow" data-act="place" data-v="${d.id}"><svg width="44" height="44" viewBox="-24 -24 48 48" style="flex:none">${sym(d)}</svg><div><b>${esc(nm(d))}</b><span>${esc(TYPES[d.type].name)}${d.room?' · '+esc(d.room):''}</span></div><span class="ch">›</span></div>`).join(''):'<p style="font-size:15px">Alle Geräte stehen im Grundriss. Neue Geräte fügst du über „Bauteile“ hinzu.</p>'}`);}
 function planPanel(s){const P=S.plan;
@@ -1324,7 +1377,8 @@ function planPanel(s){const P=S.plan;
     ${rl?`<div class="col"><div>Maße in Metern (Breite × Länge)</div><div class="two"><input class="txt" data-act="rw" inputmode="decimal" value="${fmt(b.x1-b.x0,2)}" aria-label="Breite"><input class="txt" data-act="rl" inputmode="decimal" value="${fmt(b.y1-b.y0,2)}" aria-label="Länge"></div><div style="font-size:12.5px;color:var(--sub);margin-top:5px">Andere Form: Ecken ziehen oder mit „Raum mit Ecken“ zeichnen.</div></div>`:`<div style="font-size:13.5px;color:var(--sub);padding:10px 0;border-bottom:1px solid var(--line)">Freie Form mit ${r.pts.length} Ecken – Ecken ziehen ändert die Form.</div>`}
     <div class="sec">Regeln für diese Raumart</div><div class="expl"><p style="font-size:14.5px">${esc(rule.text||'Allgemeine Regeln: In Wohnungen Steckdosen und Licht über einen 30-mA-FI.')}</p></div>
     <div class="sec">Geräte im Raum</div><div style="font-size:14.5px;margin-top:6px;line-height:1.5">${devs.length?devs.map(d=>esc(nm(d))).join(', '):'Noch keine. Unten über „Geräte“ platzieren.'}</div>
-    <div class="actions"><button class="btn red" data-act="rdel">Raum löschen</button></div>`;}
+    <div style="font-size:13px;color:var(--sub);margin-top:12px">Wände: Griff in der Wandmitte ziehen verschiebt die Wand. Antippen öffnet Wandansicht, Türen und Fenster.</div>
+    <div class="actions"><button class="btn" data-act="rrot">90° drehen</button><button class="btn red" data-act="rdel">Raum löschen</button></div>`;}
   if(s.kind==='duct'){const k=P.ducts.find(x=>x.id===s.id);if(!k)return null;const kinds=['Kabelkanal 15×15','Kabelkanal 25×40','Kabelkanal 40×60','Kabelkanal 60×110','Installationsrohr M20','Installationsrohr M25'];
     return `<div class="ph"><div><div class="pt">Kabelkanal</div><div class="ps sub">${fmt(polyLen(k.pts))} m · ${esc(flName(k.fl))}</div></div><button class="btn" data-act="close">Schließen</button></div>
     <div class="col"><div>Art</div><select class="txt" data-act="dkind">${kinds.map(x=>`<option${x===k.kind?' selected':''}>${x}</option>`).join('')}</select></div>
@@ -1338,6 +1392,19 @@ function planPanel(s){const P=S.plan;
     return `<div class="ph"><div><div class="pt">Steigleitung</div><div class="ps sub">${esc(P.floors[a].name)} → ${esc(P.floors[b].name)} · ${fmt(heightBetween(a,b),2)} m</div></div><button class="btn" data-act="close">Schließen</button></div>
     <div class="col"><div>Von Etage</div><select class="txt" data-act="sfrom">${opt(r.from)}</select></div><div class="col"><div>Bis Etage</div><select class="txt" data-act="sto">${opt(r.to)}</select></div>
     <div class="expl"><p style="font-size:14px;color:#3B362E">Das Symbol erscheint auf allen Etagen dazwischen an derselben Stelle. Leitungswege, die auf zwei Etagen hier enden, bekommen die Höhe automatisch dazu. Die Höhe stellst du unter „Etagen“ ein.</p></div><div class="actions"><button class="btn red" data-act="rdel">Steigleitung löschen</button></div>`;}
+  if(s.kind==='wall'){const r=room(s.room);if(!r)return null;const F=wallFrame(r,s.i);if(!F)return null;const dv=devsOnWall(r,s.i),op=opsOnWall(r,s.i);
+    return `<div class="ph"><div><div class="pt">Wand ${s.i+1} · ${esc(r.name)}</div><div class="ps sub">${fmt(F.L,2)} m lang · ${fmt(flH(r.fl),2)} m hoch</div></div><button class="btn" data-act="close">Schließen</button></div>
+    <div class="actions" style="margin-top:6px"><button class="btn pri" data-act="wview">Wandansicht öffnen</button></div>
+    <div class="actions"><button class="btn" data-act="waddp" data-v="door">+ Tür</button><button class="btn" data-act="waddp" data-v="window">+ Fenster</button><button class="btn" data-act="wsplit">Wand teilen</button></div>
+    <div style="font-size:13px;color:var(--sub);margin-top:8px">„Wand teilen“ macht aus einer Wand zwei. Dann eine Hälfte am Griff ziehen – so entstehen Vorsprünge und L-Formen.</div>
+    <div class="sec">An dieser Wand</div><div style="font-size:14.5px;margin-top:6px;line-height:1.5">${[...dv.map(d=>esc(nm(d))+' ('+fmt(zOf(d),2)+' m hoch)'),...op.map(o=>o.kind==='door'?'Tür':'Fenster')].join(', ')||'Noch nichts.'}</div>`;}
+  if(s.kind==='opening'){const o=P.openings.find(x=>x.id===s.id);if(!o)return null;const w=openWall0(o);
+    return `<div class="ph"><div><div class="pt">${o.kind==='door'?'Tür':'Fenster'}</div><div class="ps sub">${fmt(o.w,2)} × ${fmt(o.h,2)} m</div></div><button class="btn" data-act="close">Schließen</button></div>
+    <div class="col"><div>Art</div>${seg('opkind',[['door','Tür'],['window','Fenster']],o.kind)}</div>
+    <div class="col"><div>Maße (m)</div><div class="two"><input class="txt" inputmode="decimal" data-act="opw" value="${fmt(o.w,2)}" aria-label="Breite"><input class="txt" inputmode="decimal" data-act="oph" value="${fmt(o.h,2)}" aria-label="Höhe"></div><div style="font-size:12.5px;color:var(--sub);margin-top:4px">Breite × Höhe</div></div>
+    ${o.kind==='window'?`<div class="col"><div>Brüstung (m)</div><input class="txt" inputmode="decimal" data-act="opsill" value="${fmt(o.sill,2)}"></div>`:`<div class="col"><div>Schlossseite (von innen gesehen)</div>${seg('oplock',[['links','Links'],['rechts','Rechts']],o.lock)}</div>`}
+    <div style="font-size:13px;color:var(--sub);margin-top:8px">Verschieben: im Grundriss an der Wand entlang ziehen.</div>
+    <div class="actions">${w?`<button class="btn pri" data-act="opwall">Wandansicht</button>`:''}<button class="btn red" data-act="opdel">Entfernen</button></div>`;}
   return null;}
 function roomRules(add,sN,nu,fiU){const P=S.plan;if(!P.rooms.length)return;const seen=new Set();
   for(const d of S.items){const ty=TYPES[d.type];if(ty.rail||ty.enclosure)continue;const r=roomOfItem(d);if(!r)continue;const rule=RTYPES[r.type];if(!rule)continue;
@@ -1346,6 +1413,132 @@ function roomRules(add,sN,nu,fiU){const P=S.plan;if(!P.rooms.length)return;const
       if(rule.fiAll&&!fiU.some(u=>u.idn<=rule.fiAll&&!nu(u).get(Lk).phases.size))add('err',`${nm(d)} im Raum „${r.name}“: In „${r.type}“ müssen alle Stromkreise über einen FI ≤ ${rule.fiAll} mA laufen (${rule.norm}).`,[d.id]);
       if(rule.fi300&&!fiU.some(u=>u.idn<=300&&!nu(u).get(Lk).phases.size))add('warn',`${nm(d)} im Raum „${r.name}“: Für den Brandschutz alle Stromkreise über einen FI ≤ 300 mA führen (${rule.norm}).`,[d.id]);}}
     if(rule.hint&&!seen.has(r.id)){seen.add(r.id);add('hint',`${r.name} (${r.type}): ${rule.hint}`,[]);}}}
+
+/* ---------- Wände, Öffnungen, Vorlagen ---------- */
+const WALLMOUNT=new Set(['schalter','steckdose','dsteck','kombi','herd','uv','zs','hak','abzk']);
+const ZDEF={lampe:-.1,leiste:-.1,adose:-.3,wago:-.3,abzk:2,schalter:1.05,kombi:1.05,steckdose:.3,dsteck:.3,herd:.45,uv:1.5,zs:1.5,hak:.8};
+function flH(fl){return +(S.plan.floors.find(f=>f.id===fl)||{}).h||2.5;}
+function zOf(d){const p=S.plan.pos[d.id];const h=flH(p?p[2]:FL());const z=S.plan.z[d.id];if(z!=null)return Math.min(z,h);const v=ZDEF[d.type]??.5;return v<0?h+v:v;}
+function wallFrame(r,i){const a=r.pts[i],b=r.pts[(i+1)%r.pts.length];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.05)return null;const u=[(b[0]-a[0])/L,(b[1]-a[1])/L];let n=[-u[1],u[0]];
+  const m=[(a[0]+b[0])/2+n[0]*.05,(a[1]+b[1])/2+n[1]*.05];if(!pip(m,r.pts))n=[-n[0],-n[1]];const rt=[n[1],-n[0]];const da=a[0]*rt[0]+a[1]*rt[1],db=b[0]*rt[0]+b[1]*rt[1];
+  const left=da<=db?a:b,right=da<=db?b:a;return{a,b,L,n,left,right,dir:[(right[0]-left[0])/L,(right[1]-left[1])/L]};}
+const along=(F,p)=>(p[0]-F.left[0])*F.dir[0]+(p[1]-F.left[1])*F.dir[1];
+const fromAlong=(F,s,off=.08)=>[F.left[0]+F.dir[0]*s+F.n[0]*off,F.left[1]+F.dir[1]*s+F.n[1]*off];
+function wallOfPoint(p,fl,maxd=.4){let best=null,bd=maxd;for(const r of S.plan.rooms){if(r.fl!==fl)continue;const inside=pip(p,r.pts);for(let i=0;i<r.pts.length;i++){const a=r.pts[i],b=r.pts[(i+1)%r.pts.length];if(Math.hypot(b[0]-a[0],b[1]-a[1])<.05)continue;const d=segDist(p,a,b)-(inside?.02:0);if(d<bd){bd=d;best={r,i};}}}return best;}
+function openWall0(o){const r=room(o.room);if(!r)return null;let best=null,bd=.6;for(let i=0;i<r.pts.length;i++){const a=r.pts[i],b=r.pts[(i+1)%r.pts.length];if(Math.hypot(b[0]-a[0],b[1]-a[1])<.05)continue;const d=segDist([o.x,o.y],a,b);if(d<bd){bd=d;best=i;}}if(best==null)return null;const F=wallFrame(r,best);return{r,i:best,F,s:along(F,[o.x,o.y])};}
+const devsOnWall=(r,i)=>{const F=wallFrame(r,i);if(!F)return[];return S.items.filter(d=>{const p=S.plan.pos[d.id];if(!p||p[2]!==r.fl||!WALLMOUNT.has(d.type))return false;const w=wallOfPoint(p,r.fl,.4);return w&&w.r.id===r.id&&w.i===i;});};
+const opsOnWall=(r,i)=>S.plan.openings.filter(o=>{const w=openWall0(o);return w&&w.r.id===r.id&&w.i===i;});
+function snapToWall(id){const d=byId(id),p=S.plan.pos[id];if(!d||!p||!WALLMOUNT.has(d.type))return;const w=wallOfPoint(p,p[2],.45);if(!w)return;const F=wallFrame(w.r,w.i);const s=clamp(along(F,p),.05,F.L-.05);const q=fromAlong(F,s,.08);S.plan.pos[id]=[q[0],q[1],p[2]];}
+function addOpening(r,i,kind,s){const F=wallFrame(r,i);if(!F)return null;const w=kind==='door'?.9:1;if(s==null){const occ=opsOnWall(r,i).map(o=>{const q=openWall0(o);return [q.s-o.w/2,q.s+o.w/2];});const free=x=>occ.every(([u,v])=>x+w/2+.1<=u||x-w/2-.1>=v);const cand=[];for(let x=w/2+.1;x<=F.L-w/2-.1+1e-9;x+=.05)cand.push(+x.toFixed(2));const ok=cand.filter(free).sort((p,q)=>Math.abs(p-F.L/2)-Math.abs(q-F.L/2));if(occ.length&&!ok.length){toast('Auf dieser Wand ist kein Platz mehr frei.','info',2500);return null;}s=ok.length?ok[0]:F.L/2;}s=clamp(s,w/2+.05,F.L-w/2-.05);const p=fromAlong(F,s,0);
+  const o={id:'o'+(S.nid++),fl:r.fl,room:r.id,x:p[0],y:p[1],kind,w,h:kind==='door'?2:1.2,sill:kind==='door'?0:.9,lock:'rechts'};S.plan.openings.push(o);return o;}
+const TPL={shape:'rect',W:4,D:3,a:1.5,b:1.5,name:'',type:'Wohnraum'};
+function tplPts(t){const W=+t.W,D=+t.D,a=Math.min(+t.a,W-.5),b=Math.min(+t.b,D-.5);
+  if(t.shape==='L')return[[0,0],[W-a,0],[W-a,b],[W,b],[W,D],[0,D]];
+  if(t.shape==='U'){const x1=(W-a)/2;return[[0,0],[x1,0],[x1,b],[x1+a,b],[x1+a,0],[W,0],[W,D],[0,D]];}
+  if(t.shape==='T'){const x1=(W-a)/2;return[[0,0],[W,0],[W,b],[x1+a,b],[x1+a,D],[x1,D],[x1,b],[0,b]];}
+  return[[0,0],[W,0],[W,D],[0,D]];}
+function tplPreview(t,size=120){const p=tplPts(t);const b=bbox(p);const k=(size-16)/Math.max(b.x1-b.x0,b.y1-b.y0);return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><polygon points="${p.map(q=>(8+(q[0]-b.x0)*k)+','+(8+(q[1]-b.y0)*k)).join(' ')}" fill="#FFFDF9" stroke="#1A1A1A" stroke-width="3" stroke-linejoin="round"/></svg>`;}
+function openTemplates(){const t=TPL;if(!t.name)t.name=nextRoomName();const sh=[['rect','Rechteck'],['L','L-Form'],['U','U-Form'],['T','T-Form']];
+  const lab={L:['Ausschnitt Breite','Ausschnitt Tiefe'],U:['Öffnung Breite','Öffnung Tiefe'],T:['Steg Breite','Kopf Tiefe']}[t.shape];const n=v=>fmt(v,2);
+  modal(`<div class="mh"><h2>Raum hinzufügen</h2><button class="btn" data-act="mclose">Abbrechen</button></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">${sh.map(([k,l])=>`<button class="way${t.shape===k?' pri':''}" style="flex-direction:column;gap:4px;padding:10px 6px;margin:0;text-align:center" data-act="tshape" data-v="${k}">${tplPreview({...t,shape:k},56)}<b style="font-size:13.5px">${l}</b></button>`).join('')}</div>
+  <div style="display:flex;gap:16px;align-items:center;margin-top:14px;flex-wrap:wrap"><div id="tprev">${tplPreview(t,130)}</div><div style="flex:1;min-width:220px">
+   <div class="grid2"><div><label>Name</label><input class="txt" data-act="tf" data-v="name" value="${esc(t.name)}"></div><div><label>Raumart</label><select class="txt" data-act="tf" data-v="type">${Object.keys(RTYPES).map(k=>`<option${k===t.type?' selected':''}>${k}</option>`).join('')}</select></div>
+   <div><label>Breite (m)</label><input class="txt" inputmode="decimal" data-act="tf" data-v="W" value="${n(t.W)}"></div><div><label>Tiefe (m)</label><input class="txt" inputmode="decimal" data-act="tf" data-v="D" value="${n(t.D)}"></div>
+   ${lab?`<div><label>${lab[0]} (m)</label><input class="txt" inputmode="decimal" data-act="tf" data-v="a" value="${n(t.a)}"></div><div><label>${lab[1]} (m)</label><input class="txt" inputmode="decimal" data-act="tf" data-v="b" value="${n(t.b)}"></div>`:''}</div></div></div>
+  <div class="actions"><button class="btn pri" data-act="tinsert">Raum einsetzen</button></div>
+  <div class="sec" style="margin-top:20px">Andere Wege</div><div class="mrow" data-act="tool" data-v="rect"><div><b>Selbst aufziehen</b><span>Rechteck mit dem Finger auf die Fläche ziehen.</span></div><span class="ch">›</span></div><div class="mrow" data-act="tool" data-v="poly"><div><b>Freie Form</b><span>Ecken nacheinander antippen – für schräge Wände.</span></div><span class="ch">›</span></div>
+  <p style="font-size:13px;color:var(--sub)">Tipp: Später an der Wandmitte ziehen verschiebt eine Wand. Eine Wand antippen öffnet die Wandansicht, Türen und Fenster.</p>`);}
+function insertTemplate(){const t=TPL;const P=S.plan;const pts0=tplPts(t);const rs=P.rooms.filter(r=>r.fl===FL());let ox,oy;
+  if(rs.length){const b=bbox(rs.flatMap(r=>r.pts));ox=b.x1;oy=b.y0;}else{const r=svg.getBoundingClientRect();ox=snapv((r.width/2-V.tx)/V.k/PXM-t.W/2,.5);oy=snapv((r.height*.4-V.ty)/V.k/PXM-t.D/2,.5);}
+  const rm={id:'r'+(S.nid++),fl:FL(),name:(t.name||nextRoomName()).trim(),type:t.type,pts:pts0.map(p=>[p[0]+ox,p[1]+oy])};P.rooms.push(rm);TPL.name='';closeModal();assignRooms();S.sel={kind:'room',id:rm.id};changed(false);fit();}
+function rotateRoom(r){const c=centroid(r.pts);const rot=p=>[snapv(c[0]-(p[1]-c[1]),.25),snapv(c[1]+(p[0]-c[0]),.25)];const inside=Object.entries(S.plan.pos).filter(([,p])=>p[2]===r.fl&&pip(p,r.pts));const ops=S.plan.openings.filter(o=>o.room===r.id);
+  r.pts=r.pts.map(rot);for(const [id,p] of inside){const q=rot(p);S.plan.pos[id]=[q[0],q[1],p[2]];}for(const o of ops){const q=rot([o.x,o.y]);o.x=q[0];o.y=q[1];}}
+
+/* ---------- Wandansicht ---------- */
+let WV=null;
+function zonesFor(r,i,mid){const F=wallFrame(r,i),h=flH(r.fl),L=F.L,z=[];
+  z.push({s0:0,s1:L,z0:h-.45,z1:h-.15,t:'ZW-o'},{s0:0,s1:L,z0:.15,z1:.45,t:'ZW-u'});if(mid)z.push({s0:0,s1:L,z0:1,z1:1.3,t:'ZW-m'});
+  z.push({s0:.1,s1:.3,z0:0,z1:h,t:'ZS-e'},{s0:L-.3,s1:L-.1,z0:0,z1:h,t:'ZS-e'});
+  for(const o of opsOnWall(r,i)){const w=openWall0(o);const a=w.s-o.w/2,b=w.s+o.w/2;if(o.kind==='window'){z.push({s0:a-.3,s1:a-.1,z0:0,z1:h,t:'ZS-f'},{s0:b+.1,s1:b+.3,z0:0,z1:h,t:'ZS-f'});}
+    else{if(o.lock!=='rechts')z.push({s0:a-.3,s1:a-.1,z0:0,z1:h,t:'ZS-t'});if(o.lock!=='links')z.push({s0:b+.1,s1:b+.3,z0:0,z1:h,t:'ZS-t'});}}
+  return z.map(q=>({...q,s0:clamp(q.s0,0,L),s1:clamp(q.s1,0,L)})).filter(q=>q.s1>q.s0);}
+const midDefault=r=>['Küche','Bad / Dusche','Hauswirtschaft','Werkstatt','WC'].includes(r.type);
+function wallSVG(r,i,o={}){const F=wallFrame(r,i);if(!F)return'';const h=flH(r.fl);const mid=o.mid??midDefault(r);const K=o.k||Math.min(150,Math.max(40,(Math.min(innerWidth,1100)-140)/F.L));
+  const W=F.L*K+100,H=h*K+86;const X=s=>60+s*K,Y=z=>18+(h-z)*K;const Z=zonesFor(r,i,mid);
+  let s=`<rect x="${X(0)}" y="${Y(h)}" width="${F.L*K}" height="${h*K}" fill="#FFFDF9"/>`;
+  for(const q of Z)s+=`<rect x="${X(q.s0)}" y="${Y(q.z1)}" width="${(q.s1-q.s0)*K}" height="${(q.z1-q.z0)*K}" fill="#E7C88A" opacity="${q.t.startsWith('ZW')?.32:.26}"/>`;
+  for(const t of ['ZW-o','ZW-u','ZW-m']){const q=Z.find(z=>z.t===t);if(q)s+=`<text x="${X(0)-6}" y="${(Y(q.z0)+Y(q.z1))/2+4}" text-anchor="end" font-size="10" font-weight="800" fill="#9A7A3A">${t}</text>`;}
+  s+=`<rect x="${X(0)}" y="${Y(h)}" width="${F.L*K}" height="${h*K}" fill="none" stroke="#1A1A1A" stroke-width="3"/><path d="M${X(0)-10} ${Y(0)}H${X(F.L)+10}" stroke="#1A1A1A" stroke-width="5"/>`;
+  for(const op of opsOnWall(r,i)){const w=openWall0(op);const a=w.s-op.w/2;const sel=WV&&WV.sel===op.id&&!o.doc;
+    if(op.kind==='door')s+=`<g${o.doc?'':` data-kind="wopen" data-id="${op.id}" style="cursor:ew-resize"`}><rect x="${X(a)}" y="${Y(op.h)}" width="${op.w*K}" height="${op.h*K}" fill="#E7DFCF" stroke="#1A1A1A" stroke-width="${sel?3.5:2}"/><circle cx="${X(op.lock==='links'?a+.08:a+op.w-.08)}" cy="${Y(1.05)}" r="3.5" fill="#1A1A1A"/>${lblTxt(X(w.s),Y(op.h/2),'Tür',11,'#6B655C',700)}</g>`;
+    else s+=`<g${o.doc?'':` data-kind="wopen" data-id="${op.id}" style="cursor:ew-resize"`}><rect x="${X(a)}" y="${Y(op.sill+op.h)}" width="${op.w*K}" height="${op.h*K}" fill="#DCE9F1" stroke="#1A1A1A" stroke-width="${sel?3.5:2}"/><path d="M${X(w.s)} ${Y(op.sill+op.h)}V${Y(op.sill)}" stroke="#1A1A1A" stroke-width="1.2"/>${lblTxt(X(w.s),Y(op.sill+op.h/2),'Fenster',11,'#6B655C',700)}</g>`;}
+  const inZ=(ss,zz)=>Z.some(q=>ss>=q.s0-.02&&ss<=q.s1+.02&&zz>=q.z0-.02&&zz<=q.z1+.02);
+  for(const d of devsOnWall(r,i)){const ss=along(F,S.plan.pos[d.id]),zz=zOf(d);const sel=WV&&WV.sel===d.id&&!o.doc;const ok=inZ(ss,zz);
+    if(sel||o.doc)s+=`<path d="M${X(ss)} ${Y(0)}V${Y(zz)+16}" stroke="#1A1A1A" stroke-width="1.2" stroke-dasharray="4 4"/>${lblTxt(X(ss)+(o.doc?0:0)+24,(Y(0)+Y(zz))/2+4,fmt(zz,2)+' m',11,'#1A1A1A',800)}`;
+    if(sel)s+=`<path d="M${X(0)} ${Y(zz)}H${X(ss)-20}" stroke="#1A1A1A" stroke-width="1.2" stroke-dasharray="4 4"/>${lblTxt((X(0)+X(ss))/2,Y(zz)-6,fmt(ss,2)+' m',11,'#1A1A1A',800)}`;
+    s+=`<g transform="translate(${X(ss)},${Y(zz)})"${o.doc?'':` data-kind="wdev" data-id="${d.id}" style="cursor:move"`}><circle r="22" fill="transparent"/>${ok?'':'<circle r="19" fill="none" stroke="#C98A1B" stroke-width="3" stroke-dasharray="4 3"/>'}${sel?'<circle r="21" fill="none" stroke="#1A1A1A" stroke-width="2.5"/>':''}<circle r="15" fill="#FFFDF9" opacity=".9"/>${sym(d)}${lblTxt(0,32,esc(nm(d)),10.5,'#3B362E',700)}</g>`;}
+  s+=`<path d="M${X(0)} ${Y(0)+30}H${X(F.L)}M${X(0)} ${Y(0)+24}V${Y(0)+36}M${X(F.L)} ${Y(0)+24}V${Y(0)+36}" stroke="#1A1A1A" stroke-width="1.3"/>${lblTxt((X(0)+X(F.L))/2,Y(0)+48,fmt(F.L,2)+' m',11.5,'#1A1A1A',800)}`;
+  s+=`<path d="M${X(F.L)+22} ${Y(0)}V${Y(h)}M${X(F.L)+16} ${Y(0)}H${X(F.L)+28}M${X(F.L)+16} ${Y(h)}H${X(F.L)+28}" stroke="#1A1A1A" stroke-width="1.3"/><text x="${X(F.L)+30}" y="${(Y(0)+Y(h))/2}" font-size="11" font-weight="800" fill="#1A1A1A" transform="rotate(-90 ${X(F.L)+30} ${(Y(0)+Y(h))/2})" text-anchor="middle">${fmt(h,2)} m</text>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" id="${o.doc?'':'wsvg'}" viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;height:auto;display:block;margin:0 auto;touch-action:none">${s}</svg>`;}
+function openWall(rid,i){WV={room:rid,i,mid:null,sel:null};$('#wallv').style.display='block';renderWall();}
+function closeWall(){WV=null;$('#wallv').style.display='none';render();renderPanel();}
+function renderWall(){if(!WV)return;const r=room(WV.room);if(!r){closeWall();return;}const n=r.pts.length;let F=wallFrame(r,WV.i);let guard=0;while(!F&&guard++<n){WV.i=(WV.i+1)%n;F=wallFrame(r,WV.i);}if(!F){closeWall();return;}
+  const mid=WV.mid??midDefault(r);const devs=devsOnWall(r,WV.i),ops=opsOnWall(r,WV.i);const Z=zonesFor(r,WV.i,mid);const inZ=(s,z)=>Z.some(q=>s>=q.s0-.02&&s<=q.s1+.02&&z>=q.z0-.02&&z<=q.z1+.02);
+  const sel=WV.sel&&(byId(WV.sel)||S.plan.openings.find(o=>o.id===WV.sel));let ed='';
+  if(sel&&sel.type){const s=along(F,S.plan.pos[sel.id]);ed=`<div class="sec">${esc(nm(sel))}</div><div class="grid2" style="margin-top:6px"><div><label>Abstand von links (m)</label><input class="txt" inputmode="decimal" data-act="wds" value="${fmt(s,2)}"></div><div><label>Höhe Mitte (m)</label><input class="txt" inputmode="decimal" data-act="wdz" value="${fmt(zOf(sel),2)}"></div></div>`;}
+  else if(sel){const w=openWall0(sel);ed=`<div class="sec">${sel.kind==='door'?'Tür':'Fenster'}</div><div class="grid2" style="margin-top:6px"><div><label>Breite (m)</label><input class="txt" inputmode="decimal" data-act="wow" value="${fmt(sel.w,2)}"></div><div><label>Höhe (m)</label><input class="txt" inputmode="decimal" data-act="woh" value="${fmt(sel.h,2)}"></div><div><label>Abstand Mitte von links (m)</label><input class="txt" inputmode="decimal" data-act="wos" value="${fmt(w.s,2)}"></div>${sel.kind==='window'?`<div><label>Brüstung (m)</label><input class="txt" inputmode="decimal" data-act="wosill" value="${fmt(sel.sill,2)}"></div>`:`<div><label>Schlossseite</label>${seg('wolock',[['links','Links'],['rechts','Rechts']],sel.lock)}</div>`}</div><div class="actions"><button class="btn red" data-act="wodel">${sel.kind==='door'?'Tür':'Fenster'} entfernen</button></div>`;}
+  $('#wallv').innerHTML=`<div class="dbar noprint"><b>${esc(r.name)} · Wand ${WV.i+1} von ${n}</b><button class="btn" data-act="wprev">← Wand</button><button class="btn" data-act="wnext">Wand →</button><button class="btn pri" data-act="wclose">Fertig</button></div>
+  <div class="dedit"><div style="font-size:13.5px;color:var(--sub);margin-bottom:8px">Blick von innen auf die Wand. Geräte ziehen: waagrecht = Abstand, senkrecht = Höhe. Sie rasten bei 30 cm und 105 cm ein.</div>${wallSVG(r,WV.i,{mid})}
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn" data-act="wadd" data-v="door">+ Tür</button><button class="btn" data-act="wadd" data-v="window">+ Fenster</button><label style="display:flex;align-items:center;gap:8px;font-size:14px;margin-left:auto">Mittlere Zone (Arbeitsflächen)<span class="sw"><input type="checkbox" data-act="wmid" ${mid?'checked':''}><span></span></span></label></div>
+  ${ed}
+  <div class="sec">Geräte an dieser Wand</div>${devs.length?devs.map(d=>{const s=along(F,S.plan.pos[d.id]),z=zOf(d);return `<div class="mrow" data-act="wsel" data-v="${d.id}"><div><b>${esc(nm(d))}</b><span>${fmt(s,2)} m von links · ${fmt(z,2)} m hoch${inZ(s,z)?'':' · <span style="color:#9A6A0E;font-weight:700">außerhalb der Installationszonen</span>'}</span></div><span class="ch">›</span></div>`;}).join(''):'<p style="font-size:14px;color:var(--sub)">Noch keine. Im Grundriss Schalter oder Steckdosen an diese Wand ziehen – sie rasten an der Wand ein.</p>'}
+  <div class="sec">Installationszonen nach DIN 18015-3</div><div class="expl" style="font-size:14px;line-height:1.5;color:#3B362E">Leitungen in der Wand nur senkrecht oder waagerecht in den gelben Bereichen: oben ZW-o 15–45 cm unter der Decke, unten ZW-u 15–45 cm über dem Boden, mittlere Zone ZW-m 100–130 cm bei Arbeitsflächen. Senkrecht 10–30 cm neben Ecken (ZS-e), Fenstern beidseitig (ZS-f) und Türen auf der Schlossseite (ZS-t). Vorzugshöhen: Steckdosen 30 cm, Schalter und Steckdosen neben Türen 105 cm.</div></div>`;}
+let WD=null;
+(()=>{const box=$('#wallv');
+  const toSvg=e=>{const sv=$('#wsvg');if(!sv)return null;const pt=sv.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(sv.getScreenCTM().inverse());};
+  box.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-kind="wdev"],[data-kind="wopen"]');if(!el||!WV)return;e.preventDefault();try{box.setPointerCapture(e.pointerId);}catch(_){}WD={kind:el.dataset.kind,id:el.dataset.id,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId};});
+  box.addEventListener('pointermove',e=>{if(!WD||WD.pid!==e.pointerId)return;if(!WD.moved&&Math.hypot(e.clientX-WD.sx,e.clientY-WD.sy)<6)return;WD.moved=true;const r=room(WV.room),F=wallFrame(r,WV.i),h=flH(r.fl);const q=toSvg(e);if(!q)return;
+    const K=Math.min(150,Math.max(40,(Math.min(innerWidth,1100)-140)/F.L));let s=(q.x-60)/K,z=h-(q.y-18)/K;
+    if(WD.kind==='wdev'){s=clamp(snapv(s,.05),.05,F.L-.05);z=clamp(z,0,h);let zz=Math.round(snapv(z,.05)*100)/100;for(const m of [.3,1.05,h-.3])if(Math.abs(z-m)<.06)zz=m;const p=fromAlong(F,s,.08),old=S.plan.pos[WD.id];S.plan.pos[WD.id]=[p[0],p[1],old[2]];S.plan.z[WD.id]=zz;}
+    else{const o=S.plan.openings.find(x=>x.id===WD.id);s=clamp(snapv(s,.05),o.w/2+.02,F.L-o.w/2-.02);const p=fromAlong(F,s,0);o.x=p[0];o.y=p[1];}
+    WV.sel=WD.id;renderWall();});
+  const up=e=>{if(!WD||WD.pid!==e.pointerId)return;const d=WD;WD=null;WV.sel=d.id;if(d.moved)changed(false);renderWall();};
+  box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);})();
+
+/* ---------- 3D ---------- */
+const R3={rot:0,all:false};const S3=50,C30=Math.cos(Math.PI/6),S30=.5;
+function rot2(x,y){const t=R3.rot*Math.PI/2;return[x*Math.cos(t)-y*Math.sin(t),x*Math.sin(t)+y*Math.cos(t)];}
+function scene3(fls,doc){const P=S.plan;const zb={};let acc=0;for(const f of P.floors){zb[f.id]=acc;acc+=+f.h||2.5;}const zbase=zb[fls[0]];
+  const pts=[...P.rooms.filter(r=>fls.includes(r.fl)).flatMap(r=>r.pts),...Object.entries(P.pos).filter(([,p])=>fls.includes(p[2])).map(([,p])=>p)];if(!pts.length)return null;const bb=bbox(pts);const c=[(bb.x0+bb.x1)/2,(bb.y0+bb.y1)/2];
+  const pr=(x,y,z)=>{const [xr,yr]=rot2(x-c[0],y-c[1]);return{X:(xr-yr)*C30*S3,Y:(xr+yr)*S30*S3-z*S3,d:xr+yr};};const PT=q=>q.X.toFixed(1)+','+q.Y.toFixed(1);
+  const items=[];let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;const ext=q=>{minX=Math.min(minX,q.X);maxX=Math.max(maxX,q.X);minY=Math.min(minY,q.Y);maxY=Math.max(maxY,q.Y);};
+  fls.forEach((fl,li)=>{const z0=zb[fl]-zbase,h=flH(fl),L=li*1e5;const rooms=P.rooms.filter(r=>r.fl===fl);
+    for(const r of rooms){const q=r.pts.map(p=>pr(p[0],p[1],z0));q.forEach(ext);items.push({k:L-5e4,s:`<polygon points="${q.map(PT).join(' ')}" fill="#FFFDF9" stroke="#1A1A1A" stroke-width="2" stroke-linejoin="round"${doc?'':` data-kind="p3room" data-id="${r.id}"`}/>`});
+      const cc=labelPt(r);const qc=pr(cc[0],cc[1],z0);items.push({k:L-4e4,s:lblTxt(qc.X,qc.Y+4,esc(r.name),13,'#6B655C',800)});}
+    for(const r of rooms)for(let i=0;i<r.pts.length;i++){const F=wallFrame(r,i);if(!F)continue;const on=rot2(-F.n[0],-F.n[1]);const front=on[0]+on[1]>.01;
+      const a=F.a,b=F.b;const qa=pr(a[0],a[1],z0),qb=pr(b[0],b[1],z0),qa2=pr(a[0],a[1],z0+h),qb2=pr(b[0],b[1],z0+h);[qa2,qb2].forEach(ext);const dep=(qa.d+qb.d)/2;
+      if(front){const qa1=pr(a[0],a[1],z0+.12),qb1=pr(b[0],b[1],z0+.12);items.push({k:L+dep*100+40,s:`<polygon points="${[qa,qb,qb1,qa1].map(PT).join(' ')}" fill="#CFC6B5" stroke="#1A1A1A" stroke-width="1.2"/><polygon points="${[qa,qb,qb2,qa2].map(PT).join(' ')}" fill="none" stroke="#B5AB98" stroke-width="1.2" stroke-dasharray="5 5"${doc?'':` data-kind="p3wall" data-id="${r.id}" data-i="${i}"`} pointer-events="${doc?'none':'stroke'}"/>`});continue;}
+      const shade=on[0]>on[1]?'#EDE5D6':'#E2D8C6';let s=`<polygon points="${[qa,qb,qb2,qa2].map(PT).join(' ')}" fill="${shade}" fill-opacity=".93" stroke="#1A1A1A" stroke-width="1.6" stroke-linejoin="round"${doc?'':` data-kind="p3wall" data-id="${r.id}" data-i="${i}"`}/><path d="M${PT(qa2)}L${PT(qb2)}" stroke="#1A1A1A" stroke-width="3.5"/>`;
+      for(const o of opsOnWall(r,i)){const w=openWall0(o);const s0=w.s-o.w/2,s1=w.s+o.w/2;const p0=fromAlong(F,s0,0),p1=fromAlong(F,s1,0);const z1=z0+o.sill,z2=z0+o.sill+o.h;
+        s+=`<polygon points="${[pr(p0[0],p0[1],z1),pr(p1[0],p1[1],z1),pr(p1[0],p1[1],z2),pr(p0[0],p0[1],z2)].map(PT).join(' ')}" fill="${o.kind==='door'?'#D6CBB5':'#CFE2EE'}" stroke="#1A1A1A" stroke-width="1.3"/>`;}
+      items.push({k:L+dep*100,s});}
+    for(const [id,p] of Object.entries(P.pos)){if(p[2]!==fl)continue;const d=byId(id);if(!d)continue;const z=zOf(d);const q=pr(p[0],p[1],z0+z);ext(q);const isSel=!doc&&S.sel&&S.sel.kind==='item'&&S.sel.id===id;
+      let s='';if(!WALLMOUNT.has(d.type)&&z>.5){const qf=pr(p[0],p[1],z0);s+=`<path d="M${PT(qf)}L${PT(q)}" stroke="#A39A8A" stroke-width="1" stroke-dasharray="3 4"/><ellipse cx="${qf.X}" cy="${qf.Y}" rx="7" ry="3.5" fill="#CFC6B5"/>`;}
+      s+=`<g transform="translate(${q.X.toFixed(1)},${q.Y.toFixed(1)}) scale(.85)"${doc?'':` data-kind="p3dev" data-id="${id}"`}><circle r="20" fill="transparent"/>${isSel?'<circle r="19" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="4 4"/>':''}<circle r="14" fill="#FFFDF9" opacity=".85"/>${sym(d)}${lblTxt(0,30,esc(nm(d)),11,'#3B362E',700)}</g>`;
+      items.push({k:L+q.d*100+60,s});}
+    let top='';for(const k of P.ducts.filter(k=>k.fl===fl)){const q=k.pts.map(p=>pr(p[0],p[1],z0+h-.08));top+=`<polyline points="${q.map(PT).join(' ')}" fill="none" stroke="#9C9283" stroke-width="9" stroke-linecap="square" opacity=".8"/>`;}
+    for(const k of P.routes.filter(k=>k.fl===fl)){const q=k.pts.map(p=>pr(p[0],p[1],z0+h-.15));top+=`<polyline points="${q.map(PT).join(' ')}" fill="none" stroke="#1A1A1A" stroke-width="2.4" stroke-linejoin="round"/>`;}
+    for(const ri of P.risers.filter(r=>riserOn(r,fl))){const qa=pr(ri.x,ri.y,z0),qb=pr(ri.x,ri.y,z0+h);top+=`<path d="M${PT(qa)}L${PT(qb)}" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round"/>`;}
+    items.push({k:L+9e4,s:top});
+    if(fls.length>1){const fq=pr(bb.x0,bb.y1,z0+.1);items.push({k:L+9.5e4,s:lblTxt(fq.X-30,fq.Y,esc(flName(fl)),15,'#1A1A1A',800)});}});
+  items.sort((a,b)=>a.k-b.k);return{svg:items.map(i=>i.s).join(''),b:{x0:minX-60,y0:minY-50,x1:maxX+60,y1:maxY+50}};}
+function fls3(){const F=S.plan.floors;if(!R3.all)return[FL()];return F.map(f=>f.id).filter(id=>flHasContent(id));}
+function render3d(){const sc=scene3(fls3(),false);Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
+  if(!sc)Ldev.innerHTML=lblTxt(0,0,'Diese Etage ist noch leer – im Grundriss Räume anlegen.',16,'#6B655C',700);}
+function fit3d(){const sc=scene3(fls3(),false);const r=svg.getBoundingClientRect();if(!sc){V.k=1;V.tx=r.width/2;V.ty=r.height/2;applyView();return;}const b=sc.b;const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const W=r.width-pw-20,H=r.height-150;
+  V.k=clamp(Math.min(W/(b.x1-b.x0),H/(b.y1-b.y0)),.15,2.5);V.tx=10+(W-(b.x1-b.x0)*V.k)/2-b.x0*V.k;V.ty=60+(H-(b.y1-b.y0)*V.k)/2-b.y0*V.k;applyView();}
+function doc3SVG(fl){const sc=scene3([fl],true);if(!sc)return'';const b=sc.b;return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${b.x0} ${b.y0} ${b.x1-b.x0} ${b.y1-b.y0}"><defs><pattern id="dhatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fff"/><rect width="2.2" height="6" fill="#1A1A1A"/></pattern></defs><rect x="${b.x0}" y="${b.y0}" width="${b.x1-b.x0}" height="${b.y1-b.y0}" fill="#fff"/>${sc.svg.split('url(#hatch)').join('url(#dhatch)')}</svg>`;}
 
 /* ---------- Start ---------- */
 buildPal();applyView();fillRooms();ptoolsUI();
