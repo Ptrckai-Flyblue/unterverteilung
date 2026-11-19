@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="de">
+<head data-k>
+<meta charset="utf-8" data-k>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" data-k>
+<title data-k>Unterverteilung – Baukasten</title>
+<style data-k>
+:root{--bg:#f2f2f7;--card:#fff;--txt:#1c1c1e;--sub:#6e6e73;--acc:#0a84ff;--red:#ff3b30;--orange:#ff9f0a;--green:#34c759;--line:#e5e5ea}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;color:var(--txt);background:var(--bg);-webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%}
+#bar{position:fixed;top:0;left:0;right:0;height:58px;padding:0 10px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.08);z-index:20;overflow-x:auto;scrollbar-width:none}
+#bar::-webkit-scrollbar{display:none}
+#bar .ttl{font-weight:700;font-size:16px;margin:0 8px 0 4px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+#bar .ttl i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#ffd60a,#ff9f0a);font-style:normal;font-size:15px}
+.sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;padding:0 13px;border:0;border-radius:10px;background:#ececf0;color:var(--txt);font-family:inherit;font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer;flex:none}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--acc);color:#fff}
+.btn.red{background:#ffe5e3;color:#d70015}
+.btn.sq{width:38px;padding:0;font-size:18px}
+.btn svg{width:17px;height:17px}
+@media (max-width:820px){#bar .ttl span{display:none}}
+@media (max-width:899px){.zb{display:none!important}}
+.btn:disabled{opacity:.4}
+.btn.on{background:#5e5ce6;color:#fff}
+#chk.err svg,#chk.warn svg{display:none}
+#chk.ok{background:#e3f6e8;color:#1b7a35}#chk.err{background:#ffe5e3;color:#d70015}#chk.warn{background:#fff2db;color:#a15c00}
+#meter{position:fixed;left:12px;top:70px;z-index:16;background:#1c1c1e;color:#fff;border-radius:16px;padding:14px 16px;width:min(300px,calc(100% - 24px));box-shadow:0 10px 30px rgba(0,0,0,.25);display:none}
+#meter .v{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0}
+#meter .t{font-size:13.5px;line-height:1.4;color:#d1d1d6}
+#meter .p{font-size:12.5px;color:#8e8e93;margin-top:6px}
+#meter .btn{height:32px;font-size:13px;background:#3a3a3c;color:#fff;margin-top:10px}
+select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236e6e73' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center}
+.two{display:flex;gap:8px}.two>*{flex:1}
+/* Doku */
+#docv{position:fixed;inset:0;z-index:35;background:#e9e9ee;overflow:auto;-webkit-overflow-scrolling:touch;display:none;-webkit-user-select:text;user-select:text}
+#docv .dbar{position:sticky;top:0;z-index:2;display:flex;gap:8px;align-items:center;padding:10px 14px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto}
+#docv .dbar b{font-size:17px;margin-right:auto;white-space:nowrap}
+.dedit{max-width:860px;margin:16px auto;background:#fff;border-radius:16px;padding:16px 18px}
+.dedit h3{margin:4px 0 10px;font-size:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+.grid2 label,.dedit label{font-size:13px;color:var(--sub);display:block}
+.xrow{display:flex;gap:6px;align-items:center;margin:6px 0}.xrow input{min-width:0}
+.qa{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.qa button{border:0;background:#f2f2f7;border-radius:8px;padding:7px 10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.paper{max-width:860px;margin:16px auto 40px;background:#fff;border-radius:6px;padding:34px 38px;box-shadow:0 4px 20px rgba(0,0,0,.08);color:#1c1c1e;font-size:13px;line-height:1.45}
+.paper h1{font-size:21px;margin:0 0 2px}.paper h2{font-size:15px;margin:22px 0 8px;padding-bottom:4px;border-bottom:2px solid #1c1c1e}
+.paper .meta{color:#6e6e73;font-size:12px;margin-bottom:14px}
+.paper table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
+.paper th{background:#f2f2f7;text-align:left;font-weight:700;padding:6px 7px;border:1px solid #d1d1d6}
+.paper td{padding:5px 7px;border:1px solid #d1d1d6;vertical-align:top}
+.paper .kv td:first-child{width:28%;color:#6e6e73}
+.paper .tw{overflow-x:auto}
+.paper .plan{border:1px solid #d1d1d6;border-radius:4px;padding:6px}
+.paper .plan svg{width:100%;height:auto;display:block}
+.paper .sig{display:flex;gap:30px;margin-top:40px}.paper .sig div{flex:1;border-top:1px solid #1c1c1e;padding-top:4px;font-size:11px;color:#6e6e73}
+.paper .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-weight:700;font-size:11.5px}
+@media print{
+ html,body{overflow:visible!important;height:auto!important;background:#fff!important}
+ body>*:not(#docv){display:none!important}
+ #docv{position:static!important;display:block!important;overflow:visible!important;background:#fff!important}
+ #docv .noprint{display:none!important}
+ .paper{box-shadow:none;margin:0;padding:0;max-width:none;border-radius:0}
+ .paper h2{break-after:avoid}.paper table{break-inside:auto}.paper tr{break-inside:avoid}.paper tr.catrow{break-after:avoid}.paper .plan{break-inside:avoid}
+ @page{size:A4;margin:14mm}
+}
+#stage{position:fixed;top:58px;left:0;right:0;bottom:0}
+#svg{width:100%;height:100%;touch-action:none;display:block}
+#empty{position:fixed;left:50%;top:50%;transform:translate(-50%,-40%);background:#fff;border-radius:20px;padding:26px 28px;box-shadow:0 10px 40px rgba(0,0,0,.1);text-align:center;max-width:380px;width:calc(100% - 40px);z-index:5}
+#empty h2{margin:0 0 6px;font-size:20px}
+#empty p{margin:0 0 18px;color:var(--sub);font-size:15px;line-height:1.45}
+#empty .btn{margin:4px}
+/* Palette */
+#pal{position:fixed;top:58px;left:0;bottom:0;width:310px;max-width:88%;background:#fff;z-index:18;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 30px rgba(0,0,0,.12);overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:30px}
+#pal.open{transform:none}
+#pal .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 4px}
+#pal .hd b{font-size:18px}
+.cat{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin:16px 16px 4px;font-weight:700}
+.prow{display:flex;gap:12px;align-items:center;padding:8px 16px;cursor:pointer}
+.prow:active{background:#f2f2f7}
+.prow .ic{width:46px;height:46px;flex:none;display:grid;place-items:center;background:#f5f5f7;border-radius:10px}
+.prow b{font-size:15px;display:block;font-weight:600}
+.prow span{font-size:12.5px;color:var(--sub)}
+.legend{margin:8px 16px;font-size:13px;color:var(--txt)}
+.legend div{display:flex;align-items:center;gap:10px;padding:4px 0}
+.legend i{width:34px;height:6px;border-radius:3px;flex:none}
+/* Panel */
+#panel{position:fixed;z-index:15;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 -6px 30px rgba(0,0,0,.14);display:none;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 22px;-webkit-user-select:text;user-select:text}
+@media (min-width:900px){#panel{top:70px;right:12px;width:360px;max-height:calc(100% - 84px);border-radius:18px}}
+@media (max-width:899px){#panel{left:0;right:0;bottom:0;max-height:47%;border-radius:18px 18px 0 0}}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.pt{font-size:18px;font-weight:700}
+.ps{font-size:14px;margin-top:3px;font-weight:600}
+.ps.ok{color:#248a3d}.ps.red{color:#d70015}.ps.sub{color:var(--sub)}.ps.org{color:#c93400}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+.row .l{display:flex;flex-direction:column}
+.row .l small{color:var(--sub);font-size:12.5px;margin-top:2px}
+.col{padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+.col>div:first-child{margin-bottom:8px}
+.sec{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);font-weight:700;margin:16px 0 2px}
+input.txt{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1px solid #d1d1d6;border-radius:10px;background:#fff;-webkit-user-select:text;user-select:text}
+.sw{position:relative;display:inline-block;width:51px;height:31px;flex:none}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw span{position:absolute;inset:0;background:#e3e3e8;border-radius:31px;transition:.2s;cursor:pointer}
+.sw span:before{content:"";position:absolute;width:27px;height:27px;left:2px;top:2px;background:#fff;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.22);transition:.2s}
+.sw input:checked+span{background:var(--green)}
+.sw.warn input:checked+span{background:var(--red)}
+.sw input:checked+span:before{transform:translateX(20px)}
+.seg{display:flex;background:#eeeef1;border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap}
+.seg button{flex:1;border:0;background:transparent;padding:8px 9px;border-radius:8px;font-weight:600;font-size:13.5px;font-family:inherit;color:var(--txt);cursor:pointer;white-space:nowrap}
+.seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.16)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:7px;border:2px solid transparent;background:#f2f2f7;border-radius:10px;padding:7px 10px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--txt)}
+.chip.on{border-color:var(--acc);background:#fff}
+.chip i{width:22px;height:8px;border-radius:4px}
+.expl p{margin:8px 0;font-size:15px;line-height:1.5}
+.expl ul{margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.5;color:#3a3a3c}
+.expl li{margin:4px 0}
+details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;color:var(--acc)}
+.alert{background:#fff2f0;border-radius:12px;padding:11px 13px;margin:10px 0;font-size:14px;line-height:1.45;color:#a50011}
+.alert.o{background:#fff6e5;color:#8a4b00}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+/* Toasts */
+#toasts{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:40;display:flex;flex-direction:column;gap:8px;width:min(560px,calc(100% - 24px));pointer-events:none}
+.toast{pointer-events:auto;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.16);padding:12px 40px 12px 14px;font-size:14.5px;line-height:1.45;border-left:5px solid var(--acc);position:relative;animation:tin .25s ease}
+.toast.err{border-left-color:var(--red)}.toast.warn{border-left-color:var(--orange)}.toast.ok{border-left-color:var(--green)}
+.toast.danger{background:#d70015;color:#fff;border-left-color:#7a000c}
+.toast b{display:block;margin-bottom:2px}
+.toast .x{position:absolute;right:6px;top:6px;border:0;background:transparent;font-size:18px;width:30px;height:30px;cursor:pointer;color:inherit;opacity:.6}
+@keyframes tin{from{opacity:0;transform:translateY(-8px)}}
+@media (min-width:900px){body.pp #toasts{left:calc((100% - 380px)/2);width:min(520px,calc(100% - 420px))}}
+/* Modal */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.28);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
+#modal .sheet{background:#fff;border-radius:20px;max-width:580px;width:100%;max-height:86%;overflow:auto;-webkit-overflow-scrolling:touch;padding:20px 22px 22px;-webkit-user-select:text;user-select:text}
+#modal h2{margin:0;font-size:20px}
+#modal .mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.res{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.45;cursor:pointer}
+.res i{width:10px;height:10px;border-radius:50%;flex:none;margin-top:6px}
+.res .tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block}
+.sum{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.sum span{font-size:13px;font-weight:700;padding:5px 10px;border-radius:8px}
+.help li{margin:7px 0;font-size:15px;line-height:1.5}
+.help h3{font-size:15px;margin:16px 0 4px}
+/* SVG */
+.wire{fill:none;stroke-linecap:round}
+.flow{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:3 11;stroke-linecap:round;animation:fl .7s linear infinite;pointer-events:none}
+@keyframes fl{to{stroke-dashoffset:-14}}
+.glow{fill:none;stroke:#ffd60a;stroke-width:11;opacity:.38;pointer-events:none;stroke-linecap:round}
+.dot{fill:#fff;stroke:#636366;stroke-width:1.6}
+.dot.live{fill:#ffd60a;stroke:#b38600}
+.dot.pend{fill:var(--acc);stroke:#fff;stroke-width:2.5}
+.tl{font-size:8.5px;fill:#48484a;font-weight:700;text-anchor:middle;pointer-events:none}
+.lbl{font-size:10px;fill:#6e6e73;text-anchor:middle;pointer-events:none;font-weight:600}
+</style>
+</head>
+<body data-k>
+<header id="bar" data-k>
+  <div class="ttl"><i>⚡</i><span>Unterverteilung</span></div>
+  <button class="btn pri" data-act="pal"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>Bauteile</button>
+  <button class="btn" data-act="check" id="chk"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Prüfen</span></button>
+  <button class="btn" data-act="meas" id="measBtn">Messen</button>
+  <button class="btn" data-act="undo" id="undoBtn" disabled>↶ Zurück</button>
+  <button class="btn" data-act="doc">Doku</button>
+  <button class="btn" data-act="share">Teilen</button>
+  <button class="btn" data-act="project">Projekt</button>
+  <div class="sp"></div>
+  <button class="btn sq zb" data-act="zout" aria-label="Verkleinern" title="Verkleinern">−</button>
+  <button class="btn sq zb" data-act="zin" aria-label="Vergrößern" title="Vergrößern">+</button>
+  <button class="btn" data-act="fit">Einpassen</button>
+  <button class="btn" data-act="help">Hilfe</button>
+</header>
+<main id="stage" data-k>
+  <svg id="svg" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.1" fill="#c9c9cf"/></pattern>
+      <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e8ec"/><stop offset=".5" stop-color="#b4b4ba"/><stop offset="1" stop-color="#dcdce0"/></linearGradient>
+      <pattern id="pestripe" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#34a853"/><rect width="5" height="10" fill="#f5d10a"/></pattern>
+      <radialGradient id="bulb"><stop offset="0" stop-color="#fff7c2"/><stop offset=".6" stop-color="#ffd60a"/><stop offset="1" stop-color="#ffb300"/></radialGradient>
+      <radialGradient id="hot"><stop offset="0" stop-color="#ffb199"/><stop offset=".55" stop-color="#ff453a"/><stop offset="1" stop-color="#a1150b"/></radialGradient>
+      <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity=".12"/></filter>
+    </defs>
+    <g id="world">
+      <rect x="-30000" y="-30000" width="60000" height="60000" fill="url(#grid)"/>
+      <g id="lEnc"></g><g id="lDev"></g><g id="lWire"></g><g id="lTerm"></g>
+      <path id="temp" fill="none" stroke="#0a84ff" stroke-width="3" stroke-dasharray="6 6" pointer-events="none"/>
+    </g>
+  </svg>
+</main>
+<div id="empty" data-k>
+  <h2>Leere Fläche</h2>
+  <p>Füge Bauteile hinzu und verbinde sie – oder lade einen fertigen, korrekten Beispielaufbau zum Anschauen.</p>
+  <button class="btn pri" data-act="example">Beispiel laden</button>
+  <button class="btn" data-act="pal">Bauteile</button>
+</div>
+<aside id="pal" data-k></aside>
+<section id="panel" data-k></section>
+<div id="toasts" data-k></div>
+<div id="meter" data-k></div>
+<div id="docv" data-k></div>
+<datalist id="roomlist" data-k></datalist>
+<div id="modal" data-k><div class="sheet" id="sheet"></div></div>
+<input type="file" id="file" accept=".json,application/json" style="display:none" data-k>
+<script type="application/json" id="saved" data-k>null</script>
+<script data-k>
+'use strict';
+// Quelltext der Seite für "Speichern" (ohne vom Viewer eingefügte Elemente)
+const SRC_PARTS=(()=>{const h=[...document.head.children].filter(e=>e.hasAttribute('data-k')).map(e=>e.outerHTML).join('\n');
+  const b=[...document.body.children].filter(e=>e.hasAttribute('data-k')).map(e=>e.outerHTML).join('\n');return {h,b};})();
+
+const TE=24, DH=110, PAD=20;
+const $=s=>document.querySelector(s);
+const svg=$('#svg'), world=$('#world'), Lenc=$('#lEnc'), Ldev=$('#lDev'), Lwire=$('#lWire'), Lterm=$('#lTerm'), temp=$('#temp');
+const COL={braun:{c:'#8a5a2b',n:'Braun'},schwarz:{c:'#1c1c1e',n:'Schwarz'},grau:{c:'#9a9aa0',n:'Grau'},blau:{c:'#1f6feb',n:'Blau'},gnge:{c:'#2fa14e',n:'Grün-gelb'},pen:{c:'#2fa14e',n:'PEN'}};
+const RC={PEN:'pen',PE:'gnge',N:'blau',L1:'braun',L2:'schwarz',L3:'grau',L:'braun'};
+const ROLEPRIO=['PEN','PE','N','L1','L2','L3','L'];
+const T=(id,label,role,side,fx)=>({id,label,role,side,fx});
+const fr=n=>Array.from({length:n},(_,i)=>(2*i+1)/(2*n));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(n,d=1)=>Number(n).toLocaleString('de-DE',{maximumFractionDigits:d});
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ---------- Zeichenhilfen ---------- */
+function railBody(w,fill='#fafafa',stroke='#b9b9be'){
+  return `<rect x="0" y="0" width="${w}" height="${DH}" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/>
+  <rect x="1.5" y="1.5" width="${w-3}" height="21" rx="3" fill="#e6e6eb"/><rect x="1.5" y="${DH-22.5}" width="${w-3}" height="21" rx="3" fill="#e6e6eb"/>`;
+}
+function tLabels(d,w,h,fill){const ty=TYPES[d.type];return ty.terms.map(t=>t.label?`<text class="tl" x="${t.fx*w}" y="${t.side==='top'?34:h-27}"${fill?` style="fill:${fill}"`:''}>${t.label}</text>`:'').join('');}
+function lever(d,x,y,w,h){const on=!!d.on;return `<g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="${x-6}" y="${y-5}" width="${w+12}" height="${h+10}" fill="transparent"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${on?'#34c759':'#c7c7cc'}"/><rect x="${x+2}" y="${on?y+2:y+h/2}" width="${w-4}" height="${h/2-2}" rx="2" fill="#fff" opacity=".35"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" pointer-events="none">${on?'I':'0'}</text></g>`;}
+function tripMark(d,w){return d.tripped?`<circle cx="${w-1}" cy="1" r="9" fill="#ff3b30" stroke="#fff" stroke-width="1.5"/><text x="${w-1}" y="5.5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">!</text>`:'';}
+function olMark(d,w){return OL[d.id+'#']?`<rect x="2" y="24" width="${w-4}" height="12" rx="3" fill="#ff9f0a"/><text x="${w/2}" y="33" text-anchor="middle" font-size="8" font-weight="800" fill="#fff">${w>30?'ÜBERLAST':'ÜL'}</text>`:'';}
+function devLabel(d,w){return d.label?`<text class="lbl" x="${w/2}" y="${DH+14}">${esc(d.label)}</text>`:'';}
+function cLabel(d,w,y,fill='#3a3a3c'){return `<text x="${w/2}" y="${y}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${fill}" pointer-events="none">${esc(d.label||TYPES[d.type].name)}</text>`;}
+
+/* ---------- Bauteiltypen ---------- */
+const TYPES={
+ hak:{cat:0,name:'Hausanschlusskasten',sub:'HAK · 3 × NH 63 A · PEN',w:220,h:200,
+  terms:[T('L1','L1','L1','top',.2),T('L2','L2','L2','top',.4),T('L3','L3','L3','top',.6),T('PEN','PEN','PEN','top',.8)],
+  draw(d,{w,h}){let s=`<path d="M110 200 L110 248" stroke="#1c1c1e" stroke-width="12" stroke-linecap="round"/><text x="110" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#3a3a3c">Netz 400/230 V (Erdkabel)</text>
+   <rect x="0" y="0" width="${w}" height="${h}" rx="10" fill="#3a3a3c" filter="url(#sh)"/><rect x="2" y="2" width="${w-4}" height="22" rx="8" fill="#5a5a5e"/>`;
+   s+=['L1','L2','L3'].map((p,i)=>{const x=24+i*62, ok=d.fuses[i];return `<rect x="${x}" y="46" width="48" height="84" rx="6" fill="${ok?'#ece5d6':'#d9cfc0'}" stroke="#9e937d"/><rect x="${x+14}" y="40" width="20" height="8" rx="2" fill="#b0b0b5"/><rect x="${x+14}" y="128" width="20" height="8" rx="2" fill="#b0b0b5"/><text x="${x+24}" y="84" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4f3a">63 A</text><text x="${x+24}" y="99" text-anchor="middle" font-size="9" font-weight="700" fill="#7d725c">gG · ${p}</text>${ok?'':`<path d="M${x+6} 54 L${x+42} 122 M${x+42} 54 L${x+6} 122" stroke="#ff3b30" stroke-width="4" stroke-linecap="round"/>`}`;}).join('');
+   s+=`<text x="${w/2}" y="164" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">HAK</text><text x="${w/2}" y="182" text-anchor="middle" font-size="10" fill="#c7c7cc">Netzbetreiber · verplombt</text>`;
+   return s+tLabels(d,w,h,'#fff');}},
+ zs:{cat:0,name:'Zählerschrank',sub:'2 Hutschienen: SLS/PEN + Zählerplatz',enclosure:true,
+  rails:[{y:100,len:8,label:'Anschlussraum: SLS + PEN-Aufteilung'},{y:270,len:8,label:'Zählerplatz'}],h:385},
+ uv:{cat:0,name:'Unterverteilung',sub:'3 Hutschienen à 12 TE',enclosure:true,
+  rails:[{y:100,len:12,label:'Reihe 1'},{y:270,len:12,label:'Reihe 2'},{y:440,len:12,label:'Reihe 3'}],h:555},
+ sls:{cat:1,name:'SLS-Schalter',sub:'Selektiver Hauptschalter, 3-polig',rail:true,te:3,home:'zs',unit:'sls',ratings:[35,50,63],def:{rating:35,cable:'NYM-J 5×10',len:''},
+  terms:[...['1','2','3'].map((n,i)=>T('i'+n,'L'+n,'L'+n,'top',fr(3)[i])),...['1','2','3'].map((n,i)=>T('o'+n,'L'+n,'L'+n,'bot',fr(3)[i]))],
+  edges:(d,cl)=>cl()?[['i1','o1'],['i2','o2'],['i3','o3']]:[],
+  draw(d,{w}){return railBody(w,'#eaf0fa','#9fb3d1')+`<text x="${w/2}" y="47" text-anchor="middle" font-size="10" font-weight="800" fill="#1d3a6b">SLS E${d.rating}</text>`+lever(d,w/2-15,52,30,24)+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
+ zaehler:{cat:1,name:'Stromzähler',sub:'Drehstromzähler (eHZ)',rail:true,te:4,home:'zs',
+  terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),...['1','2','3','N'].map((n,i)=>T('o'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'bot',fr(4)[i]))],
+  edges:()=>[['i1','o1'],['i2','o2'],['i3','o3'],['iN','oN']],
+  draw(d,{w}){return railBody(w,'#f4f4f6')+`<rect x="7" y="40" width="${w-14}" height="26" rx="4" fill="#16261a"/><text x="${w-12}" y="58" text-anchor="end" font-size="13" font-weight="700" fill="#5dff86" font-family="ui-monospace,Menlo,monospace">${fmt(RT.P/1000,2)} kW</text><text x="${w/2}" y="76" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">eHZ · kWh</text>`+tLabels(d,w,DH)+devLabel(d,w);}},
+ pen:{cat:1,name:'PEN-Aufteilung',sub:'PEN → N + PE (TN-C-S)',rail:true,te:2,home:'zs',
+  terms:[T('PEN','PEN','PEN','top',.5),T('N','N','N','bot',.25),T('PE','PE','PE','bot',.75)],
+  edges:()=>[['PEN','N'],['PEN','PE']],
+  draw(d,{w}){return railBody(w,'#eef7f0','#8cc49b')+`<text x="${w/2}" y="52" text-anchor="middle" font-size="9" font-weight="800" fill="#1e6b34">PEN</text><path d="M${w/2} 58 L${w/2} 64 M${w/4} 70 L${w/2} 64 L${w*.75} 70" stroke="#1e6b34" stroke-width="2" fill="none"/>`+tLabels(d,w,DH)+devLabel(d,w);}},
+ fi4:{cat:2,name:'FI-Schalter 4-polig',sub:'Fehlerstromschutz 40 A, Typ A',rail:true,te:4,unit:'fi',idns:[30,300],def:{idn:30},
+  terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),...['1','2','3','N'].map((n,i)=>T('o'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'bot',fr(4)[i]))],
+  edges:(d,cl)=>cl()?[['i1','o1'],['i2','o2'],['i3','o3'],['iN','oN']]:[],
+  draw(d,{w}){return railBody(w)+`<text x="${w/2-8}" y="46" text-anchor="middle" font-size="9" font-weight="800" fill="#1c1c1e">FI 40A ${d.idn}mA</text>`+lever(d,18,52,28,24)+`<g data-kind="test" data-id="${d.id}" style="cursor:pointer"><circle cx="${w-20}" cy="64" r="14" fill="transparent"/><circle cx="${w-20}" cy="64" r="9" fill="#ffd60a" stroke="#b38600"/><text x="${w-20}" y="68" text-anchor="middle" font-size="10" font-weight="800" fill="#5c4400" pointer-events="none">T</text></g>`+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
+ fi2:{cat:2,name:'FI-Schalter 2-polig',sub:'Fehlerstromschutz 40 A für L + N',rail:true,te:2,unit:'fi',idns:[30,300],def:{idn:30},
+  terms:[T('iL','L','L','top',.25),T('iN','N','N','top',.75),T('oL','L','L','bot',.25),T('oN','N','N','bot',.75)],
+  edges:(d,cl)=>cl()?[['iL','oL'],['iN','oN']]:[],
+  draw(d,{w}){return railBody(w)+`<text x="${w/2}" y="46" text-anchor="middle" font-size="8.5" font-weight="800">FI ${d.idn}</text>`+lever(d,6,52,18,24)+`<g data-kind="test" data-id="${d.id}" style="cursor:pointer"><circle cx="37" cy="64" r="12" fill="transparent"/><circle cx="37" cy="64" r="7" fill="#ffd60a" stroke="#b38600"/><text x="37" y="67.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#5c4400" pointer-events="none">T</text></g>`+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
+ ls1:{cat:2,name:'Leitungsschutzschalter',sub:'LS 1-polig, Charakteristik B',rail:true,te:1,unit:'ls',ratings:[6,10,13,16,20],def:{rating:16,cable:'NYM-J 3×1,5',len:''},
+  terms:[T('i','1','L','top',.5),T('o','2','L','bot',.5)],
+  edges:(d,cl)=>cl()?[['i','o']]:[],
+  draw(d,{w}){return railBody(w)+`<text x="${w/2}" y="47" text-anchor="middle" font-size="8.5" font-weight="800">B${d.rating}</text>`+lever(d,5,52,14,24)+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
+ ls3:{cat:2,name:'Leitungsschutzschalter 3-polig',sub:'Für Drehstrom, z. B. Herd',rail:true,te:3,unit:'ls',ratings:[16,20,25,32],def:{rating:16,cable:'NYM-J 5×2,5',len:''},
+  terms:[...['1','2','3'].map((n,i)=>T('i'+n,'L'+n,'L'+n,'top',fr(3)[i])),...['1','2','3'].map((n,i)=>T('o'+n,'L'+n,'L'+n,'bot',fr(3)[i]))],
+  edges:(d,cl)=>cl()?[['i1','o1'],['i2','o2'],['i3','o3']]:[],
+  draw(d,{w}){return railBody(w)+`<text x="${w/2}" y="47" text-anchor="middle" font-size="9" font-weight="800">3 × B${d.rating}</text>`+lever(d,w/2-15,52,30,24)+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
+ rcbo:{cat:2,name:'FI/LS-Schalter',sub:'FI und Sicherung in einem (RCBO)',rail:true,te:2,unit:'rcbo',ratings:[10,13,16,20],idns:[30,300],def:{rating:16,idn:30,cable:'NYM-J 3×1,5',len:''},
+  terms:[T('iL','L','L','top',.25),T('iN','N','N','top',.75),T('oL','L','L','bot',.25),T('oN','N','N','bot',.75)],
+  edges:(d,cl)=>cl()?[['iL','oL'],['iN','oN']]:[],
+  draw(d,{w}){return railBody(w,'#fbf7ff','#b9a6d6')+`<text x="${w/2}" y="46" text-anchor="middle" font-size="8" font-weight="800">B${d.rating}·${d.idn}</text>`+lever(d,6,52,18,24)+`<g data-kind="test" data-id="${d.id}" style="cursor:pointer"><circle cx="37" cy="64" r="12" fill="transparent"/><circle cx="37" cy="64" r="7" fill="#ffd60a" stroke="#b38600"/><text x="37" y="67.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#5c4400" pointer-events="none">T</text></g>`+olMark(d,w)+tLabels(d,w,DH)+tripMark(d,w)+devLabel(d,w);}},
+ spd:{cat:2,name:'Überspannungsschutz',sub:'SPD Typ 1+2, gegen Blitz-Spitzen',rail:true,te:4,
+  terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),T('pe','PE','PE','bot',.5)],
+  draw(d,{w}){return railBody(w,'#f6f6f8')+`<text x="${w/2}" y="47" text-anchor="middle" font-size="9" font-weight="800">SPD T1+2</text>${[0,1,2,3].map(i=>`<rect x="${10+i*20}" y="56" width="14" height="12" rx="2" fill="#34c759"/>`).join('')}`+tLabels(d,w,DH)+devLabel(d,w);}},
+ nk:{cat:2,name:'N-Klemme',sub:'Sammelschiene für Neutralleiter',rail:true,te:4,
+  terms:[...fr(4).map((f,i)=>T('t'+i,'','N','top',f)),...fr(4).map((f,i)=>T('b'+i,'','N','bot',f))],
+  edges:()=>['t1','t2','t3','b0','b1','b2','b3'].map(k=>['t0',k]),
+  draw(d,{w}){return railBody(w,'#e3edff','#1f6feb')+`<rect x="6" y="${DH/2-5}" width="${w-12}" height="10" rx="3" fill="#1f6feb" opacity=".25"/><text x="${w/2}" y="${DH/2+8}" text-anchor="middle" font-size="22" font-weight="800" fill="#1f6feb">N</text>`+devLabel(d,w);}},
+ pek:{cat:2,name:'PE-Klemme',sub:'Sammelschiene für Schutzleiter',rail:true,te:4,
+  terms:[...fr(4).map((f,i)=>T('t'+i,'','PE','top',f)),...fr(4).map((f,i)=>T('b'+i,'','PE','bot',f))],
+  edges:()=>['t1','t2','t3','b0','b1','b2','b3'].map(k=>['t0',k]),
+  draw(d,{w}){return railBody(w,'#f1f8ec','#2fa14e')+`<rect x="6" y="${DH/2-11}" width="${w-12}" height="22" rx="4" fill="url(#pestripe)"/><text x="${w/2}" y="${DH/2+7}" text-anchor="middle" font-size="18" font-weight="800" fill="#fff" stroke="#1c1c1e" stroke-width=".6">PE</text>`+devLabel(d,w);}},
+ lampe:{cat:3,name:'Lampe',sub:'60 W, mit Metallgehäuse (PE)',w:110,h:130,lTerm:'L',
+  terms:[T('L','L','L','top',.25),T('N','N','N','top',.5),T('PE','PE','PE','top',.75)],
+  loads:(d)=>[['L','N',60]],faulty:true,
+  draw(d,{w,h}){const on=(RT.powered.get(d.id)||[]).length>0, hl=RT.housing.has(d.id);
+   return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="${hl?'#ff3b30':'#d1d1d6'}" stroke-width="${hl?3:1.2}" filter="url(#sh)"/><g transform="translate(0,30)">${on?`<circle cx="55" cy="40" r="34" fill="#ffd60a" opacity=".28"/>`:''}<circle cx="55" cy="40" r="21" fill="${on?'url(#bulb)':'#ececf0'}" stroke="${on?'#e0a800':'#c7c7cc'}"/><rect x="47" y="60" width="16" height="10" rx="2" fill="#aeaeb2"/>${on?'':`<path d="M48 40 q7 -10 14 0" stroke="#c7c7cc" stroke-width="2" fill="none"/>`}${hl?`<text x="12" y="20" font-size="16">⚡</text>`:''}`+cLabel(d,w,82)+'</g>'+tLabels(d,w,h);}},
+ schalter:{cat:3,name:'Lichtschalter',sub:'Ausschalter, unterbricht L',w:96,h:130,unit:'sw',
+  terms:[T('L','L','L','top',.3),T('LS','L↑','L','top',.7)],
+  edges:(d,cl)=>cl()?[['L','LS']]:[],
+  draw(d,{w,h}){const on=!!d.on;return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="#d1d1d6" stroke-width="1.2" filter="url(#sh)"/><g transform="translate(0,30)"><rect x="18" y="8" width="60" height="62" rx="10" fill="#f5f5f7" stroke="#d1d1d6"/><g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="26" y="15" width="44" height="48" rx="7" fill="${on?'#34c759':'#e5e5ea'}" stroke="${on?'#248a3d':'#c7c7cc'}"/><text x="48" y="44" text-anchor="middle" font-size="12" font-weight="800" fill="${on?'#fff':'#6e6e73'}" pointer-events="none">${on?'Ein':'Aus'}</text></g>`+cLabel(d,w,84)+'</g>'+tLabels(d,w,h);}},
+ steckdose:{cat:3,name:'Steckdose',sub:'Schuko 16 A, Last wählbar',w:110,h:130,lTerm:'L',def:{load:0},
+  terms:[T('L','L','L','top',.25),T('N','N','N','top',.5),T('PE','PE','PE','top',.75)],
+  loads:(d,all)=>(all||d.load>0)?[['L','N',d.load||0]]:[],faulty:true,
+  draw(d,{w,h}){const on=(RT.powered.get(d.id)||[]).length>0, live=RT.n&&RT.n.get(d.id+':L').phases.size>0, hl=RT.housing.has(d.id);
+   return `<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="${hl?'#ff3b30':'#d1d1d6'}" stroke-width="${hl?3:1.2}" filter="url(#sh)"/><g transform="translate(0,30)"><circle cx="55" cy="40" r="27" fill="#f2f2f7" stroke="#c7c7cc"/><rect x="51" y="13" width="8" height="5" rx="1" fill="#aeaeb2"/><rect x="51" y="62" width="8" height="5" rx="1" fill="#aeaeb2"/><circle cx="45" cy="40" r="3.6" fill="#48484a"/><circle cx="65" cy="40" r="3.6" fill="#48484a"/><circle cx="96" cy="13" r="5" fill="${live?'#34c759':'#d1d1d6'}"/>${d.load>0?`<rect x="6" y="6" width="38" height="16" rx="5" fill="${on?'#0a84ff':'#aeaeb2'}"/><text x="25" y="17.5" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">${fmt(d.load/1000)} kW</text>`:''}${hl?`<text x="86" y="80" font-size="16">⚡</text>`:''}`+cLabel(d,w,84)+'</g>'+tLabels(d,w,h);}},
+ herd:{cat:3,name:'Herd',sub:'Drehstrom 400 V, 3 × 2 kW',w:190,h:140,lTerm:'L1',def:{on:true},
+  terms:[T('L1','L1','L1','top',.14),T('L2','L2','L2','top',.32),T('L3','L3','L3','top',.5),T('N','N','N','top',.68),T('PE','PE','PE','top',.86)],
+  loads:(d,all)=>(all||d.on)?[['L1','N',2000],['L2','N',2000],['L3','N',2000]]:[],faulty:true,
+  draw(d,{w,h}){const pw=RT.powered.get(d.id)||[], hl=RT.housing.has(d.id);const ph=new Set(pw.map(e=>e.term));
+   return `<rect width="${w}" height="${h}" rx="14" fill="#2c2c2e" stroke="${hl?'#ff3b30':'#1c1c1e'}" stroke-width="${hl?3:1}" filter="url(#sh)"/><g transform="translate(0,34)">`+['L1','L2','L3'].map((p,i)=>`<circle cx="${48+i*47}" cy="52" r="19" fill="${ph.has(p)?'url(#hot)':'#48484a'}" stroke="#636366"/><text x="${48+i*47}" y="56" text-anchor="middle" font-size="9" font-weight="700" fill="${ph.has(p)?'#fff':'#8e8e93'}" pointer-events="none">${p}</text>`).join('')+
+   `<g data-kind="lever" data-id="${d.id}" style="cursor:pointer"><rect x="8" y="6" width="44" height="20" rx="6" fill="${d.on?'#34c759':'#636366'}"/><text x="30" y="20" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" pointer-events="none">${d.on?'Ein':'Aus'}</text></g>${hl?`<text x="164" y="24" font-size="16">⚡</text>`:''}`+cLabel(d,w,94,'#fff')+'</g>'+tLabels(d,w,h,'#d1d1d6');}},
+ wago:{cat:3,name:'Verbindungsklemme',sub:'5-fach, z. B. in der Abzweigdose',w:120,h:56,
+  terms:fr(5).map((f,i)=>T('k'+i,'','any','bot',f)),
+  edges:()=>['k1','k2','k3','k4'].map(k=>['k0',k]),
+  draw(d,{w,h}){return `<rect width="${w}" height="${h}" rx="8" fill="#ececf0" stroke="#aeaeb2"/>${fr(5).map(f=>`<rect x="${f*w-7}" y="8" width="14" height="18" rx="3" fill="#ff9f0a"/>`).join('')}<text x="${w/2}" y="${h-24}" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">${esc(d.label||'Klemme')}</text>`;}},
+};
+const CATS=['Gehäuse','Zählerschrank-Geräte','Unterverteilung','Verbraucher'];
+
+/* ---------- Erklärungen ---------- */
+const FIT=['Summenstromwandler: Alle aktiven Leiter (L und N) laufen durch einen Ringkern. Ist die Summe der Ströme nicht null, löst er aus.','30 mA für Personenschutz, 300 mA für Brandschutz. Abschaltung in der Praxis meist in 20–40 ms.','Pflicht für Steckdosen bis 32 A und für Beleuchtung in Wohnungen (VDE 0100-410).','Schützt nicht vor Überlast oder Kurzschluss L–N, dafür braucht es den LS.','N jedes Stromkreises muss über denselben FI laufen wie sein L.','Prüftaste T regelmäßig drücken, meist halbjährlich.'];
+const INFO={
+ hak:{e:'Hier kommt der Strom aus dem Erdkabel der Straße ins Haus. Der Kasten gehört dem Netzbetreiber und ist verplombt. Drin sitzen drei dicke Sicherungen, eine pro Außenleiter.',t:['Übergabepunkt vom Netz in die Kundenanlage.','NH-Sicherungen (z. B. 63 A gG) je Außenleiter L1, L2, L3. Keine Hutschienen.','Im TN-C-S-Netz kommt ein PEN-Leiter: Schutz- und Neutralleiter in einem. Er wird später in N und PE aufgeteilt.','Öffnen und Sicherungstausch nur durch Netzbetreiber bzw. eingetragenen Elektroinstallateur.']},
+ zs:{e:'Der Schrank für Zähler und Hauptschalter. Auf seinen Hutschienen werden die Geräte festgeklickt.',t:['Aufbau nach VDE-AR-N 4100 (TAR Niederspannung): Anschlussraum mit SLS, Zählerfeld, ggf. Verteilerfeld.','Hutschiene = Tragschiene 35 mm (TS 35). Gerätebreite in Teilungseinheiten: 1 TE = 17,5 mm.','Hier vereinfacht: eine Schiene für SLS und PEN-Aufteilung, eine für den Zähler.']},
+ uv:{e:'Verteilt den Strom auf die einzelnen Stromkreise im Haus. Jeder Kreis bekommt seine eigene Sicherung.',t:['Typischer Inhalt: Überspannungsschutz, FI-Schalter, Leitungsschutzschalter (LS), N- und PE-Klemmen.','Ab der PEN-Aufteilung 5 Leiter: L1, L2, L3, N, PE (TN-S).','Pro FI eine eigene N-Klemme, sonst löst der FI aus.','Empfehlung: Stromkreise auf mehrere FIs aufteilen, damit bei einer Auslösung nicht das ganze Haus ausfällt.']},
+ sls:{e:'Der Hauptschalter vor dem Zähler. Er ist größer als alle Sicherungen dahinter und springt nur, wenn die es nicht schaffen. Damit schaltest du die ganze Anlage ab.',t:['Selektiver Hauptleitungsschutzschalter, Charakteristik E (z. B. 35 A).','Selektiv: Bei einem Kurzschluss im Stromkreis löst zuerst der kleine LS aus, der SLS bleibt drin.','Nach VDE-AR-N 4100 im Anschlussraum vor dem Zähler vorgesehen, dient auch als Trennstelle.']},
+ zaehler:{e:'Zählt, wie viel Energie verbraucht wird. Die Anzeige zeigt hier die aktuelle Leistung aller Verbraucher.',t:['Elektronischer Haushaltszähler (eHZ) bzw. moderne Messeinrichtung, 3-phasig.','Misst Wirkenergie in kWh: Leistung × Zeit, je Außenleiter.','Gehört dem Messstellenbetreiber. Mit Smart-Meter-Gateway wird er zum intelligenten Messsystem.']},
+ pen:{e:'Aus dem Netz kommt ein kombinierter Leiter (PEN). Hier wird er in zwei getrennte Leiter aufgeteilt: N (blau) und PE (grün-gelb). Danach dürfen sie nie wieder verbunden werden.',t:['Übergang TN-C → TN-S, zusammen TN-C-S-System.','PEN: grün-gelb mit blauer Markierung, Kupfer mindestens 10 mm².','Werden N und PE danach wieder verbunden, fließt Betriebsstrom über den Schutzleiter und FIs lösen aus.']},
+ fi4:{e:'Der FI ist ein Aufpasser, der zählt: Fließt genauso viel Strom zurück wie hinein? Fehlt etwas, weil Strom über einen Menschen oder das Gehäuse in die Erde fließt, schaltet er blitzschnell ab.',t:FIT},
+ fi2:{e:'Wie der 4-polige FI, nur für einen einphasigen Abzweig mit L und N.',t:FIT},
+ ls1:{e:'Die Sicherung für einen Stromkreis. Ziehen die Geräte zu viel Strom oder gibt es einen Kurzschluss, schaltet er ab, damit die Leitung nicht heiß wird.',t:['Thermischer Auslöser (Bimetall) für Überlast: unter 1,13 × In kein Auslösen, ab 1,45 × In innerhalb 1 Stunde. Hier zeitgerafft.','Magnetischer Auslöser für Kurzschluss: Charakteristik B bei 3–5 × In, in Millisekunden.','Die Größe richtet sich nach der Leitung: 1,5 mm² Kupfer meist B16 (abhängig von Verlegeart), Licht oft B10.','Schützt die Leitung, nicht den Menschen. Dafür ist der FI da.']},
+ ls3:{e:'Drei gekoppelte Sicherungen für ein Drehstromgerät wie den Herd. Löst eine aus, schalten alle drei ab.',t:['Dreipolig mit gemeinsamer Schaltwelle.','Herd typisch: 3 × B16 mit 5 × 2,5 mm² (L1, L2, L3, N, PE).','Auslöseverhalten wie beim einpoligen LS.']},
+ rcbo:{e:'FI und Sicherung in einem Gerät, für genau einen Stromkreis.',t:['Fehlerstrom-/Leitungsschutzschalter (RCBO).','Vorteil: Ein Fehler schaltet nur diesen einen Kreis ab.','Nachteil: teurer als ein LS hinter einem gemeinsamen FI.']},
+ spd:{e:'Fängt Spannungsspitzen ab, zum Beispiel bei einem Blitzeinschlag in der Nähe, und leitet sie zur Erde ab.',t:['Überspannungsschutzgerät (SPD), hier Typ 1+2 (Kombiableiter).','Im Normalbetrieb hochohmig, es fließt kein Strom.','Anschluss an L1–L3, N und PE, mit möglichst kurzen Leitungen.','Bei Neuanlagen nach VDE 0100-443/-534 in der Praxis fast immer gefordert.']},
+ nk:{e:'Sammelpunkt für die blauen Neutralleiter. Über N fließt der Strom vom Gerät zurück.',t:['Alle Anschlüsse sind miteinander verbunden.','Pro FI eine eigene N-Klemme: dort nur N von Kreisen, deren L über denselben FI läuft.']},
+ pek:{e:'Sammelpunkt für die grün-gelben Schutzleiter. Hat ein Gerät einen Defekt, fließt der Strom hierüber ab statt durch dich.',t:['Verbunden mit dem Hauptpotentialausgleich bzw. der Haupterdungsschiene.','PE wird nie geschaltet und nie durch einen FI geführt.']},
+ lampe:{e:'Ein Verbraucher, der Licht macht. Er braucht L (hin) und N (zurück). PE schützt das Metallgehäuse.',t:['60 W, also etwa 0,26 A bei 230 V (I = P / U).','Schutzklasse I: Metallgehäuse an PE.','Beleuchtung in Wohnungen braucht einen 30-mA-FI (VDE 0100-410).']},
+ schalter:{e:'Unterbricht die Leitung zur Lampe. Geschaltet wird immer L, nie N.',t:['Ausschalter: trennt den Außenleiter.','Der Draht vom Schalter zur Lampe heißt geschalteter Außenleiter.','Würde N geschaltet, stünde die Lampe auch bei „Aus“ unter Spannung. Gefährlich beim Lampenwechsel.']},
+ steckdose:{e:'Hier werden Geräte eingesteckt. Unten wählst du, was gerade dranhängt.',t:['Schutzkontaktsteckdose 16 A / 230 V.','30-mA-FI Pflicht (VDE 0100-410).','Typisch B16 mit 3 × 1,5 mm², je nach Verlegeart und Länge 2,5 mm².','Strom: I = P / 230 V, z. B. 2 kW ≈ 8,7 A.']},
+ herd:{e:'Ein großer Verbraucher mit Drehstrom. Jede Kochplatte hängt an einem anderen Außenleiter, so verteilt sich die Last.',t:['Anschluss 400 V 3N~: L1, L2, L3, N, PE.','Hier 3 × 2 kW, also ca. 8,7 A pro Außenleiter.','Fehlt N, liegen die Platten in Reihe an 400 V (Sternpunktverschiebung). Deshalb N nie vergessen.']},
+ wago:{e:'Verbindet mehrere Drähte, zum Beispiel in einer Abzweigdose.',t:['Hebelklemme: Alle Anschlüsse sind miteinander verbunden.','Nur gleiche Leiter zusammenklemmen, z. B. nur N.']},
+};
+const LOADS=[[0,'Nichts eingesteckt'],[10,'Handy-Ladegerät · 10 W'],[2000,'Wasserkocher · 2 kW'],[4000,'Wasserkocher + Föhn · 4 kW'],[5000,'Heizlüfter + Wasserkocher · 5 kW']];
+
+/* ---------- Zustand ---------- */
+let S={items:[],wires:[],nid:1,rooms:[],doc:{},extras:[]};
+let RT={n:null,flow:new Set(),powered:new Map(),cur:new Map(),housing:new Set(),P:0};
+let OL={}; let tick=null; let GH=null; let pend=null; let addOff=0;
+const V={k:1,tx:40,ty:30};
+const byId=id=>S.items.find(i=>i.id===id);
+function newItem(type,props={}){const ty=TYPES[type];const d={id:props.id||'i'+(S.nid++),type,x:0,y:0,label:'',on:true,tripped:null,mount:null,...(ty.def||{})};
+  if(type==='hak')d.fuses=[true,true,true]; if(ty.faulty)d.fault={kurz:false,koerper:false}; if(ty.loads||type==='schalter')d.room=''; return Object.assign(d,props);}
+function sz(d){const ty=TYPES[d.type];if(ty.rail)return{w:ty.te*TE,h:DH};if(ty.enclosure)return{w:PAD*2+ty.rails[0].len*TE,h:ty.h};return{w:ty.w,h:ty.h};}
+function getPos(d){if(d.mount){const e=byId(d.mount.enc);if(e){const r=TYPES[e.type].rails[d.mount.rail];return{x:e.x+PAD+d.mount.slot*TE,y:e.y+r.y-DH/2};}d.mount=null;}return{x:d.x,y:d.y};}
+function termOf(key){const [id,tid]=key.split(':');const d=byId(id);if(!d)return null;const t=TYPES[d.type].terms?.find(t=>t.id===tid);return t?{d,t}:null;}
+function termAbs(key){const o=termOf(key);if(!o)return null;const p=getPos(o.d),s=sz(o.d);return{x:p.x+o.t.fx*s.w,y:o.t.side==='top'?p.y+12:p.y+s.h-12,side:o.t.side};}
+function nm(d){if(!d)return'';const ty=TYPES[d.type];let n=d.label?((ty.unit==='ls'?'LS ':ty.unit==='rcbo'?'FI/LS ':'')+d.label):ty.name;if(!d.label&&d.rating&&ty.unit!=='sw'&&ty.ratings)n+=` B${d.rating}`;if(d.type==='sls'&&!d.label)n=`SLS E${d.rating}`;return n;}
+
+/* ---------- Netzberechnung ---------- */
+function closed(d,suf,o){if(o.open&&o.open.includes(d.id+'#'+suf))return false;if(o.structural)return true;if(d.type==='hak')return d.fuses[+suf.slice(1)];return !!d.on;}
+function buildNets(o={}){
+  if(o.open&&!Array.isArray(o.open))o={...o,open:[o.open]};
+  const P={};const find=k=>{if(P[k]===undefined){P[k]=k;return k;}while(P[k]!==k){P[k]=P[P[k]];k=P[k];}return k;};
+  const uni=(a,b)=>{a=find(a);b=find(b);if(a!==b)P[a]=b;};const src={};
+  for(const d of S.items){const ty=TYPES[d.type];if(!ty.terms)continue;ty.terms.forEach(t=>find(d.id+':'+t.id));
+    const cl=(suf='')=>closed(d,suf,o);
+    if(ty.edges&&!(o.excludePen&&d.type==='pen'))for(const [a,b] of ty.edges(d,cl))uni(d.id+':'+a,d.id+':'+b);
+    if(d.type==='hak'){['L1','L2','L3'].forEach((p,i)=>{const s=d.id+':S'+i;find(s);src[s]={phase:p};if(cl('f'+i))uni(s,d.id+':'+p);});src[d.id+':PEN']={ground:true};}
+    if(!o.noFaults&&d.fault){const L=d.id+':'+ty.lTerm;if(d.fault.kurz)uni(L,d.id+':N');if(d.fault.koerper)uni(L,d.id+':PE');}
+  }
+  for(const w of S.wires){if(o.excludeWire===w.id)continue;if(!termOf(w.a)||!termOf(w.b))continue;
+    if(o.excludePen&&(termOf(w.a).t.role==='PEN'||termOf(w.b).t.role==='PEN'))continue;uni(w.a,w.b);}
+  const props={};for(const k in src){const r=find(k);const p=props[r]||(props[r]={phases:new Set(),ground:false});if(src[k].phase)p.phases.add(src[k].phase);if(src[k].ground)p.ground=true;}
+  const empty={phases:new Set(),ground:false};
+  return{find,get:k=>props[find(k)]||empty,roots:()=>Object.entries(props)};
+}
+const isShort=p=>p.phases.size>1||(p.phases.size>0&&p.ground);
+const shorts=n=>n.roots().filter(([,p])=>isShort(p));
+function loadEls(all){const out=[];for(const d of S.items){const ty=TYPES[d.type];if(!ty.loads)continue;for(const [L,N,P] of ty.loads(d,all))out.push({d,term:L,L:d.id+':'+L,N:d.id+':'+N,P});}return out;}
+function powered(e,n){const l=n.get(e.L),nn=n.get(e.N);return l.phases.size===1&&!l.ground&&nn.ground&&nn.phases.size===0;}
+function units(){const u=[];for(const d of S.items){const ty=TYPES[d.type];
+  if(d.type==='hak')[0,1,2].forEach(i=>u.push({id:d.id+'#f'+i,d,kind:'nh',rating:63,pole:i,closed:d.fuses[i]}));
+  else if(ty.unit)u.push({id:d.id+'#',d,kind:ty.unit,rating:d.rating,idn:d.idn,closed:!!d.on});}return u;}
+const isFI=u=>u.kind==='fi'||u.kind==='rcbo';
+const isProt=u=>['ls','rcbo','sls','nh'].includes(u.kind);
+function uName(u){return u.kind==='nh'?`NH-Sicherung ${['L1','L2','L3'][u.pole]} im HAK`:nm(u.d);}
+
+function trip(u,kind,msg,lvl='err'){if(u.kind==='nh')u.d.fuses[u.pole]=false;else{u.d.on=false;u.d.tripped=kind;}delete OL[u.id];toast(msg,lvl);}
+function shortDesc(p){const ph=[...p.phases];return ph.length>1?ph.join(' ↔ '):`${ph[0]} ↔ N/PE`;}
+
+function simulate(){
+  for(let it=0;it<40;it++){
+    const n=buildNets();const sh=shorts(n);
+    if(sh.length){
+      let done=false;
+      for(const d of S.items){if(!d.fault?.koerper)continue;const Lk=d.id+':'+TYPES[d.type].lTerm;const p=n.get(Lk);if(!(p.ground&&p.phases.size))continue;
+        const f=units().filter(u=>u.closed&&isFI(u)).filter(u=>!buildNets({open:u.id}).get(Lk).phases.size).sort((a,b)=>a.idn-b.idn)[0];
+        if(f){trip(f,'Fehlerstrom',`<b>${esc(uName(f))} hat ausgelöst</b>Körperschluss an ${esc(nm(d))}: Der Strom fließt über den Schutzleiter (PE) ab statt über N zurück. Die Differenz ist größer als ${f.idn} mA, also schaltet der FI in ca. 20–40 ms ab.`,'warn');done=true;break;}}
+      if(done)continue;
+      const c=units().filter(u=>u.closed&&isProt(u)).map(u=>({u,k:shorts(buildNets({open:u.id})).length})).filter(x=>x.k<sh.length).sort((a,b)=>a.u.rating-b.u.rating||a.k-b.k);
+      if(!c.length)break;
+      const u=c[0].u;const ks=S.items.some(d=>d.fault?.koerper&&n.get(d.id+':PE').phases.size);
+      let m=`<b>${esc(uName(u))} hat ausgelöst</b>Kurzschluss (${shortDesc(sh[0][1])}). `;
+      if(u.kind==='nh')m+='Die Sicherung im HAK ist durchgebrannt. Tauschen darf sie nur der Netzbetreiber bzw. ein eingetragener Elektroinstallateur.';
+      else if(u.kind==='sls')m+='Kein kleinerer LS konnte den Fehler abschalten. Der Kurzschluss liegt vor den LS oder der Kreis hat keinen LS.';
+      else m+='Der magnetische Schnellauslöser hat in wenigen Millisekunden abgeschaltet. Der SLS davor bleibt drin (Selektivität).';
+      if(ks&&u.kind!=='nh')m+=' Hinweis: Ohne FI wird der Körperschluss nur über den hohen Kurzschlussstrom L–PE abgeschaltet.';
+      trip(u,'Kurzschluss',m);continue;
+    }
+    let tr=false;const els=loadEls().filter(e=>powered(e,n));
+    outer:for(const f of units().filter(u=>u.closed&&isFI(u))){const n2=buildNets({open:f.id});
+      for(const e of els){const lDep=!n2.get(e.L).phases.size,nDep=!n2.get(e.N).ground;
+        if(lDep!==nDep){trip(f,'Fehlerstrom',`<b>${esc(uName(f))} hat ausgelöst</b>Bei ${esc(nm(e.d))} fließt über L und N nicht derselbe Strom durch diesen FI. Ursache: ${lDep?'N läuft nicht über diesen FI (andere N-Klemme, vor dem FI abgegriffen oder mit PE verbunden).':'N läuft über diesen FI, L aber nicht.'}`,'warn');tr=true;break outer;}}}
+    if(tr)continue;break;
+  }
+  computeRT();
+}
+function computeRT(){
+  const n=buildNets();RT={n,flow:new Set(),powered:new Map(),cur:new Map(),housing:new Set(),P:0};
+  const els=loadEls().filter(e=>powered(e,n));
+  for(const e of els){RT.P+=e.P;if(!RT.powered.has(e.d.id))RT.powered.set(e.d.id,[]);RT.powered.get(e.d.id).push(e);}
+  const now=Date.now();const seen=new Set();
+  for(const u of units().filter(u=>u.closed&&isProt(u))){const n2=buildNets({open:u.id});const ph={};
+    for(const e of els)if(e.P>0&&!powered(e,n2)){const p=[...n.get(e.L).phases][0];ph[p]=(ph[p]||0)+e.P/230;}
+    const I=Math.max(0,...Object.values(ph));RT.cur.set(u.id,I);const r=I/u.rating;
+    if(r>1.13){seen.add(u.id);if(!OL[u.id]||Math.abs(OL[u.id].I-I)>.01)OL[u.id]={I,r,until:now+(r>=1.45?3000:8000)};}}
+  for(const id in OL)if(!seen.has(id))delete OL[id];
+  for(const w of S.wires){const n2=buildNets({excludeWire:w.id});if(els.some(e=>e.P>0&&!powered(e,n2)))RT.flow.add(w.id);}
+  for(const d of S.items)if(d.fault?.koerper){const p=n.get(d.id+':PE');if(p.phases.size&&!p.ground)RT.housing.add(d.id);}
+  if(Object.keys(OL).length&&!tick)tick=setInterval(onTick,250);
+  if(!Object.keys(OL).length&&tick){clearInterval(tick);tick=null;}
+}
+function onTick(){const now=Date.now();
+  for(const id in OL){if(now>=OL[id].until){const o=OL[id];const u=units().find(x=>x.id===id);delete OL[id];
+      if(u&&u.closed)trip(u,'Überlast',`<b>${esc(uName(u))} hat ausgelöst</b>Überlast: ${fmt(o.I)} A bei ${u.rating} A Nennstrom (${Math.round(o.r*100)} %). Der thermische Auslöser (Bimetall) hat sich erwärmt. In echt dauert das Sekunden bis Minuten, hier ist die Zeit gerafft.`);
+      changed();return;}}
+  const el=document.getElementById('olc');if(el&&S.sel){const o=OL[S.sel.id+'#'];if(o)el.textContent=Math.max(0,Math.ceil((o.until-now)/1000))+' s';}
+}
+
+/* ---------- Prüfmodus ---------- */
+function check(){
+  const R=[];const add=(lvl,txt,ids=[])=>R.push({lvl,txt,ids});
+  const sN=buildNets({structural:true,noFaults:true});const NU={};const nu=u=>NU[u.id]||(NU[u.id]=buildNets({structural:true,noFaults:true,open:u.id}));
+  for(const [r,p] of shorts(sN)){const ws=S.wires.filter(w=>sN.find(w.a)===r).map(w=>'w:'+w.id);add('err',`Kurzschluss in der Verdrahtung: ${shortDesc(p)} sind direkt verbunden. Beim Einschalten löst die Sicherung sofort aus.`,ws);}
+  const sX=buildNets({structural:true,noFaults:true,excludePen:true});const g={};
+  for(const d of S.items){if(d.type==='pen'||d.type==='hak')continue;for(const t of TYPES[d.type].terms||[]){if(t.role!=='N'&&t.role!=='PE')continue;const r=sX.find(d.id+':'+t.id);(g[r]||(g[r]={N:new Set(),PE:new Set()}))[t.role].add(d.id);}}
+  for(const r in g)if(g[r].N.size&&g[r].PE.size)add('err','N und PE sind nach der PEN-Aufteilung wieder miteinander verbunden. Dann fließt Betriebsstrom über den Schutzleiter, FIs lösen aus.',[...g[r].N,...g[r].PE]);
+  const U=units();const fiU=U.filter(isFI),lsU=U.filter(u=>u.kind==='ls'||u.kind==='rcbo'),swU=U.filter(u=>u.kind==='sw');
+  const cons=S.items.filter(d=>TYPES[d.type].loads);
+  for(const d of cons){const els=loadEls(true).filter(e=>e.d===d);
+    if(!S.wires.some(w=>w.a.startsWith(d.id+':')||w.b.startsWith(d.id+':'))){add('warn',`${nm(d)}: noch nicht angeschlossen.`,[d.id]);continue;}
+    const noL=els.filter(e=>!sN.get(e.L).phases.size);if(noL.length)add('warn',`${nm(d)}: Außenleiter ${noL.map(e=>e.term).join(', ')} bekommt keine Spannung.`,[d.id]);
+    if(!sN.get(d.id+':N').ground)add('warn',`${nm(d)}: Neutralleiter N fehlt, das Gerät bekommt keinen Strom.`,[d.id]);
+    const e0=els.find(e=>sN.get(e.L).phases.size);if(!e0||!sN.get(d.id+':N').ground)continue;
+    if(!sN.get(d.id+':PE').ground)add('err',`${nm(d)}: Schutzleiter PE fehlt. Bei einem Defekt steht das Metallgehäuse unter Spannung und niemand merkt es – bis jemand es anfasst.`,[d.id]);
+    const fi30=fiU.filter(u=>u.idn<=30&&!nu(u).get(e0.L).phases.size);
+    if(!fi30.length){if(d.type==='herd')add('hint',`${nm(d)}: kein 30-mA-FI. Für fest angeschlossene Geräte nicht zwingend, aber üblich.`,[d.id]);else add('err',`${nm(d)}: kein 30-mA-FI im Stromkreis. Pflicht für Steckdosen bis 32 A und Beleuchtung in Wohnungen (VDE 0100-410).`,[d.id]);}
+    const lsOn=lsU.filter(u=>!nu(u).get(e0.L).phases.size);
+    if(!lsOn.length)add('err',`${nm(d)}: kein Leitungsschutzschalter im Stromkreis. Die Leitung ist nicht gegen Überlast geschützt.`,[d.id]);
+    else if(d.type==='steckdose'&&Math.min(...lsOn.map(u=>u.rating))>16)add('warn',`${nm(d)}: LS größer als 16 A. Bei 1,5 mm² und Schuko-Steckdose ist B16 die Obergrenze.`,[d.id]);
+    if(d.type==='herd'&&lsOn.length&&!lsOn.some(u=>u.d.type==='ls3'))add('hint',`${nm(d)}: Für Drehstrom einen 3-poligen LS nehmen, damit bei einem Fehler alle drei Außenleiter abschalten.`,[d.id]);
+    let fiBad=false;for(const e of els){if(fiBad)break;if(!sN.get(e.L).phases.size||!sN.get(e.N).ground)continue;
+      for(const u of fiU){const n2=nu(u);if((!n2.get(e.L).phases.size)!==(!n2.get(e.N).ground)){add('err',`${nm(d)}: L und N laufen nicht über denselben FI (${nm(u.d)}). Der FI löst beim Einschalten aus.`,[d.id,u.d.id]);fiBad=true;break;}}}
+    if(d.type==='lampe')for(const u of swU){if(sN.get(d.id+':N').ground&&!nu(u).get(d.id+':N').ground)add('err',`${nm(d)}: Der Schalter schaltet N statt L. Die Lampe steht auch bei „Aus“ unter Spannung.`,[d.id,u.d.id]);}
+  }
+  for(const w of S.wires){for(const k of [w.a,w.b]){const o=termOf(k);if(!o)continue;const r=o.t.role,c=w.color;let bad=null;
+      if(r==='N'&&c!=='blau')bad='Neutralleiter muss blau sein. Blau ist für N reserviert, damit niemand eine Spannung führende Ader für den Rückleiter hält';else if(r==='PE'&&c!=='gnge')bad='Schutzleiter muss grün-gelb sein. Grün-gelb ist ausschließlich PE vorbehalten, nur so ist er eindeutig erkennbar';else if(r==='PEN'&&c!=='pen')bad='PEN muss grün-gelb mit blauer Markierung sein';
+      else if(/^L/.test(r)&&['blau','gnge','pen'].includes(c))bad=`Außenleiter (${r}) darf nicht ${COL[c].n.toLowerCase()} sein. Diese Farbe steht für ${c==='blau'?'N':'PE'} – man würde eine Spannung führende Ader für ungefährlich halten`;
+      if(bad){add('err',`Leiterfarbe an ${nm(o.d)}: ${bad}.`,['w:'+w.id]);break;}}}
+  const sls=S.items.filter(d=>d.type==='sls');
+  if(S.items.some(d=>d.type==='hak')){if(!sls.length)add('warn','Kein SLS-Schalter vorhanden. Nach VDE-AR-N 4100 gehört er vor den Zähler.');
+    else for(const z of S.items.filter(d=>d.type==='zaehler')){const k=z.id+':i1';if(!sN.get(k).phases.size)continue;if(buildNets({structural:true,noFaults:true,open:sls.map(s=>s.id+'#')}).get(k).phases.size)add('warn',`${nm(z)}: Der SLS sitzt nicht vor dem Zähler.`,[z.id]);}
+    if(!S.items.some(d=>d.type==='spd'))add('hint','Kein Überspannungsschutz. Bei Neuanlagen nach VDE 0100-443/-534 in der Praxis fast immer gefordert.');}
+  for(const d of S.items)if(TYPES[d.type].rail&&!d.mount)add('warn',`${nm(d)} liegt frei und ist nicht auf einer Hutschiene eingerastet.`,[d.id]);
+  const cnt={L1:0,L2:0,L3:0};for(const u of lsU.filter(u=>u.d.type!=='ls3')){const k=u.d.id+':'+(u.d.type==='ls1'?'i':'iL');const ph=[...sN.get(k).phases];if(ph.length===1)cnt[ph[0]]++;}
+  const vs=Object.values(cnt);if(vs.reduce((a,b)=>a+b,0)>=3&&Math.max(...vs)-Math.min(...vs)>=2)add('hint',`Einphasige Stromkreise ungleich verteilt (L1: ${cnt.L1}, L2: ${cnt.L2}, L3: ${cnt.L3}). Besser gleichmäßig auf die Außenleiter aufteilen.`);
+  if(fiU.filter(u=>u.kind==='fi').length===1&&cons.length>=4)add('hint','Alle Kreise hängen an einem FI. Empfehlung: auf mindestens zwei FIs aufteilen, damit bei einer Auslösung nicht alles ausfällt.');
+  return R;
+}
+
+/* ---------- Rendern ---------- */
+function wpath(w){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)return'';const da=A.side==='top'?-1:1,db=B.side==='top'?-1:1;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35));return `M${A.x},${A.y} C${A.x},${A.y+da*c} ${B.x},${B.y+db*c} ${B.x},${B.y}`;}
+function encDraw(d){const ty=TYPES[d.type],{w,h}=sz(d);let s=`<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="#c7c7cc" stroke-width="1.2" filter="url(#sh)"/><text x="16" y="${h-13}" font-size="14" font-weight="800" fill="#1c1c1e">${esc(d.label||ty.name)}</text>`;
+  ty.rails.forEach(r=>{s+=`<text x="${PAD}" y="${r.y-DH/2-8}" font-size="9.5" font-weight="600" fill="#8e8e93">${esc(r.label)}</text><rect x="${PAD-8}" y="${r.y-9}" width="${r.len*TE+16}" height="18" rx="2" fill="url(#rail)" stroke="#9a9aa0" stroke-width=".8"/>`;
+    for(let i=0;i<=r.len;i++)s+=`<rect x="${PAD+i*TE-1.5}" y="${r.y-3}" width="3" height="6" rx="1" fill="#8e8e93" opacity=".6"/>`;});
+  return s;}
+function markBox(d){const m=MARK[d.id];if(!m)return'';const s=sz(d);const c=m==='err'?'#ff3b30':'#ff9f0a';return `<rect x="-3" y="-3" width="${s.w+6}" height="${s.h+6}" rx="8" fill="${c}" fill-opacity=".07" stroke="${c}" stroke-width="2.5" stroke-dasharray="${m==='err'?'0':'6 4'}" pointer-events="none"/>`;}
+function selBox(d){const s=sz(d);return `<rect x="-5" y="-5" width="${s.w+10}" height="${s.h+10}" rx="9" fill="none" stroke="#0a84ff" stroke-width="2.5" pointer-events="none"/>`;}
+function render(){
+  const sel=S.sel;let se='',sd='',sw='',st='';
+  const drag=act&&act.moved&&act.kind==='item'?act.id:null;
+  for(const d of S.items){const ty=TYPES[d.type];if(!ty.enclosure)continue;const p=getPos(d);se+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})">${encDraw(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
+  if(GH){const e=byId(GH.enc);if(e){const r=TYPES[e.type].rails[GH.rail];se+=`<rect x="${e.x+PAD+GH.slot*TE}" y="${e.y+r.y-DH/2}" width="${GH.te*TE}" height="${DH}" rx="5" fill="#0a84ff" opacity=".18" stroke="#0a84ff" stroke-dasharray="5 4" stroke-width="2"/>`;}}
+  const devs=S.items.filter(d=>!TYPES[d.type].enclosure).sort((a,b)=>(a.id===drag)-(b.id===drag));
+  for(const d of devs){const p=getPos(d),s=sz(d);sd+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})">${TYPES[d.type].draw(d,s)}${markBox(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
+  for(const w of S.wires){const p=wpath(w);if(!p)continue;const live=RT.n&&RT.n.get(w.a).phases.size>0;const c=COL[w.color]||COL.braun;const isSel=sel?.kind==='wire'&&sel.id===w.id;
+    sw+=`<g>${MARK['w:'+w.id]?`<path d="${p}" fill="none" stroke="#ff3b30" stroke-width="13" opacity=".35" stroke-linecap="round"/>`:''}${isSel?`<path d="${p}" fill="none" stroke="#0a84ff" stroke-width="12" opacity=".45" stroke-linecap="round"/>`:''}${live&&!RT.flow.has(w.id)?`<path class="glow" d="${p}"/>`:''}<path class="wire" d="${p}" stroke="${c.c}" stroke-width="4.5"/>`;
+    if(w.color==='gnge'||w.color==='pen')sw+=`<path class="wire" d="${p}" stroke="#f5d10a" stroke-width="4.5" stroke-dasharray="8 8"/>`;
+    if(w.color==='pen'){const A=termAbs(w.a),B=termAbs(w.b);sw+=`<circle cx="${A.x}" cy="${A.y+(A.side==='top'?-12:12)}" r="4.5" fill="#1f6feb"/><circle cx="${B.x}" cy="${B.y+(B.side==='top'?-12:12)}" r="4.5" fill="#1f6feb"/>`;}
+    if(RT.flow.has(w.id))sw+=`<path class="flow" d="${p}"/>`;
+    sw+=`<path d="${p}" fill="none" stroke="transparent" stroke-width="18" data-kind="wire" data-id="${w.id}"/></g>`;}
+  for(const d of S.items){const ty=TYPES[d.type];if(!ty.terms)continue;for(const t of ty.terms){const k=d.id+':'+t.id;const a=termAbs(k);const live=RT.n&&RT.n.get(k).phases.size>0;
+    st+=`<g data-kind="term" data-key="${k}" transform="translate(${a.x},${a.y})"><circle r="13" fill="transparent"/><circle class="dot${live?' live':''}${pend===k?' pend':''}" r="${pend===k?7:5.5}"/>${MEAS&&(MA===k||MB===k)?`<circle r="10" fill="none" stroke="#5e5ce6" stroke-width="3"/><text y="-14" text-anchor="middle" font-size="11" font-weight="800" fill="#5e5ce6">${MA===k?'A':'B'}</text>`:''}</g>`;}}
+  Lenc.innerHTML=se;Ldev.innerHTML=sd;Lwire.innerHTML=sw;Lterm.innerHTML=st;
+  $('#empty').style.display=S.items.length?'none':'block';
+}
+let raf=0;const req=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});};
+function applyView(){world.setAttribute('transform',`translate(${V.tx},${V.ty}) scale(${V.k})`);}
+
+/* ---------- Hutschiene ---------- */
+function occ(eid,ri,except){const e=byId(eid);const len=TYPES[e.type].rails[ri].len;const a=new Array(len).fill(false);
+  for(const d of S.items)if(d.mount&&d.mount.enc===eid&&d.mount.rail===ri&&d.id!==except)for(let i=0;i<TYPES[d.type].te;i++)a[d.mount.slot+i]=true;return a;}
+const freeAt=(a,s,te)=>{for(let i=0;i<te;i++)if(a[s+i])return false;return true;};
+function findMount(d){const ty=TYPES[d.type];if(!ty.rail)return null;const cx=d.x+ty.te*TE/2,cy=d.y+DH/2;let best=null;
+  for(const e of S.items.filter(i=>TYPES[i.type].enclosure))TYPES[e.type].rails.forEach((r,ri)=>{const x0=e.x+PAD,ry=e.y+r.y;
+    if(Math.abs(cy-ry)>75||cx<x0-30||cx>x0+r.len*TE+30||ty.te>r.len)return;
+    const want=clamp(Math.round((d.x-x0)/TE),0,r.len-ty.te);const a=occ(e.id,ri,d.id);let f=null;
+    for(let k=0;k<r.len&&f===null;k++)for(const s of [want-k,want+k]){if(s<0||s>r.len-ty.te)continue;if(freeAt(a,s,ty.te)){f=s;break;}}
+    if(f===null)return;const dist=Math.abs(cy-ry)+Math.abs(f-want)*TE;if(!best||dist<best.dist)best={enc:e.id,rail:ri,slot:f,dist,te:ty.te};});
+  return best;}
+function firstFree(e,te){const rails=TYPES[e.type].rails;for(let ri=0;ri<rails.length;ri++){const a=occ(e.id,ri,null);for(let s=0;s<=rails[ri].len-te;s++)if(freeAt(a,s,te))return{enc:e.id,rail:ri,slot:s};}return null;}
+
+/* ---------- Bedienung ---------- */
+function toWorld(cx,cy){const r=svg.getBoundingClientRect();return{x:(cx-r.left-V.tx)/V.k,y:(cy-r.top-V.ty)/V.k};}
+const ptrs=new Map();let act=null;
+svg.addEventListener('pointerdown',e=>{
+  try{svg.setPointerCapture(e.pointerId);}catch(_){}
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===2){startPinch();return;}if(ptrs.size>2)return;
+  const el=e.target.closest('[data-kind]');const kind=el?el.dataset.kind:'bg';const w=toWorld(e.clientX,e.clientY);
+  act={kind,id:el?.dataset.id,key:el?.dataset.key,sx:e.clientX,sy:e.clientY,moved:false,pid:e.pointerId,v0:{tx:V.tx,ty:V.ty}};
+  if(['item','lever','test'].includes(kind)){const d=byId(act.id);const p=getPos(d);act.off={x:w.x-p.x,y:w.y-p.y};}
+});
+svg.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(act?.kind==='pinch'){doPinch();return;}
+  if(!act||act.pid!==e.pointerId)return;
+  const dx=e.clientX-act.sx,dy=e.clientY-act.sy;
+  if(!act.moved){if(Math.hypot(dx,dy)<7)return;act.moved=true;
+    if(act.kind==='lever'||act.kind==='test')act.kind='item';
+    if(act.kind==='item'){const d=byId(act.id);if(d.mount){const p=getPos(d);d.x=p.x;d.y=p.y;d.mount=null;}}}
+  const w=toWorld(e.clientX,e.clientY);
+  if(act.kind==='bg'||act.kind==='wire'){V.tx=act.v0.tx+dx;V.ty=act.v0.ty+dy;applyView();}
+  else if(act.kind==='term'&&MEAS){act.kind='bg';}
+  else if(act.kind==='term'){const A=termAbs(act.key);temp.setAttribute('d',`M${A.x},${A.y} L${w.x},${w.y}`);}
+  else if(act.kind==='item'){const d=byId(act.id);d.x=w.x-act.off.x;d.y=w.y-act.off.y;GH=TYPES[d.type].rail?findMount(d):null;req();}
+});
+function endPtr(e,cancel){
+  ptrs.delete(e.pointerId);
+  if(act?.kind==='pinch'){if(!ptrs.size)act=null;return;}
+  if(!act||act.pid!==e.pointerId)return;const a=act;act=null;
+  if(cancel){temp.setAttribute('d','');if(a.kind==='item'&&a.moved)dropItem(a.id);return;}
+  if(!a.moved){onTap(a);return;}
+  if(a.kind==='term'){temp.setAttribute('d','');const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-kind="term"]');if(el&&el.dataset.key!==a.key)connect(a.key,el.dataset.key);else render();}
+  else if(a.kind==='item')dropItem(a.id);
+}
+function dropItem(id){const d=byId(id);if(d&&TYPES[d.type].rail){const m=findMount(d);if(m)d.mount={enc:m.enc,rail:m.rail,slot:m.slot};}GH=null;changed(false);}
+svg.addEventListener('pointerup',e=>endPtr(e,false));
+svg.addEventListener('pointercancel',e=>endPtr(e,true));
+function startPinch(){if(act){temp.setAttribute('d','');if(act.kind==='item'&&act.moved)dropItem(act.id);}
+  const [a,b]=[...ptrs.values()];const r=svg.getBoundingClientRect();const mx=(a.x+b.x)/2-r.left,my=(a.y+b.y)/2-r.top;
+  act={kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y)||1,k0:V.k,wm:{x:(mx-V.tx)/V.k,y:(my-V.ty)/V.k}};}
+function doPinch(){const v=[...ptrs.values()];if(v.length<2)return;const [a,b]=v;const r=svg.getBoundingClientRect();const mx=(a.x+b.x)/2-r.left,my=(a.y+b.y)/2-r.top;
+  const k=clamp(act.k0*Math.hypot(a.x-b.x,a.y-b.y)/act.d0,.2,3);V.k=k;V.tx=mx-act.wm.x*k;V.ty=my-act.wm.y*k;applyView();}
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)));},{passive:false});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+function zoomAt(mx,my,f){const wx=(mx-V.tx)/V.k,wy=(my-V.ty)/V.k;V.k=clamp(V.k*f,.2,3);V.tx=mx-wx*V.k;V.ty=my-wy*V.k;applyView();}
+function fit(){if(!S.items.length){V.k=1;V.tx=40;V.ty=30;applyView();return;}let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(const d of S.items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);y0=Math.min(y0,p.y-20);x1=Math.max(x1,p.x+s.w);y1=Math.max(y1,p.y+s.h+(d.type==='hak'?75:24));}
+  for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
+  const r=svg.getBoundingClientRect();const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;
+  const W=r.width-pw-40,H=r.height-ph-40;V.k=clamp(Math.min(W/(x1-x0),H/(y1-y0)),.2,1.6);V.tx=20+(W-(x1-x0)*V.k)/2-x0*V.k;V.ty=20+(H-(y1-y0)*V.k)/2-y0*V.k;applyView();}
+function centerOn(d){const p=getPos(d),s=sz(d);const r=svg.getBoundingClientRect();const sx=V.tx+(p.x+s.w/2)*V.k,sy=V.ty+(p.y+s.h/2)*V.k;
+  if(sx<30||sx>r.width-30||sy<30||sy>r.height*.5){V.tx+=r.width/2-sx;V.ty+=r.height*.3-sy;applyView();}}
+
+function onTap(a){
+  if(a.kind==='bg'){S.sel=null;pend=null;render();renderPanel();return;}
+  if(a.kind==='term'&&MEAS){measTap(a.key);return;}
+  if(a.kind==='term'){if(pend&&pend!==a.key){const p=pend;pend=null;connect(p,a.key);}else if(pend===a.key){pend=null;render();}else{pend=a.key;render();toast('Jetzt den zweiten Anschluss antippen.','info',2200);}return;}
+  if(a.kind==='wire'){S.sel={kind:'wire',id:a.id};pend=null;render();renderPanel();return;}
+  const d=byId(a.id);if(!d)return;S.sel={kind:'item',id:d.id};pend=null;
+  if(a.kind==='lever'){toggleDev(d);return;}
+  if(a.kind==='test'){fiTest(d);return;}
+  render();renderPanel();if(innerWidth<900)centerOn(d);
+}
+function connect(a,b){if(a===b){render();return;}if(S.wires.some(w=>(w.a===a&&w.b===b)||(w.a===b&&w.b===a))){render();return;}
+  const ra=termOf(a).t.role,rb=termOf(b).t.role;let color='braun';for(const r of ROLEPRIO)if(ra===r||rb===r){color=RC[r];break;}
+  S.wires.push({id:'w'+(S.nid++),a,b,color});changed();}
+function toggleDev(d){if(d.type==='herd'){d.on=!d.on;changed();return;}d.on=!d.on;if(d.on)d.tripped=null;changed();}
+function fiTest(d){if(!d.on){toast(`${esc(nm(d))} ist bereits aus. Erst wieder einschalten.`,'info');renderPanel();return;}
+  const n=buildNets();const k=d.id+':'+(d.type==='fi4'?'i1':'iL');
+  if(!n.get(k).phases.size){toast('Die Prüftaste funktioniert nur, wenn der FI Spannung hat.','info');render();renderPanel();return;}
+  trip(units().find(u=>u.id===d.id+'#'),'Prüftaste',`<b>Prüftaste gedrückt</b>${esc(nm(d))} hat ausgelöst – er funktioniert. Die Taste erzeugt intern einen künstlichen Fehlerstrom.`,'ok');changed();}
+function touch(d){const n=buildNets();const k=d.id+':PE';
+  const f=units().filter(u=>u.closed&&isFI(u)).filter(u=>!buildNets({open:u.id}).get(k).phases.size).sort((a,b)=>a.idn-b.idn)[0];
+  if(f){trip(f,'Fehlerstrom',`<b>${esc(uName(f))} hat ausgelöst</b>Du hast das Gehäuse von ${esc(nm(d))} berührt. Strom floss durch deinen Körper zur Erde, nicht über N zurück. Der FI hat das in ca. 20–40 ms erkannt. Du bist geschützt.`,'warn');changed();}
+  else toast(`<b>Lebensgefahr</b>Das Gehäuse von ${esc(nm(d))} steht unter 230 V: kein Schutzleiter angeschlossen und kein FI im Stromkreis. Der Strom fließt ungebremst durch den Körper. Genau dafür gibt es PE und FI.`,'danger',12000);}
+function delItem(d){S.wires=S.wires.filter(w=>!w.a.startsWith(d.id+':')&&!w.b.startsWith(d.id+':'));
+  if(TYPES[d.type].enclosure)for(const c of S.items)if(c.mount?.enc===d.id){const p=getPos(c);c.x=p.x;c.y=p.y;c.mount=null;}
+  S.items=S.items.filter(i=>i!==d);S.sel=null;changed();}
+function addType(type){const ty=TYPES[type];const d=newItem(type);let where='';
+  if(ty.rail){const pref=ty.home||'uv';const encs=[...S.items.filter(i=>i.type===pref),...S.items.filter(i=>TYPES[i.type].enclosure&&i.type!==pref)];
+    for(const e of encs){const m=firstFree(e,ty.te);if(m){d.mount=m;where=e.label||TYPES[e.type].name;break;}}}
+  if(!d.mount){const r=svg.getBoundingClientRect();const c=toWorld(r.left+r.width/2,r.top+r.height*.35);const s=sz(d);d.x=Math.round(c.x-s.w/2+(addOff%5)*26);d.y=Math.round(c.y-s.h/2+(addOff%5)*26);addOff++;}
+  S.items.push(d);S.sel={kind:'item',id:d.id};pend=null;$('#pal').classList.remove('open');changed();centerOn(d);
+  if(where)toast(`${esc(ty.name)} auf eine Hutschiene in „${esc(where)}“ eingerastet.`,'ok',2500);
+  else if(ty.rail)toast(`${esc(ty.name)} liegt frei. Zieh es auf eine Hutschiene, damit es einrastet.`,'info',3500);}
+
+/* ---------- Panel ---------- */
+function statusOf(d){const ty=TYPES[d.type];
+  if(d.type==='hak'){const b=d.fuses.map((f,i)=>f?null:['L1','L2','L3'][i]).filter(Boolean);return b.length?{c:'red',t:`Sicherung ${b.join(', ')} durchgebrannt`}:{c:'ok',t:'Alle drei NH-Sicherungen intakt'};}
+  if(ty.enclosure)return{c:'sub',t:`${ty.rails.length} Hutschienen · ${S.items.filter(i=>i.mount?.enc===d.id).length} Geräte`};
+  if(d.type==='zaehler')return{c:'sub',t:`Aktuelle Leistung: ${fmt(RT.P/1000,2)} kW`};
+  if(ty.unit&&ty.unit!=='sw'){if(d.tripped)return{c:'red',t:`Ausgelöst: ${d.tripped}`};if(!d.on)return{c:'sub',t:'Ausgeschaltet'};
+    const I=RT.cur.get(d.id+'#');const o=OL[d.id+'#'];if(o)return{c:'org',t:`Überlast ${fmt(o.I)} A von ${d.rating} A – löst aus in `,ol:true};
+    return{c:'ok',t:`Eingeschaltet${I!=null&&isProt({kind:ty.unit})?` · Strom ${fmt(I)} A von ${d.rating} A`:''}`};}
+  if(d.type==='schalter')return d.on?{c:'ok',t:'Ein – Kontakt geschlossen'}:{c:'sub',t:'Aus – L unterbrochen'};
+  if(ty.loads){const pw=RT.powered.get(d.id)||[];if(RT.housing.has(d.id))return{c:'red',t:'Gehäuse steht unter Spannung!'};
+    if(d.type==='herd'){if(!d.on)return{c:'sub',t:'Ausgeschaltet'};return pw.length===3?{c:'ok',t:`Alle drei Platten heizen · ${fmt(pw.length*2)} kW`}:{c:pw.length?'org':'sub',t:pw.length?`Nur ${pw.map(e=>e.term).join(', ')} heizt`:'Kein Strom'};}
+    if(d.type==='steckdose'){const live=RT.n.get(d.id+':L').phases.size&&RT.n.get(d.id+':N').ground;if(!live)return{c:'sub',t:'Keine Spannung'};return{c:'ok',t:d.load>0?`230 V · ${fmt(d.load/230)} A Strom`:'230 V – nichts eingesteckt'};}
+    return pw.length?{c:'ok',t:`Leuchtet · ${fmt(60/230,2)} A`}:{c:'sub',t:'Kein Strom'};}
+  return{c:'sub',t:''};}
+const tg=(act,on,label,sub,warn)=>`<div class="row"><div class="l">${label}${sub?`<small>${sub}</small>`:''}</div><label class="sw${warn?' warn':''}"><input type="checkbox" data-act="${act}" ${on?'checked':''}><span></span></label></div>`;
+const seg=(act,opts,cur)=>`<div class="seg">${opts.map(([v,l])=>`<button data-act="${act}" data-v="${v}" class="${v==cur?'on':''}">${l}</button>`).join('')}</div>`;
+function renderPanel(){const P=$('#panel');const s=S.sel;
+  if(!s){P.style.display='none';document.body.classList.remove('pp');return;}
+  let h='';
+  if(s.kind==='wire'){const w=S.wires.find(x=>x.id===s.id);if(!w){S.sel=null;P.style.display='none';return;}
+    const tn=k=>{const o=termOf(k);return o?`${esc(nm(o.d))} · ${esc(o.t.label||o.t.role)}`:'';};
+    h+=`<div class="ph"><div><div class="pt">Leitung</div><div class="ps sub">${tn(w.a)} → ${tn(w.b)}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
+    h+=`<div class="sec">Aderfarbe</div><div class="chips" style="margin-top:8px">${Object.entries(COL).map(([k,c])=>`<button class="chip${w.color===k?' on':''}" data-act="color" data-v="${k}"><i style="background:${k==='gnge'||k==='pen'?'repeating-linear-gradient(90deg,#2fa14e 0 6px,#f5d10a 6px 12px)':c.c};${k==='pen'?'box-shadow:inset 4px 0 #1f6feb,inset -4px 0 #1f6feb':''}"></i>${c.n}</button>`).join('')}</div>`;
+    h+=`<div class="expl"><p style="font-size:14px;color:#3a3a3c">Braun, Schwarz, Grau = Außenleiter L1, L2, L3 (führen Spannung). Blau = Neutralleiter N (Rückweg). Grün-gelb = Schutzleiter PE (nur im Fehlerfall Strom). PEN = beides in einem, nur bis zur Aufteilung.</p></div>`;
+    h+=`<div class="actions"><button class="btn red" data-act="delwire">Leitung löschen</button></div>`;
+  } else {const d=byId(s.id);if(!d){S.sel=null;P.style.display='none';return;}const ty=TYPES[d.type];const st=statusOf(d);const inf=INFO[d.type];
+    h+=`<div class="ph"><div><div class="pt">${esc(ty.name)}</div><div class="ps ${st.c}">${esc(st.t)}${st.ol?`<span id="olc">${Math.max(0,Math.ceil((OL[d.id+'#'].until-Date.now())/1000))} s</span>`:''}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
+    h+=`<div class="col"><div>Bezeichnung</div><input class="txt" data-act="label" value="${esc(d.label)}" placeholder="z. B. Küche, Licht Flur" maxlength="24"></div>`;
+    if(ty.loads||d.type==='schalter')h+=`<div class="col"><div>Raum</div><input class="txt" list="roomlist" data-act="room" value="${esc(d.room)}" placeholder="z. B. Küche, Flur, Bad"></div>`;
+    if(d.cable!==undefined)h+=`<div class="col"><div>${d.type==='sls'?'Hauptleitung zur Unterverteilung':'Leitung dieses Stromkreises'}</div><div class="two"><select class="txt" data-act="cable">${CABLES.map(c=>`<option${c===d.cable?' selected':''}>${c}</option>`).join('')}</select><input class="txt" type="number" inputmode="decimal" min="0" step="0.5" data-act="len" value="${esc(d.len)}" placeholder="Länge in m"></div></div>`;
+    if(ty.unit&&ty.unit!=='sw')h+=tg('on',d.on,'Eingeschaltet',d.tripped?'Wieder einschalten. Besteht der Fehler noch, löst er sofort erneut aus.':'Entspricht dem Hebel am Gerät');
+    if(d.type==='schalter')h+=tg('on',d.on,'Schalter ein');
+    if(d.type==='herd')h+=tg('on',d.on,'Herd ein','Drei Kochplatten à 2 kW, je eine pro Außenleiter');
+    if(ty.ratings)h+=`<div class="col"><div>Bemessungsstrom</div>${seg('rating',ty.ratings.map(r=>[r,(d.type==='sls'?'E':'B')+r]),d.rating)}</div>`;
+    if(ty.idns)h+=`<div class="col"><div>Bemessungsfehlerstrom I<sub>Δn</sub></div>${seg('idn',ty.idns.map(r=>[r,r+' mA']),d.idn)}</div>`;
+    if(ty.unit==='fi'||ty.unit==='rcbo')h+=`<div class="actions" style="margin-top:12px"><button class="btn" data-act="test">Prüftaste T drücken</button></div>`;
+    if(d.type==='steckdose')h+=`<div class="sec">Was ist eingesteckt?</div><div style="margin-top:8px">${seg('load',LOADS.map(([v,l])=>[v,l]),d.load)}</div>`;
+    if(d.type==='hak'&&d.fuses.some(f=>!f))h+=`<div class="alert">Eine NH-Sicherung ist durchgebrannt. Den Fehler erst beheben, dann ersetzen.</div><div class="actions"><button class="btn" data-act="fuses">Sicherungen ersetzen (Netzbetreiber)</button></div>`;
+    if(ty.faulty){h+=`<div class="sec">Fehler simulieren</div>`+tg('kurz',d.fault.kurz,'Kurzschluss',`${ty.lTerm} berührt N im Gerät`,true)+tg('koerper',d.fault.koerper,'Körperschluss',`${ty.lTerm} berührt das Metallgehäuse`,true);
+      if(RT.housing.has(d.id))h+=`<div class="alert">Das Gehäuse führt Spannung, weil kein Schutzleiter angeschlossen ist. Bisher merkt das niemand. Was passiert, wenn jemand es anfasst?</div><div class="actions"><button class="btn red" data-act="touch">Gehäuse berühren</button></div>`;}
+    if(inf)h+=`<div class="sec">Erklärung</div><div class="expl"><p>${esc(inf.e)}</p><details><summary>Technisch erklärt</summary><ul>${inf.t.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details></div>`;
+    h+=`<div class="actions"><button class="btn red" data-act="del">${ty.enclosure?'Gehäuse löschen':'Bauteil löschen'}</button></div>`;}
+  P.innerHTML=h;P.style.display='block';document.body.classList.add('pp');}
+
+/* ---------- Palette, Modal, Toast ---------- */
+function buildPal(){let h=`<div class="hd"><b>Bauteile</b><button class="btn" data-act="palclose">Schließen</button></div><div style="padding:0 16px;font-size:13px;color:var(--sub)">Antippen zum Hinzufügen. Reiheneinbaugeräte rasten automatisch auf die nächste freie Hutschiene.</div>`;
+  CATS.forEach((c,ci)=>{h+=`<div class="cat">${c}</div>`;for(const [k,ty] of Object.entries(TYPES)){if(ty.cat!==ci)continue;const d=newItem(k,{id:'pv'});const s=sz(d);const pad=k==='hak'?[0,0,s.w,s.h+70]:[-4,-4,s.w+8,s.h+8];
+    let inner;try{inner=ty.enclosure?encDraw(d):ty.draw(d,s);}catch(_){inner='';}
+    h+=`<div class="prow" data-act="add" data-v="${k}"><div class="ic"><svg viewBox="${pad.join(' ')}" width="40" height="40" style="pointer-events:none">${inner}</svg></div><div><b>${ty.name}</b><span>${ty.sub}</span></div></div>`;}});
+  h+=`<div class="cat">Leiterfarben</div><div class="legend">${[['braun','L1 Außenleiter (auch L allgemein)'],['schwarz','L2 Außenleiter'],['grau','L3 Außenleiter'],['blau','N Neutralleiter'],['gnge','PE Schutzleiter']].map(([k,t])=>`<div><i style="background:${k==='gnge'?'repeating-linear-gradient(90deg,#2fa14e 0 6px,#f5d10a 6px 12px)':COL[k].c}"></i>${t}</div>`).join('')}</div>`;
+  $('#pal').innerHTML=h;}
+function modal(html){$('#sheet').innerHTML=html;$('#modal').style.display='flex';}
+function closeModal(){$('#modal').style.display='none';}
+function openCheck(){const R=check();const c=l=>R.filter(r=>r.lvl===l).length;const M={err:['#ff3b30','Fehler'],warn:['#ff9f0a','Warnung'],hint:['#0a84ff','Hinweis']};
+  let h=`<div class="mh"><h2>Prüfergebnis</h2><button class="btn" data-act="mclose">Schließen</button></div>`;
+  if(!S.items.length)h+='<p>Noch nichts aufgebaut.</p>';
+  else{h+=`<div class="sum"><span style="background:#ffe5e3;color:#d70015">${c('err')} Fehler</span><span style="background:#fff2db;color:#a15c00">${c('warn')} Warnungen</span><span style="background:#e5f1ff;color:#0058d0">${c('hint')} Hinweise</span></div>`;
+    if(!c('err')&&!c('warn'))h+=`<div class="res"><i style="background:#34c759"></i><div><span class="tag" style="color:#248a3d">In Ordnung</span>Keine Fehler in der Verdrahtung gefunden.</div></div>`;
+    for(const lv of ['err','warn','hint'])for(const r of R.filter(x=>x.lvl===lv))h+=`<div class="res" data-act="goto" data-v="${esc(r.ids[0]||'')}"><i style="background:${M[lv][0]}"></i><div><span class="tag" style="color:${M[lv][0]}">${M[lv][1]}</span>${esc(r.txt)}</div></div>`;
+    h+=`<p style="font-size:12.5px;color:var(--sub);margin-top:14px">Die Prüfung deckt die wichtigsten Regeln ab, ersetzt aber keine Abnahmeprüfung (VDE 0100-600) durch eine Elektrofachkraft.</p>`;}
+  modal(h);}
+function openHelp(){modal(`<div class="mh"><h2>Hilfe</h2><button class="btn" data-act="mclose">Schließen</button></div><div class="help">
+<h3>Aufbauen</h3><ul><li><b>Bauteile</b> antippen und Gerät wählen. Hutschienengeräte rasten automatisch ein: SLS, Zähler und PEN-Aufteilung im Zählerschrank, der Rest in der Unterverteilung.</li><li>Bauteil ziehen zum Verschieben. Über einer Hutschiene zeigt ein blauer Rahmen, wo es einrastet. Ziehst du einen Schrank, wandert alles darin mit.</li></ul>
+<h3>Verbinden</h3><ul><li>Vom Anschluss (Punkt) zum anderen Anschluss ziehen – oder ersten Punkt antippen, dann den zweiten.</li><li>Die Aderfarbe wird passend gewählt. Leitung antippen zum Ändern oder Löschen.</li><li>Gelb leuchtende Punkte und Leitungen führen Spannung. Weiße laufende Striche zeigen, wo Strom fließt.</li></ul>
+<h3>Schalten und Fehler</h3><ul><li>Hebel antippen schaltet ein und aus. Ausgelöste Geräte zeigen ein rotes Ausrufezeichen.</li><li>Bei Lampe, Steckdose und Herd kannst du Kurzschluss und Körperschluss auslösen. Bei der Steckdose wählst du die Last, damit testest du Überlast.</li><li><b>Prüfen</b> findet typische Verdrahtungsfehler.</li></ul>
+<h3>Fehler sofort sehen</h3><ul><li>Nach jedem Schritt wird geprüft. Ein Fehler wird sofort gemeldet – mit Grund – und das Teil rot markiert. Orange gestrichelt heißt: noch unvollständig.</li><li>Der Knopf oben zeigt den Stand: grün „Alles korrekt“, rot mit Anzahl der Fehler. Antippen zeigt die Liste.</li></ul>
+<h3>Messen und Rückgängig</h3><ul><li><b>Messen</b>: zwei Anschlüsse antippen, das Messgerät zeigt 0, 230 oder 400 V – wie ein zweipoliger Spannungsprüfer.</li><li><b>↶ Zurück</b> nimmt den letzten Schritt zurück.</li></ul>
+<h3>Dokumentation</h3><ul><li><b>Doku</b>: Kundendaten eintragen, Räume und Kleinmaterial ergänzen. Stromkreisliste, Materialliste und Schaltplan entstehen automatisch.</li><li>Leitungstyp und Länge trägst du beim jeweiligen LS ein, Räume beim Verbraucher.</li><li><b>Drucken / PDF</b> erzeugt das Dokument, <b>Materialliste CSV</b> öffnet sich in Excel.</li></ul>
+<h3>Ansicht, Speichern, Teilen</h3><ul><li>Zwei Finger: zoomen. Leere Fläche ziehen: verschieben.</li><li>Gespeichert wird automatisch auf diesem Gerät. <b>Projekt → Exportieren</b> sichert einen Aufbau als Datei, z. B. pro Kunde.</li><li><b>Teilen</b> zeigt den Link zur Webseite.</li></ul>
+<h3>Vereinfachungen</h3><ul><li>Auslösezeiten bei Überlast sind gerafft. Ströme werden aus der Nennleistung berechnet, Leitungsquerschnitte und Schleifenimpedanz sind nicht simuliert.</li><li>Lernwerkzeug: Arbeiten am HAK, Zählerschrank und an der Unterverteilung gehören in die Hände einer Elektrofachkraft.</li></ul></div>`);}
+function openProject(){modal(`<div class="mh"><h2>Projekt</h2><button class="btn" data-act="mclose">Schließen</button></div>
+${artifactCap?`<div class="row"><div class="l">Speichern<small>Sichert den Aufbau dauerhaft in dieser Seite, auch für andere Geräte.</small></div><button class="btn pri" data-act="savepage">Speichern</button></div>`:''}
+<div class="row"><div class="l">Beispiel laden<small>Fertiger, korrekt verdrahteter Aufbau zum Anschauen</small></div><button class="btn" data-act="example">Beispiel</button></div>
+<div class="row"><div class="l">Als Datei exportieren<small>JSON-Datei zum Aufheben oder Weitergeben</small></div><button class="btn" data-act="export">Exportieren</button></div>
+<div class="row"><div class="l">Datei importieren<small>Eine exportierte JSON-Datei laden</small></div><button class="btn" data-act="import">Importieren</button></div>
+<div class="row"><div class="l">Alles löschen<small>Leere Fläche, neu beginnen</small></div><button class="btn red" data-act="clear">Leeren</button></div>
+<p style="font-size:12.5px;color:var(--sub)">Der Aufbau wird automatisch in diesem Browser gespeichert. Zum Weitergeben an ein anderes Gerät: Exportieren, dort Importieren.</p>`);}
+function toast(msg,lvl='info',ms){const t=document.createElement('div');t.className='toast '+lvl;t.innerHTML=msg+'<button class="x" aria-label="Schließen">×</button>';
+  t.querySelector('.x').onclick=()=>t.remove();const box=$('#toasts');box.appendChild(t);while(box.children.length>3)box.firstChild.remove();
+  setTimeout(()=>t.remove(),ms||(lvl==='danger'?12000:lvl==='info'?3500:8000));}
+
+/* ---------- Speichern ---------- */
+const LSK='uv-baukasten-v1';
+function snapshot(){return{items:S.items,wires:S.wires,nid:S.nid,rooms:S.rooms,doc:S.doc,extras:S.extras,v:{k:V.k,tx:V.tx,ty:V.ty},t:Date.now()};}
+function saveLocal(){try{localStorage.setItem(LSK,JSON.stringify(snapshot()));}catch(_){}}
+function loadData(o){if(!o||!Array.isArray(o.items)||!Array.isArray(o.wires))return false;
+  S={items:o.items.filter(i=>TYPES[i.type]),wires:o.wires,nid:o.nid||1,sel:null,rooms:Array.isArray(o.rooms)?o.rooms:[],doc:o.doc&&typeof o.doc==='object'?o.doc:{},extras:Array.isArray(o.extras)?o.extras:[]};S.wires=S.wires.filter(w=>termOf(w.a)&&termOf(w.b));
+  for(const d of S.items){const def=newItem(d.type,{id:'tmp'});for(const k in def)if(d[k]===undefined)d[k]=def[k];}S.nid=Math.max(S.nid,...S.items.map(i=>+i.id.slice(1)+1),...S.wires.map(w=>+w.id.slice(1)+1),1);
+  OL={};fillRooms();simulate();live(true);if(o.v){Object.assign(V,o.v);applyView();}else fit();render();renderPanel();histReset();return true;}
+let artifactCap=null,dlCap=null;
+(async()=>{try{if(window.claude?.use){artifactCap=await window.claude.use('artifact');dlCap=await window.claude.use('downloads');}}catch(_){}})();
+async function savePage(){
+  if(!artifactCap){saveLocal();toast('Dauerhaftes Speichern ist hier nicht verfügbar. Der Aufbau ist in diesem Browser gesichert. Für andere Geräte: Exportieren.','warn');return;}
+  const json=JSON.stringify(snapshot()).replace(/</g,'\\u003c');
+  const b=SRC_PARTS.b.replace(/(<script type="application\/json" id="saved"[^>]*>)[\s\S]*?(<\/script>)/,(m,a,c)=>a+json+c);
+  const html=`<!DOCTYPE html>\n<html lang="de">\n<head data-k>\n${SRC_PARTS.h}\n</head>\n<body data-k>\n${b}\n</body>\n</html>`;
+  try{saveLocal();await artifactCap.publish(html);toast('Gespeichert.','ok');}
+  catch(err){const c=err?.code||'';toast(c==='conflict'?'Die Seite wurde inzwischen woanders geändert und lädt neu. Bitte erneut speichern.':c==='not_granted'||c==='not_writer'?'Nur die Besitzerin oder der Besitzer der Seite kann speichern. Nutze Exportieren.':'Speichern fehlgeschlagen. Der Aufbau ist in diesem Browser gesichert.','warn');}}
+function fname(){return (S.doc.kunde||'Unterverteilung').trim().replace(/[^\wäöüÄÖÜß-]+/g,'_')||'Unterverteilung';}
+async function exportFile(){saveFile(`Aufbau_${fname()}.json`,JSON.stringify(snapshot(),null,1),'application/json');}
+async function saveFile(name,data,mime){if(dlCap){try{await dlCap.save({filename:name,data});}catch(_){toast('Speichern abgebrochen.','info');}return;}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:mime}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);}catch(_){toast('Download ist hier nicht möglich.','warn');}}
+$('#file').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(loadData(o)){saveLocal();closeModal();toast('Importiert.','ok');}else toast('Die Datei passt nicht.','warn');}catch(_){toast('Die Datei konnte nicht gelesen werden.','warn');}e.target.value='';});
+let sT=0;function changed(sim=true){if(sim)simulate();live();render();renderPanel();histPush();if(MEAS)showMeter();clearTimeout(sT);sT=setTimeout(saveLocal,400);}
+
+/* ---------- Beispiel ---------- */
+function example(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S.doc||{},extras:[]};OL={};pend=null;LIVEQ=true;
+  const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb,color)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c=color;if(!c){const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
+  const hak=A('hak',{x:40,y:100}),zs=A('zs',{x:320,y:40}),uv=A('uv',{x:640,y:40});
+  const sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:5}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:2}});
+  const spd=A('spd',{mount:{enc:uv.id,rail:0,slot:0}}),fi=A('fi4',{mount:{enc:uv.id,rail:0,slot:6},label:'FI 1'});
+  const lsS=A('ls1',{mount:{enc:uv.id,rail:1,slot:0},rating:16,label:'Steckdose'}),lsL=A('ls1',{mount:{enc:uv.id,rail:1,slot:2},rating:10,label:'Licht'}),ls3=A('ls3',{mount:{enc:uv.id,rail:1,slot:5},rating:16,label:'Herd'});
+  const nk=A('nk',{mount:{enc:uv.id,rail:2,slot:0}}),pk=A('pek',{mount:{enc:uv.id,rail:2,slot:6}});
+  const sch=A('schalter',{x:560,y:700,label:'Schalter Flur',room:'Flur'}),lam=A('lampe',{x:680,y:700,label:'Lampe Flur',room:'Flur'}),sd=A('steckdose',{x:830,y:700,label:'Steckdose Küche',load:2000,room:'Küche'}),herd=A('herd',{x:980,y:700,label:'Herd',room:'Küche'});
+  lsS.len=14;lsL.len=9;ls3.len=11;sls.len=6;
+  W(hak,'L1',sls,'i1');W(hak,'L2',sls,'i2');W(hak,'L3',sls,'i3');W(hak,'PEN',pen,'PEN');
+  ['1','2','3'].forEach(n=>W(sls,'o'+n,z,'i'+n));W(pen,'N',z,'iN');
+  ['1','2','3','N'].forEach(n=>W(z,'o'+n,fi,'i'+n));['1','2','3','N'].forEach(n=>W(fi,'i'+n,spd,'i'+n));W(spd,'pe',pk,'t0');W(pen,'PE',pk,'t1');
+  W(fi,'oN',nk,'t0');W(fi,'o1',lsS,'i');W(fi,'o2',lsL,'i');W(fi,'o1',ls3,'i1');W(fi,'o2',ls3,'i2');W(fi,'o3',ls3,'i3');
+  W(lsS,'o',sd,'L');W(nk,'b0',sd,'N');W(pk,'b0',sd,'PE');
+  W(lsL,'o',sch,'L');W(sch,'LS',lam,'L','schwarz');W(nk,'b1',lam,'N');W(pk,'b1',lam,'PE');
+  ['1','2','3'].forEach(n=>W(ls3,'o'+n,herd,'L'+n));W(nk,'b2',herd,'N');W(pk,'b2',herd,'PE');
+  S.sel=null;closeModal();fillRooms();changed();fit();
+  toast('<b>Beispiel geladen</b>Korrekt verdrahtet: HAK → SLS → Zähler → FI → LS → Verbraucher. Probier Fehler aus: Lampe oder Steckdose antippen.','ok',7000);}
+
+/* ---------- Klicks ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;const a=b.dataset.act,v=b.dataset.v;const d=S.sel?.kind==='item'?byId(S.sel.id):null;
+  if(e.target===$('#modal')){closeModal();return;}
+  switch(a){
+   case'pal':$('#pal').classList.toggle('open');break;case'palclose':$('#pal').classList.remove('open');break;
+   case'add':addType(v);break;case'check':openCheck();break;case'help':openHelp();break;case'project':openProject();break;
+   case'example':if(S.items.length){modal(`<div class="mh"><h2>Beispiel laden?</h2><button class="btn" data-act="mclose">Abbrechen</button></div><p style="font-size:15px">Der aktuelle Aufbau wird ersetzt. Speichere ihn vorher über Projekt → Exportieren, wenn du ihn behalten willst.</p><div class="actions"><button class="btn pri" data-act="example2">Beispiel laden</button></div>`);}else example();break;
+   case'example2':example();break;
+   case'mclose':closeModal();break;case'zin':{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,1.25);break;}case'zout':{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,.8);break;}
+   case'fit':fit();break;case'close':S.sel=null;render();renderPanel();break;
+   case'color':{const w=S.wires.find(x=>x.id===S.sel.id);w.color=v;changed(false);break;}
+   case'delwire':S.wires=S.wires.filter(x=>x.id!==S.sel.id);S.sel=null;changed();break;
+   case'del':if(d)delItem(d);break;case'rating':d.rating=+v;changed();break;case'idn':d.idn=+v;changed();break;case'load':d.load=+v;changed();break;
+   case'test':fiTest(d);break;case'touch':touch(d);break;case'fuses':d.fuses=[true,true,true];changed();break;
+   case'goto':{closeModal();if(!v)break;if(v.startsWith('w:')){S.sel={kind:'wire',id:v.slice(2)};}else{S.sel={kind:'item',id:v};const it=byId(v);if(it)centerOn(it);}render();renderPanel();break;}
+   case'savepage':savePage();break;case'export':exportFile();break;case'import':$('#file').click();break;
+   case'clear':S={items:[],wires:[],nid:1,sel:null,rooms:[],doc:{},extras:[]};OL={};closeModal();changed();fit();break;
+   case'meas':setMeas(!MEAS);break;case'measnew':MA=MB=null;showMeter();render();break;case'measoff':setMeas(false);break;
+   case'undo':undo();break;case'share':openShare();break;case'copylink':copyLink();break;
+   case'doc':openDoc();break;case'docclose':$('#docv').style.display='none';break;case'print':try{window.print();}catch(_){toast('Drucken ist hier nicht möglich.','warn');}break;
+   case'csv':exportCSV();break;case'xadd':S.extras.push({name:v||'',qty:1,unit:'Stk.'});changed(false);docRefresh();break;
+   case'xdel':S.extras.splice(+v,1);changed(false);docRefresh();break;case'roomdel':S.rooms=S.rooms.filter(r=>r!==v);S.items.forEach(d=>{if(d.room===v)d.room='';});fillRooms();changed(false);docRefresh();break;
+  }});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+document.addEventListener('change',e=>{const i=e.target;if(i.tagName!=='INPUT'||!i.dataset.act)return;const d=S.sel?.kind==='item'?byId(S.sel.id):null;if(!d)return;
+  if(i.dataset.act==='on'){if(d.type==='herd'||d.type==='schalter')d.on=i.checked;else{d.on=i.checked;if(d.on)d.tripped=null;}changed();}
+  else if(i.dataset.act==='kurz'||i.dataset.act==='koerper'){d.fault[i.dataset.act]=i.checked;changed();}
+  else if(i.dataset.act==='room'){d.room=i.value.trim();if(d.room&&!S.rooms.includes(d.room))S.rooms.push(d.room);fillRooms();changed(false);}
+  else if(i.dataset.act==='len'){d.len=i.value===''?'':Math.max(0,+i.value);changed(false);}});
+document.addEventListener('change',e=>{const i=e.target;if(i.tagName!=='SELECT'||i.dataset.act!=='cable')return;const d=S.sel?.kind==='item'?byId(S.sel.id):null;if(!d)return;d.cable=i.value;changed(false);});
+document.addEventListener('input',e=>{const i=e.target;const a=i.dataset.act;if(a==='docf'){S.doc[i.dataset.v]=i.value;docDirty();}
+  else if(a==='xname'||a==='xqty'||a==='xunit'){const x=S.extras[+i.dataset.v];if(!x)return;x[a==='xname'?'name':a==='xqty'?'qty':'unit']=a==='xqty'?i.value:i.value;docDirty();}});
+document.addEventListener('input',e=>{const i=e.target;if(i.dataset.act!=='label')return;const d=byId(S.sel?.id);if(!d)return;d.label=i.value;render();clearTimeout(sT);sT=setTimeout(saveLocal,400);});
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if((e.key==='Delete'||e.key==='Backspace')&&S.sel){e.preventDefault();if(S.sel.kind==='wire'){S.wires=S.wires.filter(x=>x.id!==S.sel.id);S.sel=null;changed();}else{const d=byId(S.sel.id);if(d)delItem(d);}}
+  if(e.key==='Escape'){pend=null;S.sel=null;closeModal();render();renderPanel();}});
+addEventListener('resize',()=>{});
+
+
+/* ---------- Live-Prüfung ---------- */
+let MARK={},LASTERR=new Set(),LIVEQ=false;
+function live(quiet){const R=check();MARK={};const rank={err:2,warn:1,hint:0};
+  for(const r of R)for(const id of r.ids)if(rank[r.lvl]>=1&&(!MARK[id]||rank[r.lvl]>rank[MARK[id]]))MARK[id]=r.lvl;
+  const errs=R.filter(r=>r.lvl==='err');const fresh=errs.filter(r=>!LASTERR.has(r.txt));LASTERR=new Set(errs.map(r=>r.txt));
+  if(!quiet&&!LIVEQ&&fresh.length)toast(`<b>Fehler erkannt</b>${esc(fresh[0].txt)}${fresh.length>1?`<br><span style="opacity:.7">+ ${fresh.length-1} weitere – oben auf den roten Knopf tippen.</span>`:''}`,'err',10000);
+  LIVEQ=false;const c=$('#chk');const nw=R.filter(r=>r.lvl==='warn').length;
+  c.className='btn'+(errs.length?' err':nw?' warn':S.items.length?' ok':'');
+  c.querySelector('span').textContent=errs.length?`${errs.length} Fehler`:nw?`${nw} offen`:S.items.length?'Alles korrekt':'Prüfen';}
+
+/* ---------- Rückgängig ---------- */
+let HIST=[],CUR=null;
+const histStr=()=>JSON.stringify({items:S.items,wires:S.wires,nid:S.nid,rooms:S.rooms,extras:S.extras});
+function histPush(){const s=histStr();if(CUR!==null&&s!==CUR){HIST.push(CUR);if(HIST.length>80)HIST.shift();}CUR=s;$('#undoBtn').disabled=!HIST.length;}
+function histReset(){HIST=[];CUR=histStr();$('#undoBtn').disabled=true;}
+function undo(){if(!HIST.length)return;const o=JSON.parse(HIST.pop());Object.assign(S,{items:o.items,wires:o.wires,nid:o.nid,rooms:o.rooms||[],extras:o.extras||[],sel:null});
+  OL={};pend=null;MA=MB=null;CUR=histStr();LIVEQ=true;simulate();live(true);fillRooms();render();renderPanel();if(MEAS)showMeter();$('#undoBtn').disabled=!HIST.length;clearTimeout(sT);sT=setTimeout(saveLocal,400);toast('Letzter Schritt rückgängig gemacht.','info',1800);}
+
+/* ---------- Messgerät ---------- */
+let MEAS=false,MA=null,MB=null;
+function setMeas(on){MEAS=on;MA=MB=null;pend=null;const b=$('#measBtn');b.classList.toggle('on',on);b.textContent=on?'Messen beenden':'Messen';showMeter();render();
+  if(on)toast('Messgerät: Tippe zwei Anschlüsse an (Messspitze A und B).','info',3000);}
+function measTap(k){if(!MA||MB){MA=k;MB=null;}else if(k!==MA)MB=k;showMeter();render();}
+function volt(a,b){const n=buildNets();if(n.find(a)===n.find(b))return{v:0,t:'Beide Punkte sind direkt miteinander verbunden.'};
+  const pot=p=>p.phases.size===1&&!p.ground?[...p.phases][0]:(p.ground&&!p.phases.size?'G':null);const pa=pot(n.get(a)),pb=pot(n.get(b));
+  if(!pa||!pb)return{v:null,t:'Kein Messwert: Mindestens ein Punkt hat keine Verbindung zum Netz (Leiter offen oder abgeschaltet).'};
+  if(pa==='G'&&pb==='G')return{v:0,t:'N bzw. PE gegeneinander – beide liegen auf Erdpotential.'};
+  if(pa==='G'||pb==='G')return{v:230,t:`Außenleiter ${pa==='G'?pb:pa} gegen N/PE: Strangspannung.`};
+  if(pa===pb)return{v:0,t:`Beide Punkte hängen an ${pa}.`};
+  return{v:400,t:`${pa} gegen ${pb}: verkettete Spannung (230 V × √3 ≈ 400 V).`};}
+function showMeter(){const m=$('#meter');if(!MEAS){m.style.display='none';return;}m.style.display='block';
+  const tn=k=>{const o=termOf(k);return o?`${nm(o.d)} · ${o.t.label||o.t.role}`:'';};let h='';
+  if(MA&&!termOf(MA))MA=null;if(MB&&!termOf(MB))MB=null;
+  if(!MA)h='<div class="t" style="margin:6px 0">Tippe den ersten Anschluss an (Messspitze A).</div>';
+  else if(!MB)h=`<div class="t" style="margin:6px 0">A: ${esc(tn(MA))}<br>Jetzt den zweiten Anschluss antippen (B).</div>`;
+  else{const r=volt(MA,MB);h=`<div class="v">${r.v===null?'– – –':r.v+' V'}</div><div class="t">${esc(r.t)}</div><div class="p">A: ${esc(tn(MA))}<br>B: ${esc(tn(MB))}</div>`;}
+  m.innerHTML=`<div style="font-size:11.5px;font-weight:800;color:#8e8e93;letter-spacing:.06em">SPANNUNGSPRÜFER</div>${h}<div style="display:flex;gap:6px"><button class="btn" data-act="measnew">Neu messen</button><button class="btn" data-act="measoff">Beenden</button></div>`;}
+
+/* ---------- Teilen ---------- */
+const SITE_URL='https://ptrckai-flyblue.github.io/unterverteilung/';
+function siteUrl(){try{if(/^https?:$/.test(location.protocol)&&!/claude|anthropic|usercontent/.test(location.hostname))return location.href.split('#')[0];}catch(_){}return SITE_URL;}
+function openShare(){const u=siteUrl();modal(`<div class="mh"><h2>Teilen</h2><button class="btn" data-act="mclose">Schließen</button></div>
+${u?`<p style="font-size:15px;line-height:1.5;margin-top:0">Mit diesem Link öffnet jeder den Baukasten im Browser – auf iPad, Handy oder PC, ohne Konto.</p><input class="txt" id="shareurl" readonly value="${esc(u)}"><div class="actions"><button class="btn pri" data-act="copylink">Link kopieren</button></div>`:'<p style="font-size:15px">Die öffentliche Webseite ist noch nicht eingerichtet.</p>'}
+<div class="sec">Einen Aufbau mitgeben</div><p style="font-size:14px;line-height:1.5;color:#3a3a3c">Gespeichert wird auf dem jeweiligen Gerät. Zum Weitergeben: Projekt → Exportieren, Datei schicken, beim anderen Projekt → Importieren.</p>`);}
+async function copyLink(){const u=siteUrl();try{await navigator.clipboard.writeText(u);toast('Link kopiert.','ok',2000);}catch(_){const i=$('#shareurl');if(i){i.focus();i.select();}toast('Kopieren ging nicht – der Link ist markiert, bitte selbst kopieren.','info');}}
+
+/* ---------- Räume, Kabel ---------- */
+const CABLES=['NYM-J 3×1,5','NYM-J 3×2,5','NYM-J 5×1,5','NYM-J 5×2,5','NYM-J 5×4','NYM-J 5×6','NYM-J 5×10','NYM-J 5×16','NYY-J 5×10','NYY-J 5×16','H07V-K Einzelader','Andere'];
+function fillRooms(){$('#roomlist').innerHTML=S.rooms.map(r=>`<option value="${esc(r)}"></option>`).join('');}
+
+/* ---------- Dokumentation ---------- */
+function encOrder(d){if(d.mount){return[S.items.findIndex(i=>i.id===d.mount.enc),d.mount.rail,d.mount.slot];}return[9999,d.y,d.x];}
+function circuits(){const sN=buildNets({structural:true,noFaults:true});const U=units();const NU={};const nu=id=>NU[id]||(NU[id]=buildNets({structural:true,noFaults:true,open:id}));
+  const ls=U.filter(u=>u.kind==='ls'||u.kind==='rcbo').sort((a,b)=>{const x=encOrder(a.d),y=encOrder(b.d);for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]-y[i];return 0;});
+  const fis=U.filter(u=>u.kind==='fi');const els=loadEls(true);
+  return ls.map((u,i)=>{const d=u.d;const n2=nu(u.id);const inK=d.id+':'+(d.type==='ls1'?'i':d.type==='ls3'?'i1':'iL');
+    const cons=[...new Set(els.filter(e=>sN.get(e.L).phases.size&&!n2.get(e.L).phases.size).map(e=>e.d))];
+    const sws=S.items.filter(x=>x.type==='schalter'&&sN.get(x.id+':L').phases.size&&!n2.get(x.id+':L').phases.size);
+    const fi=u.kind==='rcbo'?d:(fis.find(f=>sN.get(inK).phases.size&&!nu(f.id).get(inK).phases.size)||{}).d;
+    const ins=d.type==='ls3'?['i1','i2','i3']:[d.type==='ls1'?'i':'iL'];const ph=[...new Set(ins.flatMap(t=>[...sN.get(d.id+':'+t).phases]))];
+    const rooms=[...new Set([...cons,...sws].map(c=>c.room).filter(Boolean))];
+    return{nr:'F'+(i+1),d,fi,ph,cons,sws,rooms};});}
+const MAT={hak:d=>['Hausanschluss','Hausanschlusskasten, 3 × NH 63 A gG','Netzbetreiber'],
+ zs:d=>['Verteilung','Zählerschrank mit Hutschienen (Zählerplatz eHZ)'],uv:d=>['Verteilung','Unterverteilung, 3 Reihen à 12 TE'],
+ zaehler:d=>['Verteilung','Elektronischer Zähler (eHZ)','Messstellenbetreiber'],
+ sls:d=>['Reiheneinbaugeräte',`SLS-Schalter E ${d.rating} A, 3-polig`],pen:d=>['Reiheneinbaugeräte','PEN-Klemme / Trennklemme N-PE'],
+ fi4:d=>['Reiheneinbaugeräte',`FI-Schutzschalter 4-polig 40 A / ${d.idn} mA, Typ A`],fi2:d=>['Reiheneinbaugeräte',`FI-Schutzschalter 2-polig 40 A / ${d.idn} mA, Typ A`],
+ ls1:d=>['Reiheneinbaugeräte',`Leitungsschutzschalter B ${d.rating} A, 1-polig`],ls3:d=>['Reiheneinbaugeräte',`Leitungsschutzschalter B ${d.rating} A, 3-polig`],
+ rcbo:d=>['Reiheneinbaugeräte',`FI/LS-Schalter B ${d.rating} A / ${d.idn} mA, 1+N`],spd:d=>['Reiheneinbaugeräte','Überspannungsschutz Typ 1+2, 4-polig'],
+ nk:d=>['Reiheneinbaugeräte','N-Klemmenblock'],pek:d=>['Reiheneinbaugeräte','PE-Klemmenblock'],
+ lampe:d=>['Installation','Leuchte (Schutzklasse I)'],schalter:d=>['Installation','Ausschalter mit Wippe und Rahmen'],
+ steckdose:d=>['Installation','Schutzkontaktsteckdose mit Rahmen'],herd:d=>['Installation','Herdanschlussdose','Herd selbst nicht enthalten'],
+ wago:d=>['Installation','Verbindungsklemme 5-fach']};
+const CATORDER=['Hausanschluss','Verteilung','Reiheneinbaugeräte','Installation','Leitungen','Verdrahtung in der Verteilung','Zusatzmaterial'];
+function materials(){const g={};const add=(cat,name,qty=1,unit='Stk.',note='')=>{const k=cat+'|'+name+'|'+unit;(g[k]||(g[k]={cat,name,qty:0,unit,note})).qty+=qty;};
+  for(const d of S.items){const m=MAT[d.type];if(!m)continue;const [cat,name,note]=m(d);add(cat,name,1,'Stk.',note||'');}
+  const ud=S.items.filter(d=>d.type==='schalter'||d.type==='steckdose').length;if(ud)add('Installation','Geräte-/Schalterdose Unterputz',ud);
+  const cab={};let missing=0;for(const d of S.items)if(d.cable!==undefined){if(+d.len>0)cab[d.cable]=(cab[d.cable]||0)+(+d.len);else missing++;}
+  for(const [c,m] of Object.entries(cab))add('Leitungen',c,Math.round(m*10)/10,'m');
+  const ad={};for(const w of S.wires){const A=termOf(w.a),B=termOf(w.b);if(A&&B&&TYPES[A.d.type].rail&&TYPES[B.d.type].rail)ad[w.color]=(ad[w.color]||0)+1;}
+  for(const [c,n] of Object.entries(ad))add('Verdrahtung in der Verteilung',`Verdrahtung ${COL[c].n}${c==='pen'?' (gn-ge, blau markiert)':''}`,n,'Verb.');
+  for(const x of S.extras)if(String(x.name).trim())add('Zusatzmaterial',String(x.name).trim(),+String(x.qty).replace(',','.')||0,x.unit||'Stk.');
+  const rows=Object.values(g).sort((a,b)=>CATORDER.indexOf(a.cat)-CATORDER.indexOf(b.cat));return{rows,missing};}
+function bounds(){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(const d of S.items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);y0=Math.min(y0,p.y-20);x1=Math.max(x1,p.x+s.w);y1=Math.max(y1,p.y+s.h+(d.type==='hak'?75:24));}
+  for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
+  return{x0:x0-14,y0:y0-14,x1:x1+14,y1:y1+14};}
+function planSVG(){const ks=S.sel,km=MEAS,kp=pend,kM=MARK;S.sel=null;pend=null;MEAS=false;MARK={};render();
+  const b=bounds();let all=svg.querySelector('defs').innerHTML+'§§'+Lenc.innerHTML+Ldev.innerHTML+Lwire.innerHTML+Lterm.innerHTML;
+  S.sel=ks;MEAS=km;pend=kp;MARK=kM;render();
+  for(const i of ['grid','rail','pestripe','bulb','hot','sh'])all=all.split(`id="${i}"`).join(`id="d_${i}"`).split(`url(#${i})`).join(`url(#d_${i})`);
+  const [dd,ii]=all.split('§§');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${b.x0} ${b.y0} ${b.x1-b.x0} ${b.y1-b.y0}"><defs>${dd}</defs><rect x="${b.x0}" y="${b.y0}" width="${b.x1-b.x0}" height="${b.y1-b.y0}" fill="#fff"/>${ii.replace(/<path class="flow"[^>]*\/>/g,'').replace(/<path class="glow"[^>]*\/>/g,'')}</svg>`;}
+function openDoc(){if(!S.items.length){toast('Noch nichts aufgebaut. Erst Bauteile hinzufügen oder das Beispiel laden.','info');return;}
+  if(!S.doc.datum)S.doc.datum=new Date().toLocaleDateString('de-DE');
+  const v=$('#docv');v.innerHTML=`<div class="dbar noprint"><b>Dokumentation</b><button class="btn pri" data-act="print">Drucken / PDF</button><button class="btn" data-act="csv">Materialliste CSV</button><button class="btn" data-act="docclose">Schließen</button></div><div class="dedit noprint" id="dedit"></div><div class="paper" id="paper"></div>`;
+  v.style.display='block';v.scrollTop=0;docRefresh();}
+function docRefresh(){if($('#docv').style.display!=='block')return;renderDocEdit();renderPaper();}
+function renderDocEdit(){const D=S.doc;const f=(k,l,ph='')=>`<div><label>${l}</label><input class="txt" data-act="docf" data-v="${k}" value="${esc(D[k]||'')}" placeholder="${ph}"></div>`;
+  $('#dedit').innerHTML=`<h3>Angaben</h3><div class="grid2">${f('kunde','Kunde','Name')}${f('adresse','Adresse','Straße, PLZ Ort')}${f('objekt','Objekt / Anlage','z. B. EFH, Unterverteilung Keller')}${f('datum','Datum')}${f('ersteller','Erstellt von','Name, Firma')}${f('auftrag','Auftrags-Nr.','optional')}</div>
+  <div style="margin-top:10px"><label>Bemerkungen</label><input class="txt" data-act="docf" data-v="notiz" value="${esc(D.notiz||'')}" placeholder="optional"></div>
+  <h3 style="margin-top:20px">Räume</h3>${S.rooms.length?`<div class="chips">${S.rooms.map(r=>`<span class="chip">${esc(r)}<button class="btn" style="height:26px;padding:0 8px;font-size:12px" data-act="roomdel" data-v="${esc(r)}">Entfernen</button></span>`).join('')}</div>`:''}
+  <div style="font-size:13px;color:#6e6e73;margin-top:6px">Räume trägst du beim Verbraucher ein: Verbraucher antippen → Raum. Neue Namen werden automatisch übernommen.</div>
+  <h3 style="margin-top:20px">Zusatzmaterial</h3><div style="font-size:13px;color:#6e6e73">Kleinteile, die nicht im Plan stehen. Antippen fügt eine Zeile hinzu, Menge danach anpassen.</div>
+  <div class="qa">${['Lüsterklemmen','Verbindungsklemmen 3-fach','Aderendhülsen 1,5 mm²','Aderendhülsen 2,5 mm²','Kabelbinder','Kabelschellen','Leerrohr M20','Abdeckstreifen','Beschriftungsstreifen'].map(n=>`<button data-act="xadd" data-v="${n}">+ ${n}</button>`).join('')}<button data-act="xadd" data-v="">+ Eigene Zeile</button></div>
+  ${S.extras.map((x,i)=>`<div class="xrow"><input class="txt" style="flex:3" data-act="xname" data-v="${i}" value="${esc(x.name)}" placeholder="Bezeichnung"><input class="txt" style="flex:1" inputmode="decimal" data-act="xqty" data-v="${i}" value="${esc(x.qty)}" aria-label="Menge"><input class="txt" style="flex:1" data-act="xunit" data-v="${i}" value="${esc(x.unit)}" aria-label="Einheit"><button class="btn red" data-act="xdel" data-v="${i}">Löschen</button></div>`).join('')}`;}
+let dT=0;function docDirty(){clearTimeout(dT);dT=setTimeout(()=>{renderPaper();saveLocal();},350);}
+function renderPaper(){const D=S.doc;const C=circuits();const M=materials();const R=check();const ne=R.filter(r=>r.lvl==='err').length,nw=R.filter(r=>r.lvl==='warn').length;
+  const fin=d=>d?`${esc(d.label||TYPES[d.type].name)} (${d.idn} mA)`:'–';const sls=S.items.find(d=>d.type==='sls');
+  const rooms=[...new Set(S.items.map(d=>d.room).filter(Boolean))];const cName=d=>esc(d.label||TYPES[d.type].name);
+  const badge=ne?`<span class="badge" style="background:#ffe5e3;color:#d70015">${ne} Fehler offen</span>`:nw?`<span class="badge" style="background:#fff2db;color:#a15c00">${nw} Punkte unvollständig</span>`:`<span class="badge" style="background:#e3f6e8;color:#1b7a35">Keine Fehler im Plan</span>`;
+  let h=`<h1>Dokumentation Elektroinstallation</h1><div class="meta">Unterverteilung · Netzform TN-C-S · Stand ${esc(D.datum||'')}</div>
+  <table class="kv"><tr><td>Kunde</td><td>${esc(D.kunde||'')}</td></tr><tr><td>Adresse</td><td>${esc(D.adresse||'')}</td></tr><tr><td>Objekt / Anlage</td><td>${esc(D.objekt||'')}</td></tr>${D.auftrag?`<tr><td>Auftrags-Nr.</td><td>${esc(D.auftrag)}</td></tr>`:''}<tr><td>Erstellt von</td><td>${esc(D.ersteller||'')}</td></tr>${D.notiz?`<tr><td>Bemerkungen</td><td>${esc(D.notiz)}</td></tr>`:''}</table>`;
+  const nFI=S.items.filter(d=>d.type==='fi4'||d.type==='fi2'||d.type==='rcbo');
+  h+=`<h2>1. Übersicht</h2><table class="kv"><tr><td>Netzform</td><td>TN-C-S${S.items.some(d=>d.type==='pen')?' (PEN-Aufteilung im Zählerschrank)':''}</td></tr>${S.items.some(d=>d.type==='hak')?'<tr><td>Hausanschluss</td><td>3 × NH 63 A gG</td></tr>':''}${sls?`<tr><td>Hauptschalter</td><td>SLS E ${sls.rating} A${+sls.len>0?` · Hauptleitung ${esc(sls.cable)}, ${fmt(sls.len)} m`:''}</td></tr>`:''}<tr><td>Fehlerstromschutz</td><td>${nFI.length?nFI.map(fin).join(', '):'–'}</td></tr><tr><td>Überspannungsschutz</td><td>${S.items.some(d=>d.type==='spd')?'Typ 1+2 vorhanden':'nicht vorhanden'}</td></tr><tr><td>Stromkreise</td><td>${C.length}</td></tr><tr><td>Räume</td><td>${esc(rooms.join(', ')||'–')}</td></tr><tr><td>Planprüfung</td><td>${badge}</td></tr></table>
+  <div class="meta" style="margin-top:6px">Die Planprüfung kontrolliert Verdrahtung und Schutzorgane im Plan. Sie ersetzt nicht die Erstprüfung mit Messungen nach DIN VDE 0100-600.</div>`;
+  h+=`<h2>2. Stromkreisliste</h2>${C.length?`<div class="tw"><table><tr><th>Nr.</th><th>Bezeichnung</th><th>Raum</th><th>Schutz</th><th>FI</th><th>Außen&shy;leiter</th><th>Leitung</th><th>Länge</th><th>Verbraucher</th></tr>${C.map(c=>`<tr><td><b>${c.nr}</b></td><td>${esc(c.d.label||'')}</td><td>${esc(c.rooms.join(', '))}</td><td>B${c.d.rating}${c.d.type==='ls3'?' 3-pol.':''}</td><td>${fin(c.fi)}</td><td>${c.ph.join(', ')||'–'}</td><td>${esc(c.d.cable||'')}</td><td>${+c.d.len>0?fmt(c.d.len)+' m':'–'}</td><td>${[...c.sws,...c.cons].map(cName).join(', ')||'–'}</td></tr>`).join('')}</table></div>`:'<p>Keine Stromkreise angelegt.</p>'}`;
+  const cons=S.items.filter(d=>TYPES[d.type].loads||d.type==='schalter');const circOf=d=>(C.find(c=>c.cons.includes(d)||c.sws.includes(d))||{}).nr||'–';
+  const byRoom={};for(const d of cons)(byRoom[d.room||'Ohne Raum']||(byRoom[d.room||'Ohne Raum']=[])).push(d);
+  h+=`<h2>3. Räume und Verbraucher</h2>${cons.length?`<table><tr><th>Raum</th><th>Verbraucher</th><th>Art</th><th>Stromkreis</th></tr>${Object.entries(byRoom).sort((a,b)=>a[0]==='Ohne Raum'?1:b[0]==='Ohne Raum'?-1:a[0].localeCompare(b[0])).map(([r,ds])=>ds.map((d,i)=>`<tr>${i===0?`<td rowspan="${ds.length}"><b>${esc(r)}</b></td>`:''}<td>${cName(d)}</td><td>${esc(TYPES[d.type].name)}</td><td>${circOf(d)}</td></tr>`).join('')).join('')}</table>`:'<p>Keine Verbraucher im Plan.</p>'}`;
+  h+=`<h2>4. Materialliste</h2><div class="tw"><table><tr><th>Pos.</th><th>Menge</th><th>Einheit</th><th>Bezeichnung</th><th>Hinweis</th></tr>${(()=>{let cat='',i=0;return M.rows.map(r=>{let x='';if(r.cat!==cat){cat=r.cat;x=`<tr class="catrow"><td colspan="5" style="background:#fafafa;font-weight:700">${esc(cat)}</td></tr>`;}i++;return x+`<tr><td>${i}</td><td style="text-align:right">${fmt(r.qty)}</td><td>${esc(r.unit)}</td><td>${esc(r.name)}</td><td>${esc(r.note||'')}</td></tr>`;}).join('');})()}</table></div>${M.missing?`<div class="meta" style="color:#c93400">Bei ${M.missing} Leitung${M.missing>1?'en':''} fehlt noch die Länge – beim jeweiligen LS bzw. SLS eintragen.</div>`:''}`;
+  h+=`<h2>5. Schaltplan</h2><div class="plan">${planSVG()}</div><div class="meta">Leiterfarben: braun L1 · schwarz L2 · grau L3 · blau N · grün-gelb PE</div>`;
+  h+=`<div class="sig"><div>Ort, Datum</div><div>Unterschrift Elektrofachkraft</div></div>`;
+  $('#paper').innerHTML=h;}
+function exportCSV(){const M=materials(),C=circuits();const q=x=>'"'+String(x??'').replace(/"/g,'""')+'"';const num=n=>String(Math.round(n*10)/10).replace('.',',');
+  let csv='﻿'+[['Kategorie','Menge','Einheit','Bezeichnung','Hinweis'].map(q).join(';'),...M.rows.map(r=>[r.cat,num(r.qty),r.unit,r.name,r.note].map(q).join(';'))].join('\r\n');
+  csv+='\r\n\r\n'+[['Nr.','Bezeichnung','Raum','Schutz','FI','Außenleiter','Leitung','Länge (m)','Verbraucher'].map(q).join(';'),...C.map(c=>[c.nr,c.d.label,c.rooms.join(', '),'B'+c.d.rating+(c.d.type==='ls3'?' 3-pol.':''),c.fi?(c.fi.label||TYPES[c.fi.type].name)+' '+c.fi.idn+' mA':'',c.ph.join(', '),c.d.cable,+c.d.len>0?num(+c.d.len):'',[...c.sws,...c.cons].map(d=>d.label||TYPES[d.type].name).join(', ')].map(q).join(';'))].join('\r\n');
+  saveFile(`Materialliste_${fname()}.csv`,csv,'text/csv;charset=utf-8');}
+
+/* ---------- Start ---------- */
+buildPal();applyView();fillRooms();
+(()=>{let o=null;try{o=JSON.parse($('#saved').textContent);}catch(_){}let lo=null;try{lo=JSON.parse(localStorage.getItem(LSK));}catch(_){}
+  const c=[o,lo].filter(x=>x&&Array.isArray(x.items)&&x.items.length).sort((a,b)=>(b.t||0)-(a.t||0));
+  if(!(c[0]&&loadData(c[0]))){simulate();live(true);render();histReset();}})();
+</script>
+</body>
+</html>
