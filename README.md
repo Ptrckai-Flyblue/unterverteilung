@@ -10,6 +10,7 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 - Geräte auf Hutschienen einrasten, Leitungen mit echten Aderfarben verbinden
 - Strom-Simulation, Fehler auslösen (FI, LS, Überlast), Spannungsprüfer
 - Sofortige Fehlerprüfung mit Begründung
+- Etagen (Keller, EG, OG …) mit Geschosshöhe, Steigleitungen mit Höhe in der Kabellänge, Gebäudeansicht von der Seite
 - Grundriss: Räume beliebiger Form, Raumarten mit Regeln (Bad, Stall, Außen …), Geräte mit Normsymbolen, Kabelkanal, Leitungswege mit Länge
 - Phasenschiene, Abzweigkasten, Abzweigdose, Lichtleiste, Doppel- und Kombisteckdose, Schutzart IP
 - Räume, Kabel je Stromkreis, Dokumentation mit Installationsplan als PDF, Materialliste als CSV
