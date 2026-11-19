@@ -10,7 +10,9 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 - Geräte auf Hutschienen einrasten, Leitungen mit echten Aderfarben verbinden
 - Strom-Simulation, Fehler auslösen (FI, LS, Überlast), Spannungsprüfer
 - Sofortige Fehlerprüfung mit Begründung
-- Räume, Kabel je Stromkreis, Dokumentation als PDF, Materialliste als CSV
+- Grundriss: Räume beliebiger Form, Raumarten mit Regeln (Bad, Stall, Außen …), Geräte mit Normsymbolen, Kabelkanal, Leitungswege mit Länge
+- Phasenschiene, Abzweigkasten, Abzweigdose, Lichtleiste, Doppel- und Kombisteckdose, Schutzart IP
+- Räume, Kabel je Stromkreis, Dokumentation mit Installationsplan als PDF, Materialliste als CSV
 
 Gespeichert wird im Browser des jeweiligen Geräts. Zum Weitergeben: Projekt → Exportieren / Importieren.
 
