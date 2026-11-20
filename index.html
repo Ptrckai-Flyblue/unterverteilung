@@ -323,6 +323,7 @@ table.m{width:100%;border-collapse:collapse;font-size:14px}
     <defs>
       <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.1" fill="#D6CCBB"/></pattern>
       <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e8ec"/><stop offset=".5" stop-color="#b4b4ba"/><stop offset="1" stop-color="#dcdce0"/></linearGradient>
+      <linearGradient id="copper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c7a0"/><stop offset=".35" stop-color="#d48a55"/><stop offset=".7" stop-color="#a95e2c"/><stop offset="1" stop-color="#7a4019"/></linearGradient>
       <pattern id="pestripe" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#34a853"/><rect width="5" height="10" fill="#f5d10a"/></pattern>
       <radialGradient id="bulb"><stop offset="0" stop-color="#fff7c2"/><stop offset=".6" stop-color="#ffd60a"/><stop offset="1" stop-color="#ffb300"/></radialGradient>
       <radialGradient id="hot"><stop offset="0" stop-color="#ffb199"/><stop offset=".55" stop-color="#ff453a"/><stop offset="1" stop-color="#a1150b"/></radialGradient>
@@ -401,7 +402,7 @@ const TYPES={
    s+=`<text x="${w/2}" y="164" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">HAK</text><text x="${w/2}" y="182" text-anchor="middle" font-size="10" fill="#c7c7cc">Netzbetreiber · verplombt</text>`;
    return s+tLabels(d,w,h,'#fff');}},
  zs:{cat:0,name:'Zählerschrank',sub:'Für Hauptschalter und Zähler',enclosure:true,
-  rails:[{y:470,len:10,label:'Unten: netzseitiger Anschlussraum (Sammelschienen, Hauptschalter)'},{y:290,len:10,label:'Mitte: Zählerplatz',plate:[2,8]},{y:110,len:10,label:'Oben: anlagenseitiger Anschlussraum'}],h:635},
+  rails:[{y:470,len:10,label:'Unten: netzseitiger Anschlussraum (Sammelschienen, Hauptschalter)'},{y:290,len:10,label:'Mitte: Zählerplatz',plate:[2,8]},{y:110,len:10,label:'Oben: anlagenseitiger Anschlussraum'}],h:690},
  uv:{cat:0,name:'Unterverteilung',sub:'Für FI, Sicherungen und Schienen',enclosure:true,
   rails:[{y:100,len:12,label:'Reihe oben'},{y:270,len:12,label:'Reihe Mitte'},{y:440,len:12,label:'Reihe unten (Einspeisung)'}],h:555},
  sls:{cat:1,name:'Hauptschalter (SLS)',sub:'Schaltet das ganze Haus ab',rail:true,te:3,home:'zs',busTap:['i1','i2','i3'],unit:'sls',ratings:[35,50,63],def:{rating:35,cable:'NYM-J 5×10',len:''},
@@ -412,13 +413,17 @@ const TYPES={
   terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),...['1','2','3','N'].map((n,i)=>T('o'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'bot',fr(4)[i]))],
   edges:()=>[['i1','o1'],['i2','o2'],['i3','o3'],['iN','oN']],
   draw(d,{w}){return railBody(w,'#f4f4f6')+`<rect x="7" y="40" width="${w-14}" height="26" rx="4" fill="#16261a"/><text x="${w-12}" y="58" text-anchor="end" font-size="13" font-weight="700" fill="#5dff86" font-family="ui-monospace,Menlo,monospace">${fmt(RT.P/1000,2)} kW</text><text x="${w/2}" y="76" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">eHZ · kWh</text>`+tLabels(d,w,DH)+devLabel(d,w);}},
- ss5:{cat:1,name:'Sammelschienen 5-polig',sub:'Kupferschienen L1 L2 L3 N PE unten im Zählerschrank',rail:true,overlay:true,te:10,h:DH+72,absEdges:true,home:'zs',
-  terms:['L1','L2','L3','N','PE'].map((r,i)=>T(r,r,r,'top',[.08,.26,.44,.62,.8][i])),
+ ss5:{cat:1,name:'Sammelschienen 5-polig',sub:'Kupferschienen L1 L2 L3 N PE unten im Zählerschrank',rail:true,overlay:true,te:10,h:DH+112,absEdges:true,home:'zs',
+  terms:['L1','L2','L3','N','PE'].map((r,i)=>T(r,'',r,'top',[.06,.24,.42,.6,.78][i])),
   edges:(d)=>{if(!d.mount||!byId(d.mount.enc))return[];const out=[];for(const o of S.items){if(o===d||!o.mount||o.mount.enc!==d.mount.enc||o.mount.rail!==d.mount.rail||TYPES[o.type].overlay)continue;const tap=TYPES[o.type].busTap;if(!tap)continue;
     for(const tid of tap){const t=TYPES[o.type].terms.find(x=>x.id===tid);if(t&&['L1','L2','L3','N','PE'].includes(t.role))out.push([d.id+':'+t.role,o.id+':'+tid]);}}return out;},
-  draw(d,{w}){const C={L1:'#8a5a2b',L2:'#1c1c1e',L3:'#9a9aa0',N:'#1f6feb',PE:'#2fa14e'};let s='';['L1','L2','L3','N','PE'].forEach((r,i)=>{const y=DH+8+i*10;s+=`<rect x="0" y="${y}" width="${w}" height="7" rx="2" fill="${r==='PE'?'url(#pestripe)':C[r]}" stroke="#5a4630" stroke-width=".6"/><text x="${w-4}" y="${y+6}" text-anchor="end" font-size="7" font-weight="800" fill="#fff">${r}</text>`;});
-    ['L1','L2','L3','N','PE'].forEach((r,i)=>{const x=[.08,.26,.44,.62,.8][i]*w,y=DH+8+i*10+3.5;s+=`<path d="M${x} ${y} V${DH+60}" stroke="${r==='PE'?'#2fa14e':C[r]}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="3" fill="${r==='PE'?'#2fa14e':C[r]}" stroke="#fff"/><text x="${x+6}" y="${DH+57}" font-size="8" font-weight="800" fill="#3a3a3c">${r}</text>`;});
-    return `<g pointer-events="visiblePainted">${s}</g><text x="4" y="${DH+4}" font-size="8" font-weight="700" fill="#8A5320" pointer-events="none">Sammelschienen · Geräte darauf bekommen Strom über Adapter</text>`;}},
+  draw(d,{w}){let s='';const BH=13,G=5,y0=DH+6;
+    ['L1','L2','L3','N','PE'].forEach((r,i)=>{const y=y0+i*(BH+G);s+=`<rect x="-6" y="${y+2}" width="${w+12}" height="${BH}" rx="2.5" fill="#000" opacity=".12"/><rect x="-6" y="${y}" width="${w+12}" height="${BH}" rx="2.5" fill="url(#copper)" stroke="#6b3a17" stroke-width=".8"/><rect x="-4" y="${y+2}" width="${w+8}" height="2.2" rx="1" fill="#fff" opacity=".45"/>`;});
+    ['L1','L2','L3','N','PE'].forEach((r,i)=>{const x=[.06,.24,.42,.6,.78][i]*w,y=y0+i*(BH+G)+BH/2;s+=`<rect x="${x-4}" y="${y}" width="8" height="${DH+100-y}" fill="url(#copper)" stroke="#6b3a17" stroke-width=".6"/><circle cx="${x}" cy="${y}" r="3.2" fill="#8a8a8f" stroke="#4a4a4e"/>`;});
+    return `<g pointer-events="visiblePainted">${s}</g>`;}},
+ spdss:{cat:1,name:'Überspannungsschutz für Sammelschienen',sub:'Typ 1+2, wird auf die 5 Schienen geklickt (L1, L2, L3, PE)',rail:true,te:3,home:'zs',busTap:['L1','L2','L3','PE'],
+  terms:[T('L1','','L1','top',.2),T('L2','','L2','top',.4),T('L3','','L3','top',.6),T('PE','','PE','top',.8)],
+  draw(d,{w}){return railBody(w,'#f6f6f8')+`<text x="${w/2}" y="34" text-anchor="middle" font-size="8.5" font-weight="800">SPD T1+2</text><text x="${w/2}" y="46" text-anchor="middle" font-size="7.5" font-weight="700" fill="#6e6e73">3+0 · L–PEN</text>${[0,1,2].map(i=>`<rect x="${8+i*((w-16)/3)}" y="54" width="${(w-16)/3-4}" height="12" rx="2" fill="#2F9E57"/>`).join('')}`+devLabel(d,w);}},
  hlak:{cat:1,name:'Hauptleitungsabzweigklemme',sub:'5-polig, oben im Zählerschrank: Abgang zur Unterverteilung',rail:true,te:4,home:'zs',
   terms:[...['1','2','3','N','PE'].map((n,i)=>T('i'+n,/\d/.test(n)?'L'+n:n,/\d/.test(n)?'L'+n:n,'top',fr(5)[i])),...['1','2','3','N','PE'].map((n,i)=>T('o'+n,/\d/.test(n)?'L'+n:n,/\d/.test(n)?'L'+n:n,'bot',fr(5)[i]))],
   edges:()=>['1','2','3','N','PE'].map(n=>['i'+n,'o'+n]),
@@ -525,6 +530,7 @@ const INFO={
  uv:{e:'Verteilt den Strom auf die einzelnen Stromkreise im Haus. Jeder Kreis bekommt seine eigene Sicherung.',t:['Typischer Inhalt: Überspannungsschutz, FI-Schalter, Leitungsschutzschalter (LS), N- und PE-Klemmen.','Ab der PEN-Aufteilung 5 Leiter: L1, L2, L3, N, PE (TN-S).','Pro FI eine eigene N-Klemme, sonst löst der FI aus.','Empfehlung: Stromkreise auf mehrere FIs aufteilen, damit bei einer Auslösung nicht das ganze Haus ausfällt.']},
  sls:{e:'Der Hauptschalter vor dem Zähler. Er ist größer als alle Sicherungen dahinter und springt nur, wenn die es nicht schaffen. Damit schaltest du die ganze Anlage ab.',t:['Selektiver Hauptleitungsschutzschalter, Charakteristik E (z. B. 35 A).','Selektiv: Bei einem Kurzschluss im Stromkreis löst zuerst der kleine LS aus, der SLS bleibt drin.','Nach VDE-AR-N 4100 im Anschlussraum vor dem Zähler vorgesehen, dient auch als Trennstelle.']},
  zaehler:{e:'Zählt, wie viel Energie verbraucht wird. Die Anzeige zeigt hier die aktuelle Leistung aller Verbraucher.',t:['Elektronischer Haushaltszähler (eHZ) bzw. moderne Messeinrichtung, 3-phasig.','Misst Wirkenergie in kWh: Leistung × Zeit, je Außenleiter.','Gehört dem Messstellenbetreiber. Mit Smart-Meter-Gateway wird er zum intelligenten Messsystem.']},
+ spdss:{e:'Überspannungsschutz, der unten im Zählerschrank direkt auf die Sammelschienen geklickt wird – ohne Kabel. Er verbindet L1, L2 und L3 über Ableiter mit PE (PEN).',t:['Kombiableiter Typ 1+2 für 40-mm-Sammelschienen im netzseitigen Anschlussraum (vor dem Zähler), nach VDE-AR-N 4100.','Im TN-C-Teil vor der PEN-Aufteilung: 3+0-Schaltung, je ein Ableiter von L1, L2, L3 gegen PEN. Kein eigener N-Anschluss.','Hersteller z. B. DEHN DEHNshield ZP (TNC), Weidmüller VPU ZPA, Schneider Resi9 iPRF ZP.','Der Netzbetreiber muss Typ 1 vor dem Zähler zulassen (TAB).']},
  ss5:{e:'Dicke Kupferschienen für L1, L2, L3, N und PE ganz unten im Zählerschrank. Die Hauptleitung vom Hausanschluss kommt von unten hier an. Geräte wie der Hauptschalter sitzen mit einem Adapter direkt auf den Schienen und bekommen so Strom, ohne Draht.',t:['Sammelschienensystem 5-polig im netzseitigen Anschlussraum (VDE-AR-N 4100).','In der App bekommen Geräte auf dieser Hutschiene ihre Eingänge automatisch über die Schienen: Hauptschalter L1–L3, Aufteilung speist N und PE.','Die Hauptleitung vom HAK an die Klemmen unten anschließen.']},
  hlak:{e:'Klemmen oben im Zählerschrank, nach dem Zähler. Von hier geht die Leitung zur Unterverteilung ab.',t:['Hauptleitungsabzweigklemme 5-polig im anlagenseitigen Anschlussraum (oben).','Eingang unten vom Zähler (L1–L3, N) und von der PE-Schiene, Ausgang oben zur Unterverteilung.','Hier wird auch der Überspannungsschutz angeschlossen.']},
  pen:{e:'Aus dem Netz kommt ein kombinierter Leiter (PEN). Hier wird er in zwei getrennte Leiter aufgeteilt: N (blau) und PE (grün-gelb). Danach dürfen sie nie wieder verbunden werden.',t:['Übergang TN-C → TN-S, zusammen TN-C-S-System.','PEN: grün-gelb mit blauer Markierung, Kupfer mindestens 10 mm².','Werden N und PE danach wieder verbunden, fließt Betriebsstrom über den Schutzleiter und FIs lösen aus.']},
@@ -681,9 +687,10 @@ function check(){
   const sls=S.items.filter(d=>d.type==='sls');
   if(S.items.some(d=>d.type==='hak')){if(!sls.length)add('warn','Kein Hauptschalter (SLS) vorhanden. Nach VDE-AR-N 4100 gehört er vor den Zähler.');
     else for(const z of S.items.filter(d=>d.type==='zaehler')){const k=z.id+':i1';if(!sN.get(k).phases.size)continue;if(buildNets({structural:true,noFaults:true,open:sls.map(s=>s.id+'#')}).get(k).phases.size)add('warn',`${nm(z)}: Der Hauptschalter (SLS) sitzt nicht vor dem Zähler.`,[z.id]);}
-    if(!S.items.some(d=>d.type==='spd'))add('hint','Kein Überspannungsschutz. Pflicht für Neuanlagen nach DIN VDE 0100-443/-534. Er gehört in den Zählerschrank (Anschlussraum nach dem Zähler).');
-    else{const encOf=d=>d.mount&&byId(d.mount.enc);const zsS=S.items.filter(d=>d.type==='spd'&&encOf(d)?.type==='zs');const zss=S.items.filter(d=>d.type==='zs');
-      if(zss.length&&!zsS.length)add('hint','Der Überspannungsschutz sitzt nicht im Zählerschrank. Nach DIN VDE 0100-534 gehört er an den Einspeisepunkt (Anschlussraum nach dem Zähler). In der Unterverteilung reicht er nur, wenn sie direkt daneben sitzt.');
+    const isSpd=d=>d.type==='spd'||d.type==='spdss';
+    if(!S.items.some(isSpd))add('hint','Kein Überspannungsschutz. Pflicht für Neuanlagen nach DIN VDE 0100-443/-534. Er gehört in den Zählerschrank, z. B. unten auf die Sammelschienen geklickt.');
+    else{const encOf=d=>d.mount&&byId(d.mount.enc);const zsS=S.items.filter(d=>isSpd(d)&&encOf(d)?.type==='zs');const zss=S.items.filter(d=>d.type==='zs');
+      if(zss.length&&!zsS.length)add('hint','Der Überspannungsschutz sitzt nicht im Zählerschrank. Nach DIN VDE 0100-534 gehört er an den Einspeisepunkt, also in den Zählerschrank. In der Unterverteilung reicht er nur, wenn sie direkt daneben sitzt.');
       for(const uv of S.items.filter(d=>d.type==='uv')){const m=uvDist(uv);if(m==null||m<=10)continue;if(!S.items.some(d=>d.type==='spd'&&d.mount&&d.mount.enc===uv.id))add('hint',`${nm(uv)} liegt etwa ${fmt(m,1)} m vom Zählerschrank entfernt. Ab 10 m gehört dort zusätzlich ein Überspannungsschutz Typ 2 hinein (Empfehlung nach DIN VDE 0100-534).`,[uv.id]);}}}
   for(const d of S.items)if(TYPES[d.type].rail&&!d.mount)add('warn',`${nm(d)} liegt frei und ist nicht auf einer Hutschiene eingerastet.`,[d.id]);
   const cnt={L1:0,L2:0,L3:0};for(const u of lsU.filter(u=>u.d.type!=='ls3')){const k=u.d.id+':'+(u.d.type==='ls1'?'i':'iL');const ph=[...sN.get(k).phases];if(ph.length===1)cnt[ph[0]]++;}
@@ -954,7 +961,7 @@ function exampleHouse(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb,color)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c=color;if(!c){const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
   const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:80});
   const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}});
-  const kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:0}}),spd=A('spd',{mount:{enc:zs.id,rail:2,slot:5}}),fi=A('fi4',{mount:{enc:uv.id,rail:2,slot:0},label:'FI 1'});
+  const kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:3}}),spd=A('spdss',{mount:{enc:zs.id,rail:0,slot:3}}),fi=A('fi4',{mount:{enc:uv.id,rail:2,slot:0},label:'FI 1'});
   const lsS=A('ls1',{mount:{enc:uv.id,rail:1,slot:0},rating:16,label:'Steckdose'}),lsL=A('ls1',{mount:{enc:uv.id,rail:1,slot:2},rating:10,label:'Licht'}),ls3=A('ls3',{mount:{enc:uv.id,rail:1,slot:5},rating:16,label:'Herd'});
   const nk=A('nk',{mount:{enc:uv.id,rail:0,slot:0}}),pk=A('pek',{mount:{enc:uv.id,rail:0,slot:6}});
   const sch=A('schalter',{x:1080,y:80,label:'Schalter Flur',room:'Flur'}),lam=A('lampe',{x:1230,y:80,label:'Lampe Flur',room:'Flur'}),sd=A('steckdose',{x:1080,y:330,label:'Steckdose Küche',load:2000,room:'Küche'}),herd=A('herd',{x:1230,y:330,label:'Herd',room:'Küche'});
@@ -962,7 +969,6 @@ function exampleHouse(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S
   W(hak,'L1',ss,'L1');W(hak,'L2',ss,'L2');W(hak,'L3',ss,'L3');W(hak,'PEN',pen,'PEN');
   ['1','2','3'].forEach(n=>W(sls,'o'+n,z,'i'+n));W(ss,'N',z,'iN');
   ['1','2','3','N'].forEach(n=>W(z,'o'+n,kl,'i'+n));W(ss,'PE',kl,'iPE');
-  ['1','2','3','N'].forEach(n=>W(kl,'o'+n,spd,'i'+n));W(spd,'pe',kl,'oPE');
   ['1','2','3','N'].forEach(n=>W(kl,'o'+n,fi,'i'+n));W(kl,'oPE',pk,'t1');
   W(fi,'oN',nk,'t0');W(fi,'o1',lsS,'i');W(fi,'o2',lsL,'i');W(fi,'o1',ls3,'i1');W(fi,'o2',ls3,'i2');W(fi,'o3',ls3,'i3');
   W(lsS,'o',sd,'L');W(nk,'b0',sd,'N');W(pk,'b0',sd,'PE');
@@ -1073,11 +1079,8 @@ function openMore(){const row=(v,t,d)=>`<div class="mrow" data-act="mx" data-v="
 const GSTEPS=[
  {a:['hak','L1'],b:['ss','L1'],t:'Verbinde L1 vom Hausanschluss mit der Sammelschiene L1 (unten im Zählerschrank).',e:'Der Hausanschluss sitzt ganz unten im Keller. Von dort geht die Hauptleitung von unten in den Zählerschrank. Unten liegen die Sammelschienen: dicke Kupferschienen für L1, L2, L3, N und PE. Für einen Lichtkreis reicht L1.'},
  {a:['hak','PEN'],b:['pen','PEN'],t:'Verbinde PEN vom Hausanschluss mit der Aufteilung (unten, PEN).',e:'Aus dem Netz kommt PEN: Neutralleiter und Schutzleiter in einem Draht – grün-gelb mit blauer Markierung. Die Aufteilung trennt ihn und speist damit die N- und die PE-Schiene.'},
- {a:['sls','o1'],b:['z','i1'],t:'Verbinde den Hauptschalter (oben, L1) mit dem Zähler (unten, L1).',e:'Der Hauptschalter sitzt mit einem Adapter direkt auf den Sammelschienen – unten braucht er keinen Draht. Er schaltet das ganze Haus ab. Der Zähler steckt in der Mitte auf seinem Zählerplatz.'},
+ {a:['sls','o1'],b:['z','i1'],t:'Verbinde den Hauptschalter (oben, L1) mit dem Zähler (unten, L1).',e:'Hauptschalter und Überspannungsschutz werden unten einfach auf die Sammelschienen geklickt – ohne Kabel. Der Hauptschalter schaltet das ganze Haus ab. Der Überspannungsschutz leitet Spannungsspitzen von L1, L2 und L3 auf PE ab. Der Zähler steckt in der Mitte auf seinem Zählerplatz.'},
  {a:['ss','N'],b:['z','iN'],t:'Verbinde die Sammelschiene N mit dem Zähler (unten, N).',e:'Ab der Aufteilung sind N (blau) und PE (grün-gelb) getrennt – und werden nie wieder verbunden.'},
- {a:['z','o1'],b:['spd','i1'],t:'Verbinde den Zähler (oben, L1) mit dem Überspannungsschutz (unten, L1).',e:'Der Überspannungsschutz sitzt oben im Zählerschrank, nach dem Zähler und vor dem FI. Bei einer Spannungsspitze, etwa durch Blitz, leitet er sie zur Erde ab. Im echten Haus kommen auch L2 und L3 dran.'},
- {a:['z','oN'],b:['spd','iN'],t:'Verbinde den Zähler (oben, N) mit dem Überspannungsschutz (unten, N).',e:'Auch N wird geschützt. Spannungsspitzen können zwischen allen Leitern auftreten.'},
- {a:['spd','pe'],b:['ss','PE'],t:'Verbinde den Überspannungsschutz (oben, PE) mit der Sammelschiene PE.',e:'Über PE fließt die Spannungsspitze zur Erde ab. Die Leitung so kurz wie möglich halten – jeder Zentimeter verschlechtert den Schutz.'},
  {a:['z','o1'],b:['fi','iL'],t:'Verbinde den Zähler (oben, L1) mit dem FI-Schalter (unten, L).',e:'Der FI sitzt in der Unterverteilung in der untersten Reihe. Er vergleicht, ob genauso viel Strom zurückkommt, wie hinfließt.'},
  {a:['z','oN'],b:['fi','iN'],t:'Verbinde den Zähler (oben, N) mit dem FI-Schalter (unten, N).',e:'Auch N muss durch den FI. Sonst kann er Hin- und Rückstrom nicht vergleichen.'},
  {a:['fi','oL'],b:['ls','i'],t:'Verbinde den FI (oben, L) mit der Sicherung (unten).',e:'Die Sicherung schützt die Leitung dieses einen Stromkreises vor Überlast und Kurzschluss.'},
@@ -1092,7 +1095,7 @@ let G=null,LKIDS=null;
 function lichtkreis(withWires){S={items:[],wires:[],nid:1,rooms:['Flur'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;MA=MB=null;FREE=false;
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};
   const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:80});
-  const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0},len:6}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}}),spd=A('spd',{mount:{enc:zs.id,rail:2,slot:3}});
+  const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0},len:6}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}}),spd=A('spdss',{mount:{enc:zs.id,rail:0,slot:3}});
   const fi=A('fi2',{mount:{enc:uv.id,rail:2,slot:0},label:'FI 1'}),ls=A('ls1',{mount:{enc:uv.id,rail:1,slot:0},rating:10,label:'Licht',len:9});
   const nk=A('nk',{mount:{enc:uv.id,rail:0,slot:0}}),pk=A('pek',{mount:{enc:uv.id,rail:0,slot:6}});
   const sch=A('schalter',{x:1080,y:120,label:'Schalter Flur',room:'Flur',on:withWires}),lam=A('lampe',{x:1230,y:120,label:'Lampe Flur',room:'Flur'});
@@ -1218,7 +1221,7 @@ function circuits(){const sN=buildNets({structural:true,noFaults:true});const U=
     const ins=d.type==='ls3'?['i1','i2','i3']:[d.type==='ls1'?'i':'iL'];const ph=[...new Set(ins.flatMap(t=>[...sN.get(d.id+':'+t).phases]))];
     const rooms=[...new Set([...cons,...sws].map(c=>c.room).filter(Boolean))];
     return{nr:'F'+(i+1),d,fi,ph,cons,sws,rooms};});}
-const MAT={hak:d=>['Hausanschluss','Hausanschlusskasten, 3 × NH 63 A gG','Netzbetreiber'],ss5:d=>['Verteilung','Sammelschienensystem 5-polig mit Adapter für SLS'],hlak:d=>['Verteilung','Hauptleitungsabzweigklemme 5-polig'],
+const MAT={hak:d=>['Hausanschluss','Hausanschlusskasten, 3 × NH 63 A gG','Netzbetreiber'],ss5:d=>['Verteilung','Sammelschienensystem 5-polig mit Adapter für SLS'],hlak:d=>['Verteilung','Hauptleitungsabzweigklemme 5-polig'],spdss:d=>['Verteilung','Kombiableiter Typ 1+2 für 40-mm-Sammelschiene, TN-C 3+0'],
  zs:d=>['Verteilung','Zählerschrank mit Hutschienen (Zählerplatz eHZ)'],uv:d=>['Verteilung','Unterverteilung, 3 Reihen à 12 TE'],
  zaehler:d=>['Verteilung','Elektronischer Zähler (eHZ)','Messstellenbetreiber'],
  sls:d=>['Reiheneinbaugeräte',`SLS-Schalter E ${d.rating} A, 3-polig`],pen:d=>['Reiheneinbaugeräte','PEN-Klemme / Trennklemme N-PE'],
