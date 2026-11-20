@@ -15,6 +15,7 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 - Räume aus Vorlagen (Rechteck, L, U, T) mit Maßen, Wände am Griff verschieben, Wand teilen, Türen und Fenster
 - Wandansicht von innen mit Installationszonen nach DIN 18015-3, Geräte auf Höhe ziehen
 - 3D als Schnitt-Isometrie (Puppenhaus): Wände mit Dicke, echte Türen und Fenster, mit einem Finger drehen und neigen, Etagen gestapelt, Mini-Grundriss; zwei Blickrichtungen in der Doku
+- Aufbau von unten nach oben: HAK unten, Zählerschrank (unten Sammelschienen 5-polig + SLS, Mitte Zählerplatz mit BKE-Adapter, oben Abzweigklemme + Überspannungsschutz), darüber Unterverteilung und Verbraucher
 - Abzweigdose: offene Dose mit Hebel- oder Lüsterklemmen, Klemmenplan, passende Dosengröße (Spelsberg Abox), Aderzuordnung nach Farbregeln, Anleitung Schritt für Schritt, Prüfungen, Material, Doku
 - Phasenschiene, Abzweigkasten, Abzweigdose, Lichtleiste, Doppel- und Kombisteckdose, Schutzart IP
 - Räume, Kabel je Stromkreis, Dokumentation mit Installationsplan als PDF, Materialliste als CSV
