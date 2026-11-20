@@ -2,16 +2,16 @@
 <html lang="de">
 <head data-k>
 <meta charset="utf-8" data-k>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" data-k>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" data-k>
 <title data-k>Unterverteilung – Baukasten</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" data-k>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-k>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" data-k>
 <style data-k>
-:root{--bg:#F6F1E9;--card:#FFFDF9;--txt:#1A1A1A;--sub:#6B655C;--acc:#1A1A1A;--red:#B4472C;--orange:#C98A1B;--green:#2F9E57;--line:#E6DFD2;--sand:#EAE2D3}
+:root{--tabh:calc(64px + env(safe-area-inset-bottom));--barh:calc(62px + env(safe-area-inset-top));--bg:#F6F1E9;--card:#FFFDF9;--txt:#1A1A1A;--sub:#6B655C;--acc:#1A1A1A;--red:#B4472C;--orange:#C98A1B;--green:#2F9E57;--line:#E6DFD2;--sand:#EAE2D3}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;font-family:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:var(--txt);background:var(--bg);-webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%}
-#bar{position:fixed;top:0;left:0;right:0;height:58px;padding:0 10px;display:flex;align-items:center;gap:6px;background:rgba(246,241,233,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(26,26,26,.08);z-index:20;overflow-x:auto;scrollbar-width:none}
+#bar{position:fixed;top:0;left:0;right:0;height:var(--barh);padding:env(safe-area-inset-top) 14px 0;display:flex;align-items:center;gap:6px;background:rgba(246,241,233,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(26,26,26,.08);z-index:20;overflow-x:auto;scrollbar-width:none}
 #bar::-webkit-scrollbar{display:none}
 #bar .ttl{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:0 8px 0 4px;white-space:nowrap;display:flex;align-items:center;gap:8px}
 #bar .ttl i{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#1A1A1A;color:#F6F1E9;font-style:normal;font-size:15px}
@@ -22,13 +22,24 @@ html,body{margin:0;height:100%;overflow:hidden;font-family:"Manrope",-apple-syst
 .btn.red{background:#F6E3DC;color:#9A3A22}
 .btn.sq{width:38px;padding:0;font-size:18px}
 .btn svg{width:17px;height:17px}
-@media (max-width:820px){#bar .ttl span{display:none}}
+@media (max-width:620px){#bar .ttl span{display:none}}
+#bar .btn{height:42px}
+#bar .ib{width:42px;padding:0}
+@media (max-width:520px){.zb2{display:none}}
+#tabs{position:fixed;left:0;right:0;bottom:0;height:var(--tabh);padding-bottom:env(safe-area-inset-bottom);z-index:21;background:rgba(250,246,239,.94);-webkit-backdrop-filter:saturate(1.6) blur(22px);backdrop-filter:saturate(1.6) blur(22px);border-top:1px solid rgba(26,26,26,.09);display:flex;justify-content:center}
+#tabs .in{display:grid;grid-template-columns:repeat(5,1fr);width:100%;max-width:620px}
+#tabs button{border:0;background:transparent;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#8C857A;font-size:11.5px;font-weight:700;letter-spacing:.1px;cursor:pointer;padding:6px 0 4px;position:relative}
+#tabs button svg{width:27px;height:27px}
+#tabs button.on{color:#1A1A1A}
+#tabs button.on svg .f{fill:#1A1A1A}
+#tabs button:active{transform:scale(.94)}
+#tabs .dot{position:absolute;top:6px;left:calc(50% + 8px);min-width:17px;height:17px;border-radius:9px;background:#B4472C;color:#fff;font-size:10px;line-height:17px;padding:0 4px;display:none}
 @media (max-width:899px){.zb{display:none!important}}
 .btn:disabled{opacity:.4}
 .btn.on{background:#1A1A1A;color:#fff}
 #chk.err svg,#chk.warn svg{display:none}
 #chk.ok{background:#E2F0E6;color:#23784A}#chk.err{background:#F6E3DC;color:#9A3A22}#chk.warn{background:#F7EBD3;color:#8A5A0B}
-#meter{position:fixed;left:12px;top:70px;z-index:16;background:#1c1c1e;color:#fff;border-radius:16px;padding:14px 16px;width:min(300px,calc(100% - 24px));box-shadow:0 10px 30px rgba(0,0,0,.25);display:none}
+#meter{position:fixed;left:12px;top:calc(var(--barh) + 12px);z-index:16;background:#1c1c1e;color:#fff;border-radius:16px;padding:14px 16px;width:min(300px,calc(100% - 24px));box-shadow:0 10px 30px rgba(0,0,0,.25);display:none}
 #meter .v{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0}
 #meter .t{font-size:13.5px;line-height:1.4;color:#d1d1d6}
 #meter .p{font-size:12.5px;color:#8e8e93;margin-top:6px}
@@ -72,7 +83,7 @@ select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:ima
  .paper h2{break-after:avoid}.paper table{break-inside:auto}.paper tr{break-inside:avoid}.paper tr.catrow{break-after:avoid}.paper .plan{break-inside:avoid}
  @page{size:A4;margin:14mm}
 }
-#stage{position:fixed;top:58px;left:0;right:0;bottom:0}
+#stage{position:fixed;top:var(--barh);left:0;right:0;bottom:var(--tabh)}
 #svg{width:100%;height:100%;touch-action:none;display:block}
 #empty{position:fixed;left:50%;top:50%;transform:translate(-50%,-45%);background:#FFFDF9;border-radius:22px;padding:26px 24px 18px;box-shadow:0 10px 40px rgba(60,45,20,.12);max-width:440px;width:calc(100% - 32px);z-index:5}
 #empty h2{margin:0 0 4px;font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:24px}
@@ -83,34 +94,45 @@ select.txt{appearance:none;-webkit-appearance:none;background:#fff url("data:ima
 .way.pri{background:#1A1A1A;color:#F6F1E9}.way.pri span{color:#D9D1C2}.way.pri i{background:#F6F1E9;color:#1A1A1A}
 .mrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer}.mrow:active{background:#F3EDE2}
 .mrow b{display:block;font-size:15.5px}.mrow span{display:block;font-size:13px;color:var(--sub);margin-top:2px}.mrow .ch{margin-left:auto;color:#A39A8A;font-size:20px}
-#guide{position:fixed;left:12px;top:70px;z-index:17;background:#FFFDF9;border-radius:18px;padding:14px 16px 12px;width:min(420px,calc(100% - 24px));box-shadow:0 10px 34px rgba(60,45,20,.18);display:none;border:2px solid #1A1A1A}
+#guide{position:fixed;left:12px;top:calc(var(--barh) + 12px);max-height:calc(100% - var(--barh) - var(--tabh) - 24px);overflow:auto;z-index:17;background:#FFFDF9;border-radius:18px;padding:14px 16px 12px;width:min(420px,calc(100% - 24px));box-shadow:0 10px 34px rgba(60,45,20,.18);display:none;border:2px solid #1A1A1A}
 #guide .st{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--sub);text-transform:uppercase}
 #guide .gt{font-size:17px;font-weight:800;margin:4px 0 4px;line-height:1.3}
 #guide .ge{font-size:14px;line-height:1.45;color:#3B362E}
 #guide .gn{font-size:13.5px;line-height:1.4;color:#9A3A22;background:#F8E8E1;border-radius:10px;padding:8px 10px;margin-top:8px}
 #guide .bar2{height:5px;background:#EAE2D3;border-radius:3px;margin:8px 0 2px;overflow:hidden}#guide .bar2 i{display:block;height:100%;background:#1A1A1A;border-radius:3px}
 #guide .actions{margin-top:10px}#guide .btn{height:36px;font-size:13.5px}
-body.guiding #toasts{top:auto;bottom:16px}
+#guide .cust{font-size:14.5px;line-height:1.45;background:#F3EEE4;border-radius:12px;padding:9px 11px;margin:6px 0 8px;color:#2B2721}
+#guide .cust i{display:block;font-style:normal;font-size:11.5px;font-weight:800;color:var(--sub);letter-spacing:.04em;margin-bottom:2px}
+#guide .req{margin:4px 0 0;padding:0;list-style:none}#guide .req li{font-size:13.5px;line-height:1.4;padding:3px 0 3px 20px;position:relative;color:#3B362E}
+#guide .req li:before{content:'';position:absolute;left:4px;top:9px;width:7px;height:7px;border-radius:2px;background:#1A1A1A}
+#guide .gl{font-size:13.5px;line-height:1.4;padding:6px 0;border-top:1px solid #EFE8DB}#guide .gl b{display:block}#guide .gl small{display:block;color:#5B544A;font-size:13px;margin-top:2px}
+#guide .gl.ok b{color:#2B7A3D}#guide .gl.no b{color:#A33A1F}#guide .gl.tip b{color:#8A6A10}
+#guide .bigstars{font-size:32px;letter-spacing:6px;color:#E0A100;line-height:1.1;margin:4px 0}
+#guide.min{width:auto;max-width:calc(100% - 24px);padding:10px 12px}#guide.min .actions{margin-top:6px}
+.mrow.lv{gap:12px}.mrow.lv .lvn{flex:0 0 34px;height:34px;border-radius:17px;background:#1A1A1A;color:#F6F1E9;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px}
+.mrow.lv>div:nth-child(2){flex:1}.mrow.lv .stars{color:#E0A100;font-size:17px;letter-spacing:2px;white-space:nowrap}.mrow.lock{opacity:.45}
+.lsub{font-size:14.5px;line-height:1.45;color:#5B544A;margin:0 0 10px}
+body.guiding #toasts{top:auto;bottom:calc(var(--tabh) + 16px)}
 .vseg{display:flex;background:#EAE2D3;border-radius:20px;padding:3px;gap:2px;flex:none}
 .vseg button{border:0;background:transparent;height:34px;padding:0 13px;border-radius:17px;font:inherit;font-size:14px;font-weight:700;color:#6B655C;cursor:pointer;white-space:nowrap}
 .vseg button.on{background:#1A1A1A;color:#F6F1E9}
-#floors{position:fixed;left:12px;top:70px;z-index:14;display:none;gap:6px;align-items:center;flex-wrap:wrap;max-width:calc(100% - 24px)}
+#floors{position:fixed;left:12px;top:calc(var(--barh) + 12px);z-index:14;display:none;gap:6px;align-items:center;flex-wrap:wrap;max-width:calc(100% - 24px)}
 #floors .vseg{box-shadow:0 6px 20px rgba(60,45,20,.12);background:#FFFDF9}
 #floors .btn{background:#FFFDF9;box-shadow:0 6px 20px rgba(60,45,20,.12);height:40px}
-#ptools{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:14;display:none;flex-direction:column;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 20px)}
+#ptools{position:fixed;left:50%;bottom:calc(var(--tabh) + 12px);transform:translateX(-50%);z-index:14;display:none;flex-direction:column;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 20px)}
 #ptools .tb{display:flex;gap:4px;background:#FFFDF9;border-radius:22px;padding:5px;box-shadow:0 8px 26px rgba(60,45,20,.18);overflow-x:auto;max-width:100%}
 #ptools .tb button{border:0;background:transparent;border-radius:17px;height:38px;padding:0 12px;font:inherit;font-size:13.5px;font-weight:700;color:#3B362E;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
 #ptools .tb button.on{background:#1A1A1A;color:#F6F1E9}
 #ptools .hint{background:#1A1A1A;color:#F6F1E9;border-radius:14px;padding:9px 13px;font-size:13.5px;line-height:1.4;max-width:560px;text-align:center}
 #ptools .hint .btn{height:30px;font-size:12.5px;margin:6px 3px 0;background:#F6F1E9;color:#1A1A1A}
-body.pp #ptools{bottom:calc(47% + 10px)}
-@media (min-width:900px){body.pp #ptools{bottom:14px;left:calc(50% - 190px)}}
+body.pp #ptools{bottom:calc(47% + var(--tabh) + 10px)}
+@media (min-width:900px){body.pp #ptools{bottom:calc(var(--tabh) + 12px);left:calc(50% - 190px)}}
 select.txt{padding-right:30px}
 @keyframes pulse{0%{r:9;opacity:1}100%{r:22;opacity:0}}
 .gpulse{fill:none;stroke:#1A1A1A;stroke-width:3;animation:pulse 1.3s ease-out infinite}
 .steplbl{pointer-events:none}
 /* Palette */
-#pal{position:fixed;top:58px;left:0;bottom:0;width:320px;max-width:88%;background:#FFFDF9;z-index:18;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 30px rgba(0,0,0,.12);overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:30px}
+#pal{position:fixed;top:var(--barh);left:0;bottom:var(--tabh);width:320px;max-width:88%;background:#FFFDF9;z-index:18;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 30px rgba(0,0,0,.12);overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:30px}
 #pal.open{transform:none}
 #pal .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 4px}
 #pal .hd b{font-size:18px}
@@ -125,8 +147,8 @@ select.txt{padding-right:30px}
 .legend i{width:34px;height:6px;border-radius:3px;flex:none}
 /* Panel */
 #panel{position:fixed;z-index:15;background:rgba(255,253,249,.98);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 -6px 30px rgba(0,0,0,.14);display:none;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 22px;-webkit-user-select:text;user-select:text}
-@media (min-width:900px){#panel{top:70px;right:12px;width:360px;max-height:calc(100% - 84px);border-radius:18px}}
-@media (max-width:899px){#panel{left:0;right:0;bottom:0;max-height:47%;border-radius:18px 18px 0 0}}
+@media (min-width:900px){#panel{top:calc(var(--barh) + 12px);right:12px;width:360px;max-height:calc(100% - var(--barh) - var(--tabh) - 24px);border-radius:18px}}
+@media (max-width:899px){#panel{left:0;right:0;bottom:var(--tabh);max-height:47%;border-radius:18px 18px 0 0}}
 .ph{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
 .pt{font-size:18px;font-weight:700}
 .ps{font-size:14px;margin-top:3px;font-weight:600}
@@ -160,7 +182,7 @@ details summary{cursor:pointer;font-weight:600;font-size:14.5px;padding:6px 0;co
 .alert.o{background:#F7EED9;color:#7A510C}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 /* Toasts */
-#toasts{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:40;display:flex;flex-direction:column;gap:8px;width:min(560px,calc(100% - 24px));pointer-events:none}
+#toasts{position:fixed;top:calc(var(--barh) + 8px);left:50%;transform:translateX(-50%);z-index:40;display:flex;flex-direction:column;gap:8px;width:min(560px,calc(100% - 24px));pointer-events:none}
 .toast{pointer-events:auto;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.16);padding:12px 40px 12px 14px;font-size:14.5px;line-height:1.45;border-left:5px solid var(--acc);position:relative;animation:tin .25s ease}
 .toast.err{border-left-color:var(--red)}.toast.warn{border-left-color:var(--orange)}.toast.ok{border-left-color:var(--green)}
 .toast.danger{background:#9A3A22;color:#fff;border-left-color:#7a000c}
@@ -310,14 +332,13 @@ table.m{width:100%;border-collapse:collapse;font-size:14px}
 <body data-k>
 <header id="bar" data-k>
   <div class="ttl"><i>⚡</i><span>Unterverteilung</span></div>
-  <button class="btn pri" data-act="pal"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>Bauteile</button>
-  <button class="btn" data-act="check" id="chk"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Prüfen</span></button>
-  <button class="btn" data-act="undo" id="undoBtn" disabled>↶ Zurück</button>
-  <button class="btn" data-act="doc">Doku</button>
   <div class="sp"></div>
-  <div class="vseg" role="tablist"><button data-act="view" data-v="schema" class="on" id="vSchema">Schaltplan</button><button data-act="view" data-v="plan" id="vPlan">Grundriss</button><button data-act="view" data-v="3d" id="v3D">3D</button></div>
-  <button class="btn" data-act="more">Mehr …</button>
+  <button class="btn" data-act="check" id="chk"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg><span>Prüfen</span></button>
+  <button class="btn" data-act="undo" id="undoBtn" disabled aria-label="Rückgängig"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5L3 9l4 4"/><path d="M3 9h9a5 5 0 010 10h-2"/></svg><span class="zb2">Zurück</span></button>
+  <button class="btn pri" data-act="pal"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>Bauteil</button>
+  <button class="btn ib" data-act="more" aria-label="Mehr"><svg viewBox="0 0 20 20" fill="currentColor"><circle cx="4.5" cy="10" r="1.9"/><circle cx="10" cy="10" r="1.9"/><circle cx="15.5" cy="10" r="1.9"/></svg></button>
 </header>
+<nav id="tabs" role="tablist" data-k><div class="in"><button data-act="view" data-v="schema" id="vSchema" class="on" role="tab" aria-label="Schaltplan"><svg viewBox="0 0 24 24"><path d="M4 6h5v5H4zM15 13h5v5h-5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 8.5h3.5v7H15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle class="f" cx="12.5" cy="8.5" r="1.4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>Schaltplan</button><button data-act="view" data-v="plan" id="vPlan" class="" role="tab" aria-label="Grundriss"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M11 5v6H4M11 15v4M15 11h5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>Grundriss</button><button data-act="view" data-v="3d" id="v3D" class="" role="tab" aria-label="3D"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>3D</button><button data-act="learn" data-v="learn" id="vLearn" class="" role="tab" aria-label="Lernen"><svg viewBox="0 0 24 24"><path d="M3 9l9-4.5L21 9l-9 4.5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M7 11v4.5c1.4 1.4 3 2 5 2s3.6-.6 5-2V11M21 9v5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>Lernen</button><button data-act="doc" data-v="doc" id="vDoc" class="" role="tab" aria-label="Doku"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M14 3v4h4M10 12h5M10 16h5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>Doku</button></div></nav>
 <main id="stage" data-k>
   <svg id="svg" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -334,7 +355,7 @@ table.m{width:100%;border-collapse:collapse;font-size:14px}
     </defs>
     <g id="world">
       <rect id="gridbg" x="-30000" y="-30000" width="60000" height="60000" fill="url(#grid)"/>
-      <g id="lEnc"></g><g id="lDev"></g><g id="lWire"></g><g id="lTerm"></g>
+      <g id="lEnc"></g><g id="lDev"></g><g id="lWire"></g><g id="lTerm"></g><g id="lCov"></g>
       <path id="temp" fill="none" stroke="#1A1A1A" stroke-width="3" stroke-dasharray="6 6" pointer-events="none"/>
     </g>
   </svg>
@@ -356,7 +377,7 @@ table.m{width:100%;border-collapse:collapse;font-size:14px}
 <div id="docv" data-k></div>
 <div id="wallv" data-k></div>
 <div id="dosev" data-k></div>
-<div id="mini3" style="display:none;position:fixed;right:14px;top:132px;z-index:6;background:#FFFDF9;border-radius:16px;padding:6px;box-shadow:0 4px 18px rgba(0,0,0,.08);pointer-events:none"></div>
+<div id="mini3" style="display:none;position:fixed;right:14px;top:calc(var(--barh) + 74px);z-index:6;background:#FFFDF9;border-radius:16px;padding:6px;box-shadow:0 4px 18px rgba(0,0,0,.08);pointer-events:none"></div>
 <datalist id="roomlist" data-k></datalist>
 <div id="modal" data-k><div class="sheet" id="sheet"></div></div>
 <input type="file" id="file" accept=".json,application/json" style="display:none" data-k>
@@ -413,6 +434,10 @@ const TYPES={
   terms:[...['1','2','3','N'].map((n,i)=>T('i'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'top',fr(4)[i])),...['1','2','3','N'].map((n,i)=>T('o'+n,n==='N'?'N':'L'+n,n==='N'?'N':'L'+n,'bot',fr(4)[i]))],
   edges:()=>[['i1','o1'],['i2','o2'],['i3','o3'],['iN','oN']],
   draw(d,{w}){return railBody(w,'#f4f4f6')+`<rect x="7" y="40" width="${w-14}" height="26" rx="4" fill="#16261a"/><text x="${w-12}" y="58" text-anchor="end" font-size="13" font-weight="700" fill="#5dff86" font-family="ui-monospace,Menlo,monospace">${fmt(RT.P/1000,2)} kW</text><text x="${w/2}" y="76" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6e6e73">eHZ · kWh</text>`+tLabels(d,w,DH)+devLabel(d,w);}},
+ npek:{cat:2,name:'N/PE-Klemmleiste',sub:'Oben im Verteiler: N links (blau), PE rechts (grün-gelb)',rail:true,te:12,
+  terms:[...Array.from({length:6},(_,i)=>T('n'+i,'','N','top',(i+.5)/12)),...Array.from({length:6},(_,i)=>T('p'+i,'','PE','top',(i+6.5)/12)),...Array.from({length:6},(_,i)=>T('nb'+i,'','N','bot',(i+.5)/12)),...Array.from({length:6},(_,i)=>T('pb'+i,'','PE','bot',(i+6.5)/12))],
+  edges:()=>{const o=[];for(let i=1;i<6;i++){o.push(['n0','n'+i]);o.push(['p0','p'+i]);}for(let i=0;i<6;i++){o.push(['n0','nb'+i]);o.push(['p0','pb'+i]);}return o;},
+  draw(d,{w}){return `<rect x="1" y="14" width="${w/2-3}" height="${DH-28}" rx="5" fill="#DCE8FB" stroke="#1f6feb" stroke-width="1.2"/><rect x="${w/2+2}" y="14" width="${w/2-3}" height="${DH-28}" rx="5" fill="url(#pestripe)" opacity=".85" stroke="#2a7a3a" stroke-width="1.2"/><rect x="6" y="${DH/2-10}" width="${w/2-13}" height="20" rx="4" fill="#b9bcc2"/><rect x="${w/2+7}" y="${DH/2-10}" width="${w/2-13}" height="20" rx="4" fill="#b9bcc2"/><text x="${w/4}" y="${DH/2+5}" text-anchor="middle" font-size="13" font-weight="800" fill="#1f6feb">N</text><text x="${w*.75}" y="${DH/2+5}" text-anchor="middle" font-size="13" font-weight="800" fill="#1d5a2a">PE</text>`+devLabel(d,w);}},
  hes:{cat:0,name:'Haupterdungsschiene (HES)',sub:'Schutzpotentialausgleich: Erder, Wasser, Gas, Heizung',w:230,h:96,
   terms:[T('PE','PE','PE','bot',.12)],
   draw(d,{w,h}){const L=['Erder','Wasser','Gas','Heizung','Blitz'];return `<rect width="${w}" height="${h}" rx="10" fill="#fff" stroke="#c7c7cc" stroke-width="1.2" filter="url(#sh)"/><rect x="12" y="${h/2-7}" width="${w-24}" height="14" rx="3" fill="url(#copper)" stroke="#6b3a17" stroke-width=".8"/>${L.map((t,i)=>{const x=60+i*36;const yy=FLIP(d)?h-22:22;return `<path d="M${x} ${h/2} V${yy}" stroke="#2fa14e" stroke-width="3"/><text x="${x}" y="${FLIP(d)?h-8:12}" text-anchor="middle" font-size="7.5" font-weight="700" fill="#3a3a3c">${t.split('-')[0]}</text>`;}).join('')}<text x="${w-10}" y="${h/2+4}" text-anchor="end" font-size="9" font-weight="800" fill="#fff">HES</text>`+tLabels(d,w,h)+cLabel(d,w,h+14);}},
@@ -534,6 +559,7 @@ const INFO={
  sls:{e:'Der Hauptschalter vor dem Zähler. Er schaltet alles hinter ihm ab: Zähler, Unterverteilung, alle Stromkreise. Vor ihm bleibt alles unter Spannung – das Kabel vom Hausanschluss, die Sammelschienen, der Überspannungsschutz darauf und seine eigenen Eingänge. Das schaltet nur der Netzbetreiber ab.',t:['Selektiver Hauptleitungsschutzschalter (SH-Schalter, DIN VDE 0645), Charakteristik E (z. B. 35 A). „SLS“ ist der übliche Kurzname.','Selektiv: Bei einem Kurzschluss im Stromkreis löst in der Regel zuerst der kleine LS aus. Bis zu welcher LS-Größe das klappt, steht in der Selektivitätstabelle des Herstellers (bei E35 meist bis B16).','Mit PV-Anlage, Speicher oder Notstrom kann auch von dort Spannung kommen.','Arbeiten vor dem Zähler (Hausanschluss, Sammelschienen, Hauptschalter, Zählerplatz) nur durch den Netzbetreiber oder einen bei ihm eingetragenen Installateur (§ 13 NAV). Elektrofachkraft allein reicht dafür nicht. Plomben nie selbst öffnen.','Nach VDE-AR-N 4100 im Anschlussraum vor dem Zähler vorgesehen, dient auch als Trennstelle.']},
  zaehler:{e:'Zählt, wie viel Energie verbraucht wird. Die Anzeige zeigt hier die aktuelle Leistung aller Verbraucher.',t:['Elektronischer Haushaltszähler (eHZ) bzw. moderne Messeinrichtung, 3-phasig.','Misst Wirkenergie in kWh: Leistung × Zeit, je Außenleiter.','Gehört dem Messstellenbetreiber. Mit Smart-Meter-Gateway wird er zum intelligenten Messsystem.']},
  spdss:{e:'Überspannungsschutz, der unten im Zählerschrank direkt auf die Sammelschienen geklickt wird – ohne Kabel. Er verbindet L1, L2 und L3 über Ableiter mit PE (PEN).',t:['Kombiableiter Typ 1+2 für 40-mm-Sammelschienen im netzseitigen Anschlussraum (vor dem Zähler), nach VDE-AR-N 4100.','Im TN-C-Teil vor der PEN-Aufteilung: 3+0-Schaltung, je ein Ableiter von L1, L2, L3 gegen PEN. Kein eigener N-Anschluss.','Hersteller z. B. DEHN DEHNshield ZP (TNC), Weidmüller VPU ZPA, Schneider Resi9 iPRF ZP.','Im netzseitigen Anschlussraum nur funkenstreckenbasierte Typ-1-Ableiter (kein Varistor), Kurzschlussfestigkeit mindestens 25 kA, plombierbar (VDE-AR-N 4100). Die TAB des Netzbetreibers gilt.','3+0 passt, wenn die PEN-Aufteilung direkt auf diesem Schienensystem sitzt. Weiter hinten im TN-S-Teil braucht es 3+1 oder 4+0.','Arbeiten vor dem Zähler (Hausanschluss, Sammelschienen, Hauptschalter, Zählerplatz) nur durch den Netzbetreiber oder einen bei ihm eingetragenen Installateur (§ 13 NAV). Elektrofachkraft allein reicht dafür nicht. Plomben nie selbst öffnen.']},
+ npek:{e:'Klemmleiste für Neutralleiter (blau) und Schutzleiter (grün-gelb), meist oben im Verteiler. Alle Klemmen einer Farbe sind untereinander verbunden.',t:['Achtung bei mehreren FI: Jeder FI braucht seine eigene, getrennte N-Klemme. Eine gemeinsame N-Leiste für mehrere FI lässt sie auslösen.','PE-Seite mit der PE-Zuleitung verbinden, nie mit N.']},
  hes:{e:'Sammelpunkt für den Schutzpotentialausgleich. Hier werden PE, Fundamenterder und alle Metallrohre (Wasser, Gas, Heizung) sowie der Blitzschutz verbunden. So können zwischen Metallteilen im Haus keine gefährlichen Spannungen entstehen.',t:['Pflicht nach DIN VDE 0100-410 (411.3.1.2): Schutzpotentialausgleich über die Haupterdungsschiene.','Anschluss am PEN-Aufteilungspunkt bzw. an der PE-Schiene im Zählerschrank. Fundamenterder nach DIN 18014.','Schutzpotentialausgleichsleiter mindestens 6 mm² Cu (DIN VDE 0100-540), Erdung des Überspannungsschutzes Typ 1 mindestens 16 mm² Cu.','Bei einem PEN-Bruch im Netz ist das die wichtigste Maßnahme gegen gefährliche Berührungsspannung an Metallteilen.']},
  ss5:{e:'Dicke Kupferschienen für L1, L2, L3, N und PE ganz unten im Zählerschrank. Die Hauptleitung vom Hausanschluss kommt von unten hier an. Geräte wie der Hauptschalter sitzen mit einem Adapter direkt auf den Schienen und bekommen so Strom, ohne Draht.',t:['Sammelschienensystem 5-polig im netzseitigen Anschlussraum (VDE-AR-N 4100).','In der App bekommen Geräte auf dieser Hutschiene ihre Eingänge automatisch über die Schienen: Hauptschalter L1–L3, Aufteilung speist N und PE.','Die Hauptleitung vom HAK an die Klemmen unten anschließen. Im TN-C-Teil ist sie 4-adrig (L1, L2, L3, PEN), Querschnitt nach VDE-AR-N 4100 für mindestens 63 A ausgelegt (in der Praxis meist 16 mm²).','Arbeiten vor dem Zähler (Hausanschluss, Sammelschienen, Hauptschalter, Zählerplatz) nur durch den Netzbetreiber oder einen bei ihm eingetragenen Installateur (§ 13 NAV). Elektrofachkraft allein reicht dafür nicht. Plomben nie selbst öffnen.']},
  hlak:{e:'Klemmen oben im Zählerschrank, nach dem Zähler. Von hier geht die Leitung zur Unterverteilung ab.',t:['Hauptleitungsabzweigklemme 5-polig im anlagenseitigen Anschlussraum (oben).','Eingang unten vom Zähler (L1–L3, N) und von der PE-Schiene, Ausgang oben zur Unterverteilung.','Hier wird auch der Überspannungsschutz angeschlossen.']},
@@ -570,8 +596,10 @@ const byId=id=>S.items.find(i=>i.id===id);
 function newItem(type,props={}){const ty=TYPES[type];const d={id:props.id||'i'+(S.nid++),type,x:0,y:0,label:'',on:true,tripped:null,mount:null,...(ty.def||{})};
   if(type==='hak')d.fuses=[true,true,true]; if(ty.faulty)d.fault={kurz:false,koerper:false}; if(ty.loads||type==='schalter')d.room=''; return Object.assign(d,props);}
 const teOf=d=>d.span||TYPES[d.type].te;
-function sz(d){const ty=TYPES[d.type];if(ty.rail)return{w:teOf(d)*TE,h:ty.h||DH};if(ty.enclosure)return{w:PAD*2+ty.rails[0].len*TE,h:ty.h};return{w:ty.w,h:ty.h};}
-function getPos(d){if(d.mount){const e=byId(d.mount.enc);if(e){const r=TYPES[e.type].rails[d.mount.rail];return{x:e.x+PAD+d.mount.slot*TE,y:e.y+r.y-DH/2};}d.mount=null;}return{x:d.x,y:d.y};}
+function railsOf(e){const ty=TYPES[e.type];if(e.type==='uv'&&(e.rows||e.te)){const n=e.rows||3,len=e.te||12;return Array.from({length:n},(_,i)=>({y:100+i*170,len,label:n===1?'Reihe':i===0?'Reihe oben':i===n-1?'Reihe unten (Einspeisung)':'Reihe '+(i+1)}));}return ty.rails;}
+function encH(e){const ty=TYPES[e.type];if(e.type==='uv'&&(e.rows||e.te))return 100+((e.rows||3)-1)*170+115;return ty.h;}
+function sz(d){const ty=TYPES[d.type];if(ty.rail)return{w:teOf(d)*TE,h:ty.h||DH};if(ty.enclosure){const rs=railsOf(d);return{w:PAD*2+Math.max(...rs.map(r=>r.len))*TE,h:encH(d)};}return{w:ty.w,h:ty.h};}
+function getPos(d){if(d.mount){const e=byId(d.mount.enc);if(e){const r=railsOf(e)[d.mount.rail];if(!r)return{x:e.x,y:e.y};return{x:e.x+PAD+d.mount.slot*TE,y:e.y+r.y-DH/2};}d.mount=null;}return{x:d.x,y:d.y};}
 function termOf(key){const [id,tid]=key.split(':');const d=byId(id);if(!d)return null;const t=TYPES[d.type].terms?.find(t=>t.id===tid);return t?{d,t}:null;}
 function termAbs(key){const o=termOf(key);if(!o)return null;const p=getPos(o.d),s=sz(o.d);const sd=eside(o.d,o.t.side);return{x:p.x+o.t.fx*s.w,y:sd==='top'?p.y+12:p.y+s.h-12,side:sd};}
 function nm(d){if(!d)return'';const ty=TYPES[d.type];if(d.label)return(ty.unit==='ls'?'Sicherung ':ty.unit==='rcbo'?'FI/LS ':'')+d.label;if(d.type==='sls')return'Hauptschalter';if(d.type==='hak')return'Hausanschluss';if(d.type==='pen')return'Aufteilung PEN';if(ty.unit==='ls')return`Sicherung B${d.rating}`;if(ty.unit==='rcbo')return`FI/LS B${d.rating}`;return ty.name;}
@@ -713,9 +741,25 @@ function check(){
 }
 
 /* ---------- Rendern ---------- */
+function encOfKey(k){const o=termOf(k);return o&&o.d.mount?o.d.mount.enc:null;}
+function autoBack(w){const a=encOfKey(w.a),b=encOfKey(w.b);return !!a&&a===b;}
+function isBack(w){return w.back===true||(w.back!==false&&autoBack(w));}
+function stubPath(k){const A=termAbs(k);if(!A)return'';const d=A.side==='top'?-1:1;return `M${A.x},${A.y} L${A.x},${A.y+d*15}`;}
 function wpath(w){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)return'';const da=A.side==='top'?-1:1,db=B.side==='top'?-1:1;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35));return `M${A.x},${A.y} C${A.x},${A.y+da*c} ${B.x},${B.y+db*c} ${B.x},${B.y}`;}
+function covText(o){if(o.cov)return o.cov;const C=RTC();const c=C.find(c=>c.d.id===o.id);if(c){const r=[...new Set([...c.cons,...c.sws].map(x=>x.room).filter(Boolean))];return `${c.nr} ${o.label||''}`.trim()+(r.length&&!o.label?' '+r.join(', '):'');}if(TYPES[o.type].unit==='fi')return `${o.label||'FI'} ${o.idn||30} mA`;return o.label||TYPES[o.type].name.replace(/ \(.*\)/,'');}
+let RTC_C=null,RTC_K='';function RTC(){const k=JSON.stringify([S.items.length,S.wires.length]);if(k!==RTC_K){RTC_K=k;try{RTC_C=circuits();}catch(_){RTC_C=[];}}return RTC_C||[];}
+function coverDraw(e){const p=getPos(e),{w,h}=sz(e);const rs=railsOf(e);let holes='',lab='';
+  rs.forEach((r,ri)=>{const devs=S.items.filter(o=>o.mount&&o.mount.enc===e.id&&o.mount.rail===ri&&!TYPES[o.type].overlay&&TYPES[o.type].rail);const y0=r.y-22,y1=r.y+22;
+    holes+=`M${PAD-4},${y0}H${PAD+r.len*TE+4}V${y1}H${PAD-4}Z`;
+    const SH=44,sy=r.y-24-SH;lab+=`<rect x="${PAD-4}" y="${sy}" width="${r.len*TE+8}" height="${SH}" rx="3" fill="#fff" stroke="#c9c2b4"/>`;
+    for(const o of devs){const x=PAD+o.mount.slot*TE,ww=teOf(o)*TE;let t=covText(o);lab+=`<line x1="${x+ww}" y1="${sy+3}" x2="${x+ww}" y2="${sy+SH-3}" stroke="#d9d2c4"/>`;
+      const words=t.split(' ');const fits=t.length*5.6<=ww-4;
+      if(fits)lab+=`<text x="${x+ww/2}" y="${sy+SH/2+3.5}" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1A1A1A">${esc(t)}</text>`;
+      else if(ww>=60){const l1=words.slice(0,Math.ceil(words.length/2)).join(' '),l2=words.slice(Math.ceil(words.length/2)).join(' ');lab+=`<text x="${x+ww/2}" y="${sy+18}" text-anchor="middle" font-size="9" font-weight="700" fill="#1A1A1A">${esc(l1)}</text><text x="${x+ww/2}" y="${sy+31}" text-anchor="middle" font-size="9" font-weight="700" fill="#1A1A1A">${esc(l2)}</text>`;}
+      else{const tt=t.length>9?t.slice(0,8)+'…':t;lab+=`<text transform="translate(${x+ww/2+3},${sy+SH-4}) rotate(-90)" font-size="8" font-weight="700" fill="#1A1A1A">${esc(tt)}</text>`;}}});
+  return `<g transform="translate(${p.x},${p.y})" data-kind="item" data-id="${e.id}"><path d="M0,0H${w}V${h}H0Z ${holes}" fill-rule="evenodd" fill="#F4F2EE" stroke="#c7c7cc" stroke-width="1.2"/><rect x="6" y="6" width="${w-12}" height="${h-12}" rx="10" fill="none" stroke="#e2ded6" pointer-events="none"/>${lab}<text x="16" y="${h-13}" font-size="14" font-weight="800" fill="#1c1c1e">${esc(e.label||TYPES[e.type].name)}</text><text x="${w-14}" y="${h-13}" text-anchor="end" font-size="10" fill="#8e8e93">Abdeckung</text></g>`;}
 function encDraw(d){const ty=TYPES[d.type],{w,h}=sz(d);let s=`<rect width="${w}" height="${h}" rx="14" fill="#fff" stroke="#c7c7cc" stroke-width="1.2" filter="url(#sh)"/><text x="16" y="${h-13}" font-size="14" font-weight="800" fill="#1c1c1e">${esc(d.label||ty.name)}</text>`;
-  ty.rails.forEach(r=>{if(r.plate){const x0=PAD+r.plate[0]*TE-6,x1=PAD+r.plate[1]*TE+6;s+=`<rect x="${x0}" y="${r.y-DH/2-4}" width="${x1-x0}" height="${DH+8}" rx="6" fill="#E9E4DA" stroke="#B9B2A4"/><text x="${(x0+x1)/2}" y="${r.y+DH/2+16}" text-anchor="middle" font-size="9" font-weight="700" fill="#8e8e93">Zählerplatz mit Adapter (BKE) · Kontaktierung</text>`;}s+=`<text x="${PAD}" y="${r.y-DH/2-8}" font-size="9.5" font-weight="600" fill="#8e8e93">${esc(r.label)}</text><rect x="${PAD-8}" y="${r.y-9}" width="${r.len*TE+16}" height="18" rx="2" fill="url(#rail)" stroke="#9a9aa0" stroke-width=".8"/>`;
+  railsOf(d).forEach(r=>{if(r.plate){const x0=PAD+r.plate[0]*TE-6,x1=PAD+r.plate[1]*TE+6;s+=`<rect x="${x0}" y="${r.y-DH/2-4}" width="${x1-x0}" height="${DH+8}" rx="6" fill="#E9E4DA" stroke="#B9B2A4"/><text x="${(x0+x1)/2}" y="${r.y+DH/2+16}" text-anchor="middle" font-size="9" font-weight="700" fill="#8e8e93">Zählerplatz mit Adapter (BKE) · Kontaktierung</text>`;}s+=`<text x="${PAD}" y="${r.y-DH/2-8}" font-size="9.5" font-weight="600" fill="#8e8e93">${esc(r.label)}</text><rect x="${PAD-8}" y="${r.y-9}" width="${r.len*TE+16}" height="18" rx="2" fill="url(#rail)" stroke="#9a9aa0" stroke-width=".8"/>`;
     for(let i=0;i<=r.len;i++)s+=`<rect x="${PAD+i*TE-1.5}" y="${r.y-3}" width="3" height="6" rx="1" fill="#8e8e93" opacity=".6"/>`;});
   return s;}
 function markBox(d){const m=MARK[d.id];if(!m)return'';const s=sz(d);const c=m==='err'?'#B4472C':'#C98A1B';return `<rect x="-3" y="-3" width="${s.w+6}" height="${s.h+6}" rx="8" fill="${c}" fill-opacity=".07" stroke="${c}" stroke-width="2.5" stroke-dasharray="${m==='err'?'0':'6 4'}" pointer-events="none"/>`;}
@@ -726,11 +770,17 @@ function render(){
   const sel=S.sel;let se='',sd='',sw='',st='';
   const drag=act&&act.moved&&act.kind==='item'?act.id:null;
   for(const d of S.items){const ty=TYPES[d.type];if(!ty.enclosure)continue;const p=getPos(d);se+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})">${encDraw(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
-  if(GH){const e=byId(GH.enc);if(e){const r=TYPES[e.type].rails[GH.rail];se+=`<rect x="${e.x+PAD+GH.slot*TE}" y="${e.y+r.y-DH/2}" width="${GH.te*TE}" height="${DH}" rx="5" fill="#1A1A1A" opacity=".18" stroke="#1A1A1A" stroke-dasharray="5 4" stroke-width="2"/>`;}}
+  if(GH){const e=byId(GH.enc);if(e){const r=railsOf(e)[GH.rail];se+=`<rect x="${e.x+PAD+GH.slot*TE}" y="${e.y+r.y-DH/2}" width="${GH.te*TE}" height="${DH}" rx="5" fill="#1A1A1A" opacity=".18" stroke="#1A1A1A" stroke-dasharray="5 4" stroke-width="2"/>`;}}
   const devs=S.items.filter(d=>!TYPES[d.type].enclosure).sort((a,b)=>((a.id===drag)-(b.id===drag))||((!!TYPES[a.type].overlay)-(!!TYPES[b.type].overlay)));
   pathCheck();const gt=guideTargets();
   for(const d of devs){const p=getPos(d),s=sz(d);const dm=PATH&&!PATH.devs.has(d.id);const gb=G&&gt.box===d.id;sd+=`<g data-kind="item" data-id="${d.id}" transform="translate(${p.x},${p.y})"${dm?' class="dim"':''}>${gb?`<rect x="-8" y="-8" width="${s.w+16}" height="${s.h+16}" rx="12" fill="none" stroke="#1A1A1A" stroke-width="3" stroke-dasharray="7 5" pointer-events="none"/>`:''}${TYPES[d.type].draw(d,s)}${markBox(d)}${sel?.kind==='item'&&sel.id===d.id?selBox(d):''}</g>`;}
+  let swb='';
   for(const w of S.wires){const p=wpath(w);if(!p)continue;const live=RT.n&&RT.n.get(w.a).phases.size>0;const c=COL[w.color]||COL.braun;const isSel=sel?.kind==='wire'&&sel.id===w.id;
+    if(isBack(w)&&!isSel){const pe=w.color==='gnge'||w.color==='pen';const dim=PATH&&!PATH.wires.has(w.id);const lit=PATH&&PATH.wires.has(w.id);
+      swb+=`<g${dim?' class="dim"':''}>${MARK['w:'+w.id]?`<path d="${p}" fill="none" stroke="#B4472C" stroke-width="12" opacity=".35" stroke-linecap="round"/>`:''}<path class="wire" d="${p}" stroke="${c.c}" stroke-width="4"/>${pe?`<path class="wire" d="${p}" stroke="#f5d10a" stroke-width="4" stroke-dasharray="8 8"/>`:''}${RT.flow.has(w.id)?`<path class="flow" d="${p}"/>`:''}</g>`;
+      sw+=`<g${dim?' class="dim"':''}><path d="${p}" fill="none" stroke="${c.c}" stroke-width="${lit?4:3}" opacity="${lit?.85:.26}" stroke-dasharray="${lit?'0':'2 5'}" stroke-linecap="round" pointer-events="none"/>`;
+      for(const k of [w.a,w.b])sw+=`<path d="${stubPath(k)}" stroke="${c.c}" stroke-width="4.5" stroke-linecap="round"/>${pe?`<path d="${stubPath(k)}" stroke="#f5d10a" stroke-width="4.5" stroke-dasharray="5 5"/>`:''}`;
+      sw+=`<path d="${p}" fill="none" stroke="transparent" stroke-width="14" data-kind="wire" data-id="${w.id}"/></g>`;continue;}
     sw+=`<g${PATH&&!PATH.wires.has(w.id)?' class="dim"':''}>${MARK['w:'+w.id]?`<path d="${p}" fill="none" stroke="#B4472C" stroke-width="13" opacity=".35" stroke-linecap="round"/>`:''}${isSel?`<path d="${p}" fill="none" stroke="#1A1A1A" stroke-width="12" opacity=".45" stroke-linecap="round"/>`:''}${live&&!RT.flow.has(w.id)?`<path class="glow" d="${p}"/>`:''}<path class="wire" d="${p}" stroke="${c.c}" stroke-width="4.5"/>`;
     if(w.color==='gnge'||w.color==='pen')sw+=`<path class="wire" d="${p}" stroke="#f5d10a" stroke-width="4.5" stroke-dasharray="8 8"/>`;
     if(w.color==='pen'){const A=termAbs(w.a),B=termAbs(w.b);sw+=`<circle cx="${A.x}" cy="${A.y+(A.side==='top'?-12:12)}" r="4.5" fill="#1f6feb"/><circle cx="${B.x}" cy="${B.y+(B.side==='top'?-12:12)}" r="4.5" fill="#1f6feb"/>`;}
@@ -740,24 +790,24 @@ function render(){
   sw+=stepLabels();
   for(const d of S.items){const ty=TYPES[d.type];if(!ty.terms)continue;for(const t of ty.terms){const k=d.id+':'+t.id;const a=termAbs(k);const live=RT.n&&RT.n.get(k).phases.size>0;
     st+=`<g data-kind="term" data-key="${k}" transform="translate(${a.x},${a.y})"><circle r="13" fill="transparent"/>${gt.keys.includes(k)?`<circle class="gpulse" r="9"/><circle r="11" fill="none" stroke="#1A1A1A" stroke-width="3"/><g transform="translate(0,${termAbs(k).side==='top'?-26:26})"><circle r="10" fill="#1A1A1A"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="800" fill="#F6F1E9">${gt.keys.indexOf(k)+1}</text></g>`:''}<circle class="dot${live?' live':''}${pend===k?' pend':''}" r="${pend===k?7:5.5}"/>${MEAS&&(MA===k||MB===k)?`<circle r="10" fill="none" stroke="#1A1A1A" stroke-width="3"/><text y="-14" text-anchor="middle" font-size="11" font-weight="800" fill="#1A1A1A">${MA===k?'A':'B'}</text>`:''}</g>`;}}
-  Lenc.innerHTML=se;Ldev.innerHTML=sd;Lwire.innerHTML=sw;Lterm.innerHTML=st;
+  Lenc.innerHTML=se+swb;Ldev.innerHTML=sd;Lwire.innerHTML=sw;Lterm.innerHTML=st;$('#lCov').innerHTML=S.items.filter(e=>TYPES[e.type].enclosure&&e.cover).map(coverDraw).join('');
   $('#empty').style.display=S.items.length||FREE||G?'none':'block';
 }
 let raf=0;const req=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});};
 function applyView(){world.setAttribute('transform',`translate(${V.tx},${V.ty}) scale(${V.k})`);}
 
 /* ---------- Hutschiene ---------- */
-function occ(eid,ri,except){const e=byId(eid);const len=TYPES[e.type].rails[ri].len;const a=new Array(len).fill(false);
+function occ(eid,ri,except){const e=byId(eid);const len=railsOf(e)[ri].len;const a=new Array(len).fill(false);
   for(const d of S.items)if(d.mount&&d.mount.enc===eid&&d.mount.rail===ri&&d.id!==except&&!TYPES[d.type].overlay)for(let i=0;i<teOf(d);i++)a[d.mount.slot+i]=true;return a;}
 const freeAt=(a,s,te)=>{for(let i=0;i<te;i++)if(a[s+i])return false;return true;};
 function findMount(d){const ty=TYPES[d.type];if(!ty.rail)return null;const te=teOf(d),ov=!!ty.overlay;const cx=d.x+te*TE/2,cy=d.y+DH/2;let best=null;
-  for(const e of S.items.filter(i=>TYPES[i.type].enclosure))TYPES[e.type].rails.forEach((r,ri)=>{const x0=e.x+PAD,ry=e.y+r.y;
+  for(const e of S.items.filter(i=>TYPES[i.type].enclosure))railsOf(e).forEach((r,ri)=>{const x0=e.x+PAD,ry=e.y+r.y;
     if(Math.abs(cy-ry)>75||cx<x0-30||cx>x0+r.len*TE+30||te>r.len)return;
     const want=clamp(Math.round((d.x-x0)/TE),0,r.len-te);const a=ov?new Array(r.len).fill(false):occ(e.id,ri,d.id);let f=null;
     for(let k=0;k<r.len&&f===null;k++)for(const s of [want-k,want+k]){if(s<0||s>r.len-te)continue;if(freeAt(a,s,te)){f=s;break;}}
     if(f===null)return;const dist=Math.abs(cy-ry)+Math.abs(f-want)*TE;if(!best||dist<best.dist)best={enc:e.id,rail:ri,slot:f,dist,te};});
   return best;}
-function firstFree(e,te){const rails=TYPES[e.type].rails;for(let ri=0;ri<rails.length;ri++){const a=occ(e.id,ri,null);for(let s=0;s<=rails[ri].len-te;s++)if(freeAt(a,s,te))return{enc:e.id,rail:ri,slot:s};}return null;}
+function firstFree(e,te){const rails=railsOf(e);for(let ri=0;ri<rails.length;ri++){const a=occ(e.id,ri,null);for(let s=0;s<=rails[ri].len-te;s++)if(freeAt(a,s,te))return{enc:e.id,rail:ri,slot:s};}return null;}
 
 /* ---------- Bedienung ---------- */
 function toWorld(cx,cy){const r=svg.getBoundingClientRect();return{x:(cx-r.left-V.tx)/V.k,y:(cy-r.top-V.ty)/V.k};}
@@ -861,7 +911,7 @@ function addType(type){const ty=TYPES[type];const d=newItem(type);let where='';
 /* ---------- Panel ---------- */
 function statusOf(d){const ty=TYPES[d.type];
   if(d.type==='hak'){const b=d.fuses.map((f,i)=>f?null:['L1','L2','L3'][i]).filter(Boolean);return b.length?{c:'red',t:`Sicherung ${b.join(', ')} durchgebrannt`}:{c:'ok',t:'Alle drei NH-Sicherungen intakt'};}
-  if(ty.enclosure)return{c:'sub',t:`${ty.rails.length} Hutschienen · ${S.items.filter(i=>i.mount?.enc===d.id).length} Geräte`};
+  if(ty.enclosure)return{c:'sub',t:`${railsOf(d).length} Hutschienen · ${S.items.filter(i=>i.mount?.enc===d.id).length} Geräte`};
   if(d.type==='zaehler')return{c:'sub',t:`Aktuelle Leistung: ${fmt(RT.P/1000,2)} kW`};
   if(ty.unit&&ty.unit!=='sw'){if(d.tripped)return{c:'red',t:`Ausgelöst: ${d.tripped}`};if(!d.on)return{c:'sub',t:'Ausgeschaltet'};
     const I=RT.cur.get(d.id+'#');const o=OL[d.id+'#'];if(o)return{c:'org',t:`Überlast ${fmt(o.I)} A von ${d.rating} A – löst aus in `,ol:true};
@@ -883,6 +933,7 @@ function renderPanel(){const P=$('#panel');const s=S.sel;
     h+=`<div class="ph"><div><div class="pt">Leitung</div><div class="ps sub">${tn(w.a)} → ${tn(w.b)}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
     h+=`<div class="sec">Aderfarbe</div><div class="chips" style="margin-top:8px">${Object.entries(COL).map(([k,c])=>`<button class="chip${w.color===k?' on':''}" data-act="color" data-v="${k}"><i style="background:${k==='gnge'||k==='pen'?'repeating-linear-gradient(90deg,#2fa14e 0 6px,#f5d10a 6px 12px)':c.c};${k==='pen'?'box-shadow:inset 4px 0 #1f6feb,inset -4px 0 #1f6feb':''}"></i>${c.n}</button>`).join('')}</div>`;
     h+=`<div class="expl"><p style="font-size:14px;color:#3a3a3c">Braun, Schwarz, Grau = Außenleiter L1, L2, L3 (führen Spannung). Blau = Neutralleiter N (Rückweg). Grün-gelb = Schutzleiter PE (nur im Fehlerfall Strom). PEN = beides in einem, nur bis zur Aufteilung.</p></div>`;
+    h+=`<div class="sec">Verlegung</div><div style="margin-top:8px">${seg('wback',[['auto','Automatisch'],['front','Vorn'],['back','Hinter den Geräten']],w.back===true?'back':w.back===false?'front':'auto')}</div><div style="font-size:13px;color:var(--sub);margin-top:6px">${autoBack(w)?'Automatisch: Diese Leitung bleibt im Schrank und läuft hinter den Geräten – wie in echt. Durchscheinend sichtbar, die Enden an den Klemmen vorn.':'Automatisch: Diese Leitung verlässt den Schrank und liegt vorn.'} Antippen hebt sie hervor.</div>`;
     h+=`<div class="actions"><button class="btn red" data-act="delwire">Leitung löschen</button></div>`;
   } else {const d=byId(s.id);if(!d){S.sel=null;P.style.display='none';return;}const ty=TYPES[d.type];const st=statusOf(d);const inf=INFO[d.type];
     h+=`<div class="ph"><div><div class="pt">${esc(ty.name)}</div><div class="ps ${st.c}">${esc(st.t)}${st.ol?`<span id="olc">${Math.max(0,Math.ceil((OL[d.id+'#'].until-Date.now())/1000))} s</span>`:''}</div></div><button class="btn" data-act="close">Schließen</button></div>`;
@@ -900,6 +951,9 @@ function renderPanel(){const P=$('#panel');const s=S.sel;
     if(d.type==='spd')h+=`<div class="col"><div>Typ</div>${seg('spdt',[['1+2','Typ 1+2 (Kombiableiter)'],['2','Typ 2']],d.spdt==='2'?'2':'1+2')}</div>`;
     if(ty.idns)h+=`<div class="col"><div>Bemessungsfehlerstrom I<sub>Δn</sub></div>${seg('idn',ty.idns.map(r=>[r,r+' mA']),d.idn)}</div>`;
     if(ty.unit==='fi'||ty.unit==='rcbo')h+=`<div class="actions" style="margin-top:12px"><button class="btn" data-act="test">Prüftaste T drücken</button></div>`;
+    if(ty.enclosure){h+=`<div class="col"><div>Abdeckung</div>${seg('cover',[['0','Offen'],['1','Zu, mit Beschriftung']],d.cover?'1':'0')}</div>`;
+      if(d.type==='uv'){const rs=railsOf(d);h+=`<div class="col"><div>Reihen</div>${seg('rows',[1,2,3,4,5,6].map(n=>[n,String(n)]),rs.length)}</div><div class="col"><div>Plätze je Reihe (Teilungseinheiten)</div>${seg('encte',[8,12,18,24].map(n=>[n,String(n)]),rs[0].len)}</div><div style="font-size:13px;color:var(--sub);margin-top:6px">Wie dein echter Verteiler: Reihen und Breite einstellen. Die N/PE-Klemmleiste findest du unter Bauteile.</div>`;}
+      if(d.cover)h+=`<div class="sec">Beschriftung</div><div style="font-size:13px;color:var(--sub);margin:6px 0 8px">Steht auf dem Streifen über jedem Gerät. Leer lassen: Name des Geräts.</div>${S.items.filter(o=>o.mount&&o.mount.enc===d.id&&!TYPES[o.type].overlay).sort((a,b)=>a.mount.rail-b.mount.rail||a.mount.slot-b.mount.slot).map(o=>`<div class="col"><div>${esc(TYPES[o.type].name)}</div><input class="txt" data-act="covlbl" data-id="${o.id}" value="${esc(o.cov||'')}" placeholder="${esc(covText(o))}"></div>`).join('')}`;}
     if(d.type==='phs')h+=`<div class="col"><div>Lage</div>${seg('phside',[['top','Oben (Eingänge)'],['bot','Unten (Ausgänge)']],d.side)}</div><div class="col"><div>Länge</div>${seg('phspan',[[3,'3 TE'],[6,'6 TE'],[9,'9 TE'],[12,'12 TE']],d.span)}</div>`;
     if(d.ip!==undefined)h+=`<div class="col"><div>Schutzart</div>${seg('ip',IPS.map(x=>[x,x]),d.ip)}</div>`;
     if(d.type==='kombi')h+=tg('on',d.on,'Schalter ein');
@@ -930,7 +984,7 @@ function openCheck(){const R=check();const c=l=>R.filter(r=>r.lvl===l).length;co
     h+=`<p style="font-size:12.5px;color:var(--sub);margin-top:14px">Die Prüfung deckt die wichtigsten Regeln ab, ersetzt aber keine Abnahmeprüfung (VDE 0100-600) durch eine Elektrofachkraft.</p>`;}
   modal(h);}
 function openHelp(){modal(`<div class="mh"><h2>Hilfe</h2><button class="btn" data-act="mclose">Schließen</button></div><div class="help">
-<h3>Einstieg</h3><ul><li><b>Geführt aufbauen</b> (unter „Mehr“): Schritt für Schritt einen Lichtkreis verdrahten. Die zwei Anschlüsse jedes Schritts leuchten auf.</li><li><b>Weg des Stroms</b>: Lampe, Steckdose oder Herd antippen – der Weg vom Hausanschluss bis zum Verbraucher wird hervorgehoben.</li><li>Die großen Zahlen 1–4 auf der Fläche zeigen die Reihenfolge: Hausanschluss → Zählerschrank → Unterverteilung → Verbraucher.</li></ul>
+<h3>Menü</h3><ul><li>Unten wechselst du zwischen <b>Schaltplan</b>, <b>Grundriss</b>, <b>3D</b>, <b>Lernen</b> und <b>Doku</b>. Oben: Prüfen, Zurück, Bauteil hinzufügen, „•••“ für alles Weitere.</li></ul><h3>Lernen</h3><ul><li>Unten auf <b>Lernen</b>: Kundenaufträge in sechs Stufen – vom Lichtkreis bis zum Pferdestall. Auftrag lesen, verdrahten, <b>Abgeben</b>. Die App schaltet alles ein, prüft, ob es funktioniert und sicher ist, und erklärt jeden Fehler.</li><li>Sterne: drei beim ersten Versuch ohne Tipp und ohne offene Hinweise. Die nächste Stufe öffnet sich, sobald du eine schaffst.</li></ul><h3>Verteiler nachbauen</h3><ul><li>Gehäuse antippen: Reihen (1–6) und Breite (TE) einstellen, <b>Abdeckung</b> zu – mit Beschriftungsfeld je Gerät für den Kunden.</li><li>Leitungen innerhalb eines Schranks laufen automatisch <b>hinter den Geräten</b> und schimmern nur durch. Leitung antippen: Automatisch, Vorne oder Hinten. Gerät antippen: Seine Leitungen leuchten auf.</li><li>Mehr → <b>Vorlage: Verteiler wie auf dem Foto</b>.</li></ul><h3>Einstieg</h3><ul><li><b>Geführt aufbauen</b> (unter „Mehr“): Schritt für Schritt einen Lichtkreis verdrahten. Die zwei Anschlüsse jedes Schritts leuchten auf.</li><li><b>Weg des Stroms</b>: Lampe, Steckdose oder Herd antippen – der Weg vom Hausanschluss bis zum Verbraucher wird hervorgehoben.</li><li>Die großen Zahlen 1–4 auf der Fläche zeigen die Reihenfolge: Hausanschluss → Zählerschrank → Unterverteilung → Verbraucher.</li></ul>
 <h3>Grundriss</h3><ul><li>Oben auf <b>Grundriss</b> umschalten. Unten wählst du das Werkzeug.</li><li>Raum antippen: Name, Raumart und Maße ändern. Ecken ziehen ändert die Form.</li><li><b>Geräte</b> zeigt alles, was noch nicht im Grundriss steht. Ein Gerät, das du in einen Raum ziehst, bekommt diesen Raum automatisch.</li><li><b>Kabelkanal</b> und <b>Leitung</b> zeichnest du Punkt für Punkt. Eine Leitung ordnest du einer Sicherung zu, ihre Länge geht in die Doku.</li><li><b>Raum</b>: Form wählen (Rechteck, L, U, T) und Maße eintragen. Griff in der Wandmitte ziehen verschiebt eine Wand. Eine Wand antippen: Wandansicht, Tür, Fenster, Wand teilen.</li><li><b>Abzweigdose</b>: Dose antippen, dann „Dose öffnen“ (oder Mehr → Abzweigdose planen). Eintragen, was an der Dose hängt. Die App zeigt die offene Dose mit Klemmen, passender Größe und einer Anleitung Schritt für Schritt.</li><li><b>Wandansicht</b>: Blick von innen auf die Wand mit Installationszonen. Geräte auf Höhe und Abstand ziehen oder Maße eintippen.</li><li><b>3D</b>: oben umschalten. Ein Finger dreht und neigt, zwei Finger zoomen. Puppenhaus, Wände hoch oder flach; eine oder alle Etagen.</li><li><b>Etagen</b>: Oben links wechselst du zwischen Keller, EG, OG … Unter „Etagen“ legst du weitere an und stellst die Geschosshöhe ein. Die Etage darunter scheint blass durch.</li><li><b>Steigleitung</b>: Stelle antippen, an der die Leitung durch die Decke geht, dann Ziel-Etage wählen. Zeichnest du eine Leitung auf beiden Etagen bis zu diesem Symbol, zählt die Höhe automatisch zur Länge.</li><li><b>Gebäude</b> zeigt alle Etagen von der Seite – mit Hausanschluss, Verteilungen und Steigleitungen.</li><li>Die Raumart bringt Regeln mit, z. B. Bad oder Stall. „Prüfen“ meldet fehlende FI oder zu niedrige Schutzart.</li></ul>
 <h3>Aufbauen</h3><ul><li><b>Bauteile</b> antippen und Gerät wählen. Hutschienengeräte rasten automatisch ein: SLS, Zähler und PEN-Aufteilung im Zählerschrank, der Rest in der Unterverteilung.</li><li>Bauteil ziehen zum Verschieben. Über einer Hutschiene zeigt ein blauer Rahmen, wo es einrastet. Ziehst du einen Schrank, wandert alles darin mit.</li></ul>
 <h3>Verbinden</h3><ul><li>Vom Anschluss (Punkt) zum anderen Anschluss ziehen – oder ersten Punkt antippen, dann den zweiten.</li><li>Die Aderfarbe wird passend gewählt. Leitung antippen zum Ändern oder Löschen.</li><li>Gelb leuchtende Punkte und Leitungen führen Spannung. Weiße laufende Striche zeigen, wo Strom fließt. Nicht leuchtend heißt nur: in diesem Modell spannungsfrei. In echt können auch N, PE und PEN bei einem Fehler Spannung führen – Spannungsfreiheit nur mit einem zweipoligen Spannungsprüfer feststellen.</li></ul>
@@ -947,7 +1001,7 @@ ${artifactCap?`<div class="row"><div class="l">Speichern<small>Sichert den Aufba
 <div class="row"><div class="l">Datei importieren<small>Eine exportierte JSON-Datei laden</small></div><button class="btn" data-act="import">Importieren</button></div>
 <div class="row"><div class="l">Alles löschen<small>Leere Fläche, neu beginnen</small></div><button class="btn red" data-act="clear">Leeren</button></div>
 <p style="font-size:12.5px;color:var(--sub)">Der Aufbau wird automatisch in diesem Browser gespeichert. Zum Weitergeben an ein anderes Gerät: Exportieren, dort Importieren.</p>`);}
-function toast(msg,lvl='info',ms){const t=document.createElement('div');t.className='toast '+lvl;t.innerHTML=msg+'<button class="x" aria-label="Schließen">×</button>';
+function toast(msg,lvl='info',ms){if(QUIET)return;const t=document.createElement('div');t.className='toast '+lvl;t.innerHTML=msg+'<button class="x" aria-label="Schließen">×</button>';
   t.querySelector('.x').onclick=()=>t.remove();const box=$('#toasts');box.appendChild(t);while(box.children.length>3)box.firstChild.remove();
   setTimeout(()=>t.remove(),ms||(lvl==='danger'?12000:lvl==='info'?3500:8000));}
 
@@ -976,7 +1030,7 @@ $('#file').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)r
 let sT=0;function changed(sim=true){VER++;if(sim)simulate();live();guideUpdate();render();renderPanel();histPush();if(MEAS)showMeter();clearTimeout(sT);sT=setTimeout(saveLocal,400);}
 
 /* ---------- Beispiel ---------- */
-function exampleHouse(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;G=null;FREE=false;guideUpdate();
+function exampleHouse(){M=null;S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;G=null;FREE=false;guideUpdate();
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb,color)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c=color;if(!c){const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
   const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:80});
   const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}});
@@ -997,6 +1051,25 @@ function exampleHouse(){S={items:[],wires:[],nid:1,rooms:['Flur','Küche'],doc:S
   S.sel=null;closeModal();fillRooms();changed();fit();
   toast('<b>Beispiel: ganzes Haus</b>Licht, Steckdose und Herd. Tippe einen Verbraucher an – sein Weg leuchtet auf.','ok',6000);}
 
+function exampleFoto(){M=null;S={items:[],wires:[],nid:1,rooms:['Flur','Küche','Bad','Wohnen'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;G=null;FREE=false;guideUpdate();
+  const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb,color)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c=color;if(!c){const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
+  const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:40,rows:3,te:12,label:'Unterverteilung (Foto)'});
+  const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}});
+  const kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:3}}),spd=A('spdss',{mount:{enc:zs.id,rail:0,slot:3}}),hes=A('hes',{x:330,y:1010});
+  const np=A('npek',{mount:{enc:uv.id,rail:0,slot:0}});
+  const f1=A('fi4',{mount:{enc:uv.id,rail:1,slot:0},label:'FI 1'}),l3=A('ls3',{mount:{enc:uv.id,rail:1,slot:4},rating:16,label:'Herd'});
+  const lsA=[0,1,2,3,4].map(i=>A('ls1',{mount:{enc:uv.id,rail:1,slot:7+i},rating:16,label:['Küche','Flur','Wohnen','Bad','Licht'][i]}));
+  const ph=A('phs',{mount:{enc:uv.id,rail:1,slot:4},span:8,side:'top'});
+  const f2=A('fi4',{mount:{enc:uv.id,rail:2,slot:0},label:'FI 2'});const lsB=[0,1,2].map(i=>A('ls1',{mount:{enc:uv.id,rail:2,slot:4+i},rating:16,label:['Waschm.','Trockner','Außen'][i]}));const n2=A('nk',{mount:{enc:uv.id,rail:2,slot:8}});
+  W(hak,'L1',ss,'L1');W(hak,'L2',ss,'L2');W(hak,'L3',ss,'L3');W(hak,'PEN',pen,'PEN');
+  ['1','2','3'].forEach(n=>W(sls,'o'+n,z,'i'+n));W(ss,'N',z,'iN');
+  ['1','2','3','N'].forEach(n=>W(z,'o'+n,kl,'i'+n));W(ss,'PE',kl,'iPE');W(ss,'PE',hes,'PE');
+  ['1','2','3','N'].forEach(n=>{W(kl,'o'+n,f1,'i'+n);W(kl,'o'+n,f2,'i'+n);});W(kl,'oPE',np,'p0');
+  ['1','2','3'].forEach(n=>W(f1,'o'+n,l3,'i'+n));W(f1,'oN',np,'n0');
+  lsB.forEach((l,i)=>W(f2,'o'+(i+1),l,'i'));W(f2,'oN',n2,'t0');
+  S.sel=null;closeModal();fillRooms();changed();fit();
+  toast('<b>Vorlage: Verteiler wie auf deinem Foto</b>Oben N/PE-Klemmleiste, Reihe 1: FI 40 A/30 mA, B16 3-polig und fünf B16 auf der Phasenschiene, Reihe 2: zweiter FI mit drei B16 und eigener N-Klemme. Verbraucher kannst du selbst anschließen. Gehäuse antippen: Abdeckung mit Beschriftung.','ok',9000);}
+
 /* ---------- Klicks ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;const a=b.dataset.act,v=b.dataset.v;const d=S.sel?.kind==='item'?byId(S.sel.id):null;
   if(e.target===$('#modal')){closeModal();return;}
@@ -1006,13 +1079,19 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'example':case'exhouse':case'guide':if(S.items.length){modal(`<div class="mh"><h2>${a==='guide'?'Geführt aufbauen?':'Beispiel laden?'}</h2><button class="btn" data-act="mclose">Abbrechen</button></div><p style="font-size:15px;line-height:1.5">Der aktuelle Aufbau wird ersetzt. Mit „↶ Zurück“ kommst du wieder dorthin. Zum dauerhaften Aufheben: Mehr → Projekt → Exportieren.</p><div class="actions"><button class="btn pri" data-act="go" data-v="${a}">${a==='guide'?'Starten':'Beispiel laden'}</button></div>`);}else runStart(a);break;
    case'go':closeModal();runStart(v);break;
    case'free':FREE=true;render();$('#pal').classList.add('open');break;
-   case'more':openMore();break;case'mx':closeModal();if(v==='meas')setMeas(true);else if(v==='fit')fit();else if(v==='share')openShare();else if(v==='project')openProject();else if(v==='help')openHelp();else if(v==='dose'){let d=S.items.find(x=>x.type==='adose');if(!d){d=newItem('adose');const r=svg.getBoundingClientRect();const w=toWorld(r.left+r.width/2,r.top+r.height/2);d.x=w.x;d.y=w.y;S.items.push(d);changed(false);}S.sel={kind:'item',id:d.id};openDose(d.id);}else document.querySelector(`[data-act="${v}"]`)?.click();break;
+   case'more':openMore();break;case'mx':closeModal();if(v==='meas')setMeas(true);else if(v==='fit')fit();else if(v==='share')openShare();else if(v==='project')openProject();else if(v==='help')openHelp();else if(v==='foto'){exampleFoto();}else if(v==='dose'){let d=S.items.find(x=>x.type==='adose');if(!d){d=newItem('adose');const r=svg.getBoundingClientRect();const w=toWorld(r.left+r.width/2,r.top+r.height/2);d.x=w.x;d.y=w.y;S.items.push(d);changed(false);}S.sel={kind:'item',id:d.id};openDose(d.id);}else document.querySelector(`[data-act="${v}"]`)?.click();break;
    case'gdo':guideDo();break;case'gend':endGuide();break;
+   case'learn':openLearn();break;case'lvlock':toast('Erst den vorherigen Auftrag schaffen.','info');break;
+   case'lvgo':if(S.items.length&&!M){modal(`<div class="mh"><h2>Auftrag starten?</h2><button class="btn" data-act="mclose">Abbrechen</button></div><p style="font-size:15px;line-height:1.5">Der aktuelle Aufbau wird ersetzt. Mit „Zurück“ kommst du wieder dorthin. Zum dauerhaften Aufheben: Mehr → Projekt → Exportieren.</p><div class="actions"><button class="btn pri" data-act="lvstart" data-v="${v}">Starten</button></div>`);}else lvStart(+v);break;
+   case'lvstart':lvStart(+v);break;case'lvsub':lvSubmit();break;case'lvtip':if(M){M.tip=true;M.res=null;guideUpdate();}break;
+   case'lvmin':if(M){M.min=!M.min;guideUpdate();}break;case'lvback':if(M){M.res=null;M.min=false;guideUpdate();}break;
+   case'lvnext':if(M){const i=M.i+1;if(i<LEVELS.length)lvStart(i);else{lvEnd();openLearn();}}break;case'lvend':lvEnd();break;case'lvlist':lvEnd();openLearn();break;
    case'mclose':closeModal();break;case'zin':{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,1.25);break;}case'zout':{const r=svg.getBoundingClientRect();zoomAt(r.width/2,r.height/2,.8);break;}
    case'fit':fit();break;case'close':S.sel=null;render();renderPanel();break;
    case'color':{const w=S.wires.find(x=>x.id===S.sel.id);w.color=v;changed(false);break;}
    case'delwire':S.wires=S.wires.filter(x=>x.id!==S.sel.id);S.sel=null;changed();break;
-   case'del':if(d)delItem(d);break;case'rating':d.rating=+v;changed();break;case'idn':d.idn=+v;changed();break;case'spdt':d.spdt=v;changed();break;case'nh':d.nh=v;changed(false);break;case'load':d.load=+v;changed();break;
+   case'del':if(d)delItem(d);break;case'rating':d.rating=+v;changed();break;case'idn':d.idn=+v;changed();break;case'spdt':d.spdt=v;changed();break;case'nh':d.nh=v;changed(false);break;case'cover':d.cover=v==='1';changed(false);break;case'rows':case'encte':{if(a==='rows')d.rows=+v;else d.te=+v;if(!d.rows)d.rows=3;if(!d.te)d.te=12;const rs=railsOf(d);for(const o of S.items)if(o.mount&&o.mount.enc===d.id){const r=rs[o.mount.rail];if(!r||o.mount.slot+teOf(o)>r.len){const ff=firstFree(d,teOf(o));if(ff)o.mount=ff;else{const p=getPos(d);o.mount=null;o.x=p.x+sz(d).w+40;o.y=p.y+40;}}}changed();break;}
+   case'wback':{const w=S.wires.find(x=>x.id===S.sel?.id);if(w){if(v==='auto')delete w.back;else w.back=v==='back';changed(false);}break;}case'load':d.load=+v;changed();break;
    case'test':fiTest(d);break;case'touch':touch(d);break;case'fuses':d.fuses=[true,true,true];changed();break;
    case'goto':{closeModal();if(!v)break;if(v.startsWith('w:')){S.sel={kind:'wire',id:v.slice(2)};}else{S.sel={kind:'item',id:v};const it=byId(v);if(it)centerOn(it);}render();renderPanel();break;}
    case'savepage':savePage();break;case'export':exportFile();break;case'import':$('#file').click();break;
@@ -1035,7 +1114,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'flup':case'fldown':{const F=S.plan.floors,i=flIdx(v),j=a==='flup'?i+1:i-1;if(j>=0&&j<F.length){[F[i],F[j]]=[F[j],F[i]];changed(false);openFloors();}break;}case'tool':closeModal();setTool(v);break;case'pfinish':finishDraw();break;case'pcancel':PDRAW=null;setTool('select');break;
    case'tray':openTray();break;case'place':{closeModal();const it=byId(v);if(it){placeAtCenter(it);S.sel={kind:'item',id:it.id};changed(false);}break;}
    case'unplace':if(d){delete S.plan.pos[d.id];changed(false);}break;
-   case'ip':d.ip=v;changed(false);break;case'phside':d.side=v;changed();break;case'phspan':{d.span=+v;if(d.mount){const e=byId(d.mount.enc);const L=TYPES[e.type].rails[d.mount.rail].len;d.mount.slot=Math.min(d.mount.slot,L-d.span);}changed();break;}
+   case'ip':d.ip=v;changed(false);break;case'phside':d.side=v;changed();break;case'phspan':{d.span=+v;if(d.mount){const e=byId(d.mount.enc);const L=railsOf(e)[d.mount.rail].len;d.mount.slot=Math.min(d.mount.slot,L-d.span);}changed();break;}
    case'takelen':if(d){d.len=Math.round(routeLenFor(d.id)*10)/10;changed(false);}break;
    case'rdel':{const p=S.plan;if(S.sel.kind==='room')p.rooms=p.rooms.filter(x=>x.id!==S.sel.id);if(S.sel.kind==='duct')p.ducts=p.ducts.filter(x=>x.id!==S.sel.id);if(S.sel.kind==='route')p.routes=p.routes.filter(x=>x.id!==S.sel.id);if(S.sel.kind==='riser')p.risers=p.risers.filter(x=>x.id!==S.sel.id);S.sel=null;changed(false);break;}case'measnew':MA=MB=null;showMeter();render();break;case'measoff':setMeas(false);break;
    case'undo':undo();break;case'share':openShare();break;case'copylink':copyLink();break;
@@ -1064,7 +1143,8 @@ document.addEventListener('input',e=>{const i=e.target;const a=i.dataset.act;if(
   else if(a==='xname'||a==='xqty'||a==='xunit'){const x=S.extras[+i.dataset.v];if(!x)return;x[a==='xname'?'name':a==='xqty'?'qty':'unit']=a==='xqty'?i.value:i.value;docDirty();}});
 document.addEventListener('input',e=>{const i=e.target;if(i.dataset.act!=='label')return;const d=byId(S.sel?.id);if(!d)return;d.label=i.value;render();clearTimeout(sT);sT=setTimeout(saveLocal,400);});
 document.addEventListener('input',e=>{const i=e.target;if(i.dataset.act!=='tf')return;TPL[i.dataset.v]=['W','D','a','b'].includes(i.dataset.v)?Math.max(.5,+String(i.value).replace(',','.')||0):i.value;const pv=$('#tprev');if(pv)pv.innerHTML=tplPreview(TPL,130);});
-document.addEventListener('change',e=>{const i=e.target;const a=i.dataset.act;if(!a)return;const num=()=>+String(i.value).replace(',','.');
+document.addEventListener('change',e=>{const i=e.target;const a=i.dataset.act;if(!a)return;
+  if(a==='covlbl'){const o=byId(i.dataset.id);if(o){o.cov=i.value.trim();changed(false);}return;}const num=()=>+String(i.value).replace(',','.');
   if(a==='tf'&&i.tagName==='SELECT'){TPL.type=i.value;return;}
   if(['wds','wdz','wow','woh','wos','wosill','wmid'].includes(a)&&WV){const r=room(WV.room),F=wallFrame(r,WV.i),h=flH(r.fl);
     if(a==='wmid'){WV.mid=i.checked;renderWall();return;}
@@ -1086,6 +1166,7 @@ function runStart(a){if(a==='guide')startGuide();else if(a==='exhouse')exampleHo
 function openMore(){const row=(v,t,d)=>`<div class="mrow" data-act="mx" data-v="${v}"><div><b>${t}</b><span>${d}</span></div><span class="ch">›</span></div>`;
   modal(`<div class="mh"><h2>Mehr</h2><button class="btn" data-act="mclose">Schließen</button></div>
   ${row('guide','Geführt aufbauen','Schritt für Schritt einen Lichtkreis verdrahten, mit Erklärung.')}
+  ${row('foto','Vorlage: Verteiler wie auf dem Foto','Zwei FI, Phasenschiene, N/PE-Klemmleiste oben – zum Nachbauen und Beschriften.')}
   ${row('dose','Abzweigdose planen','Offene Dose: welche Ader in welche Klemme, Dosengröße, Anleitung.')}
   ${row('meas','Messen','Spannung zwischen zwei Anschlüssen anzeigen – wie ein Spannungsprüfer.')}
   ${row('example','Beispiel: Lichtkreis','Einfach: ein Stromkreis vom Hausanschluss bis zur Lampe.')}
@@ -1117,8 +1198,8 @@ const GSTEPS=[
  {act:'on',k:'fi',t:'Schalte den FI-Schalter ein.',e:'Danach die Prüftaste drücken: Sie prüft die Mechanik des FI.'},
  {act:'on',k:'ls',t:'Schalte die Sicherung ein.',e:'Jetzt hat der Stromkreis bis zum Lichtschalter Spannung.'},
  {act:'switch',t:'Schalte den Lichtschalter ein.',e:'Tippe auf die Wippe des Schalters. Jetzt ist der Stromkreis geschlossen – die Lampe leuchtet.'}];
-let G=null,LKIDS=null;
-function lichtkreis(withWires){S={items:[],wires:[],nid:1,rooms:['Flur'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;MA=MB=null;FREE=false;
+var M=null,QUIET=false;let G=null,LKIDS=null;
+function lichtkreis(withWires){M=null;S={items:[],wires:[],nid:1,rooms:['Flur'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;MA=MB=null;FREE=false;
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};
   const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:80});
   const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0},len:6}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}}),spd=A('spdss',{mount:{enc:zs.id,rail:0,slot:3}});
@@ -1141,7 +1222,7 @@ function stepDone(st){if(st.act==='ack')return !!(G.ack&&G.ack[st.k]);if(st.act=
 function guideTargets(){const r={keys:[],box:null};if(!G||G.i>=GSTEPS.length)return r;const st=GSTEPS[G.i];
   if(st.act==='ack')return r;if(st.act==='on'){r.box=G.ids[st.k];return r;}if(st.act){r.box=G.ids.sch;return r;}const ka=st.a[1]?G.ids[st.a[0]]+':'+st.a[1]:stepKey(st.a,st.b),kb=st.b[1]?G.ids[st.b[0]]+':'+st.b[1]:stepKey(st.b,st.a);
   if(termOf(ka)&&termOf(kb))r.keys=[ka,kb];return r;}
-function guideUpdate(){const box=$('#guide');if(!G){box.style.display='none';return;}
+function guideUpdate(){const box=$('#guide');box.classList.remove('min');if(!G){if(M)missionUpdate();else box.style.display='none';return;}
   if(!Object.values(G.ids).every(id=>byId(id))){toast('Für die Anleitung fehlt ein Bauteil. Die Anleitung wurde beendet.','info');endGuide();return;}
   let i=0;while(i<GSTEPS.length&&stepDone(GSTEPS[i]))i++;
   if(i!==G.i){if(i>G.i)G.note='';G.i=i;}
@@ -1159,6 +1240,133 @@ function guideDo(){if(!G||G.i>=GSTEPS.length)return;const st=GSTEPS[G.i];
   if(st.act==='ack'){G.ack=G.ack||{};G.ack[st.k]=true;changed(false);guideUpdate();return;}if(st.act==='on'){const d=byId(G.ids[st.k]);if(d){d.on=true;d.tripped=null;changed();}return;}
   if(st.act){const sc=byId(G.ids.sch);if(sc){sc.on=true;changed();}return;}
   const gt=guideTargets();if(gt.keys.length===2){G.note='';connect(gt.keys[0],gt.keys[1]);}}
+
+/* ---------- Lernspiel: Kundenaufträge ---------- */
+const LVK='uv-lernspiel-v1';
+function lvProg(){try{return JSON.parse(localStorage.getItem(LVK))||{};}catch(_){return{};}}
+function lvSave(id,st){const p=lvProg();p[id]=Math.max(p[id]||0,st);try{localStorage.setItem(LVK,JSON.stringify(p));}catch(_){}}
+const CAP=t=>t.charAt(0).toUpperCase()+t.slice(1);
+const G_ON=(A,B,k,n)=>({ok:A.on(k),t:`${n} funktioniert`,why:`${n} bekommt keine Spannung. Weg prüfen: Sicherung → (Schalter) → L am Gerät, N am Gerät → N-Schiene hinter demselben FI.`});
+const G_SW=(A,B,k,n)=>({ok:A.on(k)&&!B.on(k),t:`${CAP(n)} geht mit dem Schalter an und aus`,why:A.on(k)?`${CAP(n)} leuchtet auch bei ausgeschaltetem Schalter. Der Schalter liegt nicht im Weg zu ${n}.`:`Erst muss ${n} bei eingeschaltetem Schalter leuchten.`});
+const G_L=(A,B,k,n)=>({ok:A.on(k)&&!B.on(k)&&!B.hasL(k),t:'Der Schalter trennt L, nicht N',why:!A.on(k)?`Erst muss ${n.replace(/^der /,'die ')} bei eingeschaltetem Schalter leuchten.`:`Bei Schalter AUS liegt an ${n} noch L an. Geschaltet wird immer der Außenleiter L – sonst steht die Fassung beim Lampenwechsel unter Spannung.`});
+const G_PE=(A,B,k,n)=>({ok:A.pe(k),t:`Schutzleiter an ${n}`,why:`Kein PE an ${n}. Grün-gelb von der PE-Schiene an PE des Geräts. Ohne PE bleibt ein defektes Metallgehäuse unbemerkt unter Spannung.`});
+const G_FI=(A,B,k,n)=>({ok:A.fiMax(k)!==null&&A.fiMax(k)<=30,t:`${n} über 30-mA-FI`,why:`${n} läuft nicht über einen 30-mA-FI. Pflicht für Steckdosen und Beleuchtung in Wohnungen (VDE 0100-410).`});
+const G_LS=(A,B,k,n,max)=>({ok:A.lsMax(k)!==null&&A.lsMax(k)<=max,t:`${n} abgesichert, höchstens ${max} A`,why:A.lsMax(k)===null?`${n} hat keine Sicherung im Stromkreis. Ohne LS ist die Leitung nicht gegen Überlast geschützt.`:`${n} hängt an ${A.lsMax(k)} A. Erlaubt sind höchstens ${max} A – ${max===16?'eine Schutzkontaktsteckdose ist für 16 A gebaut.':'passend zur Leitung.'}`});
+const LEVELS=[
+ {id:'flur',title:'Licht im Flur',room:'Flur',short:'Eine Lampe, ein Schalter',
+  brief:'„Im Flur soll eine Deckenlampe hin, mit Schalter an der Tür. Bitte sicher, wir haben kleine Kinder.“',who:'Frau Becker',
+  req:['Lampe geht mit dem Schalter an und aus','Der Schalter unterbricht L','Schutzleiter an der Lampe','Über FI 30 mA und Sicherung B10'],
+  tip:'FI oben (L) → Sicherung unten. Sicherung oben → Schalter L. Schalter L↑ → Lampe L. FI oben (N) → N-Schiene → Lampe N. PE-Schiene → Lampe PE.',
+  fis:[{t:'fi2',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:10,label:'Licht Flur'}],
+  loads:[{k:'sch',t:'schalter',x:1080,y:150,label:'Schalter Flur'},{k:'lam',t:'lampe',x:1230,y:150,label:'Lampe Flur'}],
+  goals:(A,B)=>[G_SW(A,B,'lam','die Lampe'),G_L(A,B,'lam','der Lampe'),G_PE(A,B,'lam','der Lampe'),G_FI(A,B,'lam','Die Lampe'),G_LS(A,B,'lam','Die Lampe',10)],
+  win:'Ein vollständiger Lichtkreis: L über FI, Sicherung und Schalter, N zurück über denselben FI, PE direkt.'},
+ {id:'kueche',title:'Steckdosen Küche',room:'Küche',short:'Doppelsteckdose und Kühlschrank',
+  brief:'„In der Küche brauche ich eine Doppelsteckdose an der Arbeitsplatte und eine Steckdose für den Kühlschrank.“',who:'Herr Yilmaz',
+  req:['Beide Steckdosen haben Spannung','Höchstens B16','Über FI 30 mA','Schutzleiter an beiden'],
+  tip:'Im Verteiler liegen eine B16 und eine B20. Eine Schutzkontaktsteckdose verträgt 16 A – nimm die B16. Beide Steckdosen können an derselben Sicherung hängen: L von der Sicherung, N von der N-Schiene, PE von der PE-Schiene.',
+  fis:[{t:'fi2',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:20,label:'B20',cable:'NYM-J 3×2,5'},{t:'ls1',r:16,label:'B16'}],
+  loads:[{k:'ds',t:'dsteck',x:1080,y:150,label:'Arbeitsplatte'},{k:'kue',t:'steckdose',x:1270,y:150,label:'Kühlschrank'}],
+  goals:(A,B)=>[G_ON(A,B,'ds','Die Doppelsteckdose'),G_ON(A,B,'kue','Die Kühlschrank-Steckdose'),G_LS(A,B,'ds','Die Doppelsteckdose',16),G_LS(A,B,'kue','Die Kühlschrank-Steckdose',16),G_FI(A,B,'ds','Die Doppelsteckdose'),G_FI(A,B,'kue','Die Kühlschrank-Steckdose'),G_PE(A,B,'ds','der Doppelsteckdose'),G_PE(A,B,'kue','der Kühlschrank-Steckdose')],
+  win:'Die B20 war die Falle: Die Leitung hielte vielleicht 20 A aus, die Steckdose nicht.'},
+ {id:'wohnen',title:'Zwei Lampen, ein Schalter',room:'Wohnen',short:'Parallel anschließen',
+  brief:'„Im Wohnzimmer hängen zwei Lampen. Ein Schalter an der Tür soll beide gleichzeitig schalten.“',who:'Herr Schneider',
+  req:['Beide Lampen gehen mit dem einen Schalter an und aus','Der Schalter unterbricht L','Schutzleiter an beiden Lampen'],
+  tip:'Lampen parallel, nicht in Reihe: Vom Schalter (L↑) zu beiden Lampen L. Beide Lampen N an die N-Schiene, beide PE an die PE-Schiene. In echt verbindet man das in einer Abzweigdose.',
+  fis:[{t:'fi2',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:10,label:'Licht Wohnen'}],
+  loads:[{k:'sch',t:'schalter',x:1080,y:150,label:'Schalter Wohnen'},{k:'l1',t:'lampe',x:1230,y:60,label:'Lampe links'},{k:'l2',t:'lampe',x:1230,y:260,label:'Lampe rechts'}],
+  goals:(A,B)=>[G_SW(A,B,'l1','die linke Lampe'),G_SW(A,B,'l2','die rechte Lampe'),G_L(A,B,'l1','der linken Lampe'),G_L(A,B,'l2','der rechten Lampe'),G_PE(A,B,'l1','der linken Lampe'),G_PE(A,B,'l2','der rechten Lampe'),G_FI(A,B,'l1','Das Licht'),G_LS(A,B,'l1','Das Licht',10)],
+  win:'Parallel bekommt jede Lampe die vollen 230 V. In Reihe würden beide nur die halbe Spannung bekommen.'},
+ {id:'herd',title:'Herd mit Drehstrom',room:'Küche',short:'3-polige Sicherung, 5 Adern',
+  brief:'„Unser neuer Herd hat einen Drehstromanschluss. Bitte anschließen.“',who:'Familie Wagner',
+  req:['Alle drei Kochplatten haben Spannung','Jede Platte an einem anderen Außenleiter','N und PE angeschlossen','Über die 3-polige Sicherung'],
+  tip:'Die 3-polige B16 nehmen, nicht die einpolige. FI oben L1, L2, L3 → Sicherung unten 1, 2, 3. Sicherung oben 1, 2, 3 → Herd L1, L2, L3. FI oben N → N-Schiene → Herd N. PE-Schiene → Herd PE. Leitung 5 × 2,5 mm².',
+  fis:[{t:'fi4',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:16,label:'B16'},{t:'ls3',r:16,label:'Herd'}],
+  loads:[{k:'herd',t:'herd',x:1080,y:150,label:'Herd'}],
+  goals:(A,B)=>{const ph=A.phases('herd');return[G_ON(A,B,'herd','Der Herd'),{ok:A.on('herd')&&new Set(ph).size===3,t:'Jede Platte an einem anderen Außenleiter',why:'Die drei Platten hängen nicht an L1, L2 und L3. Dann ist die Last ungleich verteilt und ein Außenleiter trägt alles.'},
+   {ok:A.nOk('herd'),t:'N angeschlossen',why:'Am Herd fehlt N. Bei ungleicher Last bekommen einzelne Platten bis zu 400 V.'},G_PE(A,B,'herd','dem Herd'),
+   {ok:A.lsTypes('herd').includes('ls3'),t:'Über die 3-polige Sicherung',why:'Der Herd hängt nicht an der 3-poligen Sicherung. Sie schaltet bei einem Fehler alle drei Außenleiter gleichzeitig ab.'}];},
+  win:'Drei Platten auf drei Außenleitern: Die Last verteilt sich, über N fließt nur der Unterschied zurück.'},
+ {id:'zweifi',title:'Licht bleibt an',room:'Wohnen',short:'Aufteilen auf zwei FI',
+  brief:'„Letztes Mal hat der Staubsauger den FI ausgelöst und das ganze Wohnzimmer war dunkel. Das soll nicht mehr passieren.“',who:'Familie Krüger',
+  req:['Lampe mit Schalter und Steckdose funktionieren','Licht und Steckdose an verschiedenen FI','Jeder FI hat seine eigene N-Schiene','Schutzleiter an allen Geräten'],
+  tip:'Licht über FI 1 und B10, Steckdose über FI 2 und B16. Jeder FI bekommt seine eigene N-Schiene: N vom Licht nur auf die N-Schiene von FI 1, N der Steckdose nur auf die von FI 2. Sonst löst der FI aus.',
+  fis:[{t:'fi2',label:'FI 1',ph:1},{t:'fi2',label:'FI 2',ph:2}],nk:2,ls:[{t:'ls1',r:10,label:'Licht'},{t:'ls1',r:16,label:'Steckdose'}],
+  loads:[{k:'sch',t:'schalter',x:1080,y:60,label:'Schalter Wohnen'},{k:'lam',t:'lampe',x:1230,y:60,label:'Lampe Wohnen'},{k:'st',t:'steckdose',x:1150,y:290,label:'Steckdose Wohnen'}],
+  goals:(A,B)=>{const a=A.fiIds('lam'),b=A.fiIds('st');return[G_SW(A,B,'lam','die Lampe'),G_ON(A,B,'st','Die Steckdose'),
+   {ok:a.length>0&&b.length>0&&!a.some(x=>b.includes(x)),t:'Licht und Steckdose an verschiedenen FI',why:a.length&&b.length?'Licht und Steckdose hängen am selben FI. Löst ein Gerät an der Steckdose ihn aus, ist es dunkel.':'Beide Kreise müssen über einen FI laufen.'},
+   G_PE(A,B,'lam','der Lampe'),G_PE(A,B,'st','der Steckdose'),G_LS(A,B,'st','Die Steckdose',16)];},
+  win:'Mehrere FI aufteilen heißt: Ein Fehler legt nicht das ganze Haus lahm. Pflicht nach DIN 18015-1 ist eine sinnvolle Aufteilung.'},
+ {id:'stall',title:'Pferdestall',room:'Stall',short:'Feuchte Räume, IP-Schutz, VDE 0100-705',
+  brief:'„Im Stall brauchen wir Licht mit Schalter und eine Steckdose für den Wasserkocher. Es ist staubig und feucht.“',who:'Hof Lindner',
+  req:['Lampe mit Schalter und Steckdose funktionieren','Steckdose über FI 30 mA','Alle Kreise über einen FI (höchstens 300 mA)','Schalter, Lampe und Steckdose mindestens IP44','Schutzleiter an Lampe und Steckdose'],
+  tip:'Steckdose über den 30-mA-FI (Personenschutz). Das Licht darf über den 300-mA-FI (Brandschutz nach VDE 0100-705). Jeder FI mit eigener N-Schiene. Dann jedes Gerät antippen und die Schutzart auf IP44 oder höher stellen – bei viel Staub besser IP54.',
+  fis:[{t:'fi2',label:'FI 30 mA',ph:1},{t:'fi2',label:'FI 300 mA',ph:2,idn:300}],nk:2,ls:[{t:'ls1',r:10,label:'Licht Stall'},{t:'ls1',r:16,label:'Steckdose Stall'}],
+  loads:[{k:'sch',t:'schalter',x:1080,y:60,label:'Schalter Stall'},{k:'lam',t:'lampe',x:1230,y:60,label:'Stalllampe'},{k:'st',t:'steckdose',x:1150,y:290,label:'Steckdose Stall'}],
+  ignore:(r,ids)=>/kein 30-mA-FI/.test(r.txt)&&r.ids.every(x=>x===ids.lam),
+  goals:(A,B)=>{const ip=k=>{const d=A.item(k);return d&&ipOk(d.ip||'IP20','IP44');};const bad=['sch','lam','st'].filter(k=>!ip(k)).map(k=>nm(A.item(k)));return[G_SW(A,B,'lam','die Stalllampe'),G_ON(A,B,'st','Die Steckdose'),G_FI(A,B,'st','Die Steckdose'),
+   {ok:A.fiMax('lam')!==null&&A.fiMax('lam')<=300,t:'Licht über FI höchstens 300 mA',why:'Im Stall müssen alle Kreise über einen FI laufen – höchstens 300 mA, als Brandschutz gegen Staub und Heu (VDE 0100-705).'},
+   {ok:!bad.length,t:'Mindestens IP44',why:`Schutzart reicht nicht bei: ${bad.join(', ')}. Gerät antippen und IP44 oder höher wählen.`},G_PE(A,B,'lam','der Lampe'),G_PE(A,B,'st','der Steckdose')];},
+  win:'Stall heißt: Feuchtigkeit, Staub und Tiere. Darum höhere Schutzart, FI überall und ein zusätzlicher Schutzpotentialausgleich.'}];
+function lvBuild(L){S={items:[],wires:[],nid:1,rooms:[L.room],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;G=null;FREE=false;MA=MB=null;
+  const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c;const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
+  const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:40,rows:3,te:12,label:'Unterverteilung'});
+  const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}});
+  const kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:3}});A('spdss',{mount:{enc:zs.id,rail:0,slot:3}});const hes=A('hes',{x:330,y:1010});
+  W(hak,'L1',ss,'L1');W(hak,'L2',ss,'L2');W(hak,'L3',ss,'L3');W(hak,'PEN',pen,'PEN');
+  ['1','2','3'].forEach(n=>W(sls,'o'+n,z,'i'+n));W(ss,'N',z,'iN');['1','2','3','N'].forEach(n=>W(z,'o'+n,kl,'i'+n));W(ss,'PE',kl,'iPE');W(ss,'PE',hes,'PE');
+  const ids={};const pk=A('pek',{mount:{enc:uv.id,rail:0,slot:8}});W(kl,'oPE',pk,'t0');ids.pk=pk.id;
+  L.fis.forEach((f,i)=>{const d=A(f.t,{mount:{enc:uv.id,rail:2,slot:i*4},label:f.label,idn:f.idn||30});ids['fi'+i]=d.id;
+    if(f.t==='fi4')['1','2','3','N'].forEach(n=>W(kl,'o'+n,d,'i'+n));else{W(kl,'o'+(f.ph||1),d,'iL');W(kl,'oN',d,'iN');}});
+  for(let i=0;i<L.nk;i++)ids['nk'+i]=A('nk',{mount:{enc:uv.id,rail:0,slot:i*4}}).id;
+  let sl=0;L.ls.forEach((l,i)=>{const d=A(l.t,{mount:{enc:uv.id,rail:1,slot:sl},rating:l.r,label:l.label,...(l.cable?{cable:l.cable}:{})});sl+=TYPES[l.t].te;ids['ls'+i]=d.id;});
+  for(const o of L.loads)ids[o.k]=A(o.t,{x:o.x,y:o.y,label:o.label,room:L.room,...(o.t==='schalter'?{on:true}:{})}).id;
+  return ids;}
+function lvStart(i){const L=LEVELS[i];if(!L)return;G=null;const ids=lvBuild(L);M={i,ids,tries:0,tip:false,res:null,min:false};
+  S.sel=null;closeModal();fillRooms();document.body.classList.add('guiding');changed();fit();}
+function lvEnd(){M=null;document.body.classList.remove('guiding');$('#guide').style.display='none';render();}
+function lvCtx(ids,swOn){const sw=S.items.filter(d=>TYPES[d.type].unit==='sw');const prep=()=>sw.forEach(x=>x.on=swOn);prep();const n=buildNets();const els=loadEls(true);const U=units();const NB={};const nb=id=>NB[id]||(prep(),NB[id]=buildNets({open:id}));
+  const E=k=>els.filter(e=>e.d.id===ids[k]);
+  const via=(k,f)=>{const es=E(k).filter(e=>n.get(e.L).phases.size);if(!es.length)return[];return U.filter(u=>u.closed&&f(u)).filter(u=>es.some(e=>!nb(u.id).get(e.L).phases.size));};
+  return{n,item:k=>byId(ids[k]),
+   on:k=>{const es=E(k);return es.length>0&&es.every(e=>powered(e,n));},
+   hasL:k=>E(k).some(e=>n.get(e.L).phases.size>0),
+   nOk:k=>!!n.get(ids[k]+':N').ground,pe:k=>!!n.get(ids[k]+':PE').ground&&!n.get(ids[k]+':PE').phases.size,
+   phases:k=>E(k).map(e=>[...n.get(e.L).phases][0]).filter(Boolean),
+   fiIds:k=>via(k,isFI).map(u=>u.d.id),fiMax:k=>{const f=via(k,isFI);return f.length?Math.min(...f.map(u=>u.idn)):null;},
+   lsMax:k=>{const f=via(k,u=>u.kind==='ls'||u.kind==='rcbo');return f.length?Math.min(...f.map(u=>u.rating)):null;},
+   lsTypes:k=>via(k,u=>u.kind==='ls'||u.kind==='rcbo').map(u=>u.d.type)};}
+function lvSubmit(){if(!M)return;const L=LEVELS[M.i];M.tries++;const save=JSON.stringify(S);QUIET=true;let res=null;
+  const allOn=()=>{for(const d of S.items){const u=TYPES[d.type].unit;if(u&&u!=='sw'){d.on=true;d.tripped=null;}if(Array.isArray(d.fuses))d.fuses=d.fuses.map(()=>true);if(d.type==='herd')d.on=true;}};
+  try{allOn();const R=check();const lid=new Set(Object.values(M.ids));
+    const errs=R.filter(r=>r.lvl==='err'&&!(L.ignore&&L.ignore(r,M.ids)));errs.splice(0,errs.length,...errs.filter((r,i)=>errs.findIndex(x=>x.txt===r.txt)===i));const uq=a=>a.filter((r,i)=>a.findIndex(x=>x.txt===r.txt)===i);const warns=uq(R.filter(r=>r.lvl==='warn'&&(r.ids||[]).some(x=>lid.has(x)||String(x).startsWith('w:'))));
+    const sw=S.items.filter(d=>TYPES[d.type].unit==='sw');
+    const run=on=>{allOn();sw.forEach(x=>x.on=on);simulate();return{c:lvCtx(M.ids,on),tr:S.items.filter(d=>d.tripped).map(d=>`${nm(d)}: ${d.tripped}`)};};
+    const A=run(true),B=run(false);const goals=L.goals(A.c,B.c);const trips=[...new Set([...A.tr,...B.tr])];
+    const pass=goals.every(g=>g.ok)&&!errs.length&&!trips.length;
+    let st=0;if(pass){st=3;if(M.tries>1)st--;if(M.tries>3)st--;if(M.tip)st--;if(warns.length)st--;st=Math.max(1,st);lvSave(L.id,st);}
+    res={pass,st,goals,errs,warns,trips};
+  }catch(e){console.error(e);res={pass:false,st:0,goals:[],errs:[{txt:'Prüfung fehlgeschlagen: '+e.message}],warns:[],trips:[]};}
+  finally{S=JSON.parse(save);QUIET=false;}
+  M.res=res;M.min=false;changed(true);}
+function missionUpdate(){const box=$('#guide');const L=LEVELS[M.i];
+  if(!L||!Object.values(M.ids).every(id=>byId(id))){M=null;box.style.display='none';document.body.classList.remove('guiding');toast('Für den Auftrag fehlt ein Bauteil. Der Auftrag wurde beendet.','info');return;}
+  box.style.display='block';const n=LEVELS.length;const head=`<div class="st">Auftrag ${M.i+1} von ${n} · ${esc(L.who)}</div>`;
+  if(M.min){box.classList.add('min');box.innerHTML=`${head}<div class="actions"><button class="btn pri" data-act="lvsub">Abgeben</button><button class="btn" data-act="lvmin">Auftrag zeigen</button></div>`;return;}
+  const r=M.res;
+  if(r){const gl=r.goals.map(g=>`<div class="gl ${g.ok?'ok':'no'}"><b>${g.ok?'✓':'✗'} ${esc(g.t)}</b>${g.ok?'':`<small>${esc(g.why)}</small>`}</div>`).join('');
+    const el=r.errs.map(e=>`<div class="gl no"><b>✗ Sicherheitsfehler</b><small>${esc(e.txt)}</small></div>`).join('');
+    const tl=r.trips.map(t=>`<div class="gl no"><b>✗ Beim Einschalten ausgelöst</b><small>${esc(t)}</small></div>`).join('');
+    const wl=r.warns.map(e=>`<div class="gl tip"><b>Noch besser</b><small>${esc(e.txt)}</small></div>`).join('');
+    box.innerHTML=r.pass?`${head}<div class="gt">Auftrag erfüllt!</div><div class="bigstars">${'★'.repeat(r.st)}${'☆'.repeat(3-r.st)}</div><div class="ge">${esc(L.win)}</div>${r.st<3?`<div class="ge" style="margin-top:6px;color:var(--sub)">${[M.tries>1?'mehrere Versuche':'',M.tip?'Tipp genutzt':'',r.warns.length?'Hinweise offen':''].filter(Boolean).join(' · ')}</div>`:''}${wl}
+      <div class="actions"><button class="btn pri" data-act="lvnext">${M.i+1<n?'Nächster Auftrag':'Zur Übersicht'}</button><button class="btn" data-act="lvlist">Alle Aufträge</button></div>`
+     :`${head}<div class="gt">Noch nicht richtig</div><div class="ge">Versuch ${M.tries}. Prüfe die rot markierten Punkte.</div>${gl}${el}${tl}${wl}
+      <div class="actions"><button class="btn pri" data-act="lvback">Weiter bauen</button>${M.tip?'':'<button class="btn" data-act="lvtip">Tipp</button>'}<button class="btn" data-act="lvend">Beenden</button></div>`;return;}
+  box.innerHTML=`${head}<div class="gt">${esc(L.title)}</div><div class="cust"><i>${esc(L.who)} schreibt</i>${esc(L.brief)}</div><div class="ge"><b>Das muss am Ende stimmen</b></div><ul class="req">${L.req.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${M.tip?`<div class="gl tip"><b>Tipp</b><small>${esc(L.tip)}</small></div>`:''}
+  <div class="actions"><button class="btn pri" data-act="lvsub">Abgeben</button>${M.tip?'':'<button class="btn" data-act="lvtip">Tipp</button>'}<button class="btn" data-act="lvmin">Einklappen</button><button class="btn" data-act="lvend">Beenden</button></div>`;}
+function openLearn(){const P=lvProg();const tot=LEVELS.reduce((a,L)=>a+(P[L.id]||0),0);
+  modal(`<div class="mh"><h2>Lernen</h2><button class="btn" data-act="mclose">Schließen</button></div><p class="lsub">Kundenaufträge in Stufen: Auftrag lesen, im Verteiler umsetzen, abgeben. Die App prüft, ob alles funktioniert und sicher ist, und erklärt Fehler. ${tot} von ${LEVELS.length*3} Sternen.</p>
+  ${LEVELS.map((L,i)=>{const st=P[L.id]||0;const open=i===0||P[LEVELS[i-1].id];return`<div class="mrow lv${open?'':' lock'}" data-act="${open?'lvgo':'lvlock'}" data-v="${i}"><div class="lvn">${open?i+1:'🔒'}</div><div><b>${esc(L.title)}</b><span>${esc(L.short)}</span></div><span class="stars">${'★'.repeat(st)}${'☆'.repeat(3-st)}</span></div>`;}).join('')}`);}
 
 /* ---------- Wegweiser 1–4 ---------- */
 function stepLabels(){const arcTop=(x0,x1)=>{let m=1e9;for(const w of S.wires)for(const k of [w.a,w.b]){const A=termAbs(k);if(!A||A.side!=='top'||A.x<x0||A.x>x1)continue;const o=termAbs(k===w.a?w.b:w.a);if(!o)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-o.x,A.y-o.y)*.35));m=Math.min(m,A.y-c*.75);}return m;};
@@ -1255,7 +1463,7 @@ function circuits(){const sN=buildNets({structural:true,noFaults:true});const U=
     const ins=d.type==='ls3'?['i1','i2','i3']:[d.type==='ls1'?'i':'iL'];const ph=[...new Set(ins.flatMap(t=>[...sN.get(d.id+':'+t).phases]))];
     const rooms=[...new Set([...cons,...sws].map(c=>c.room).filter(Boolean))];
     return{nr:'F'+(i+1),d,fi,ph,cons,sws,rooms};});}
-const MAT={hak:d=>['Hausanschluss',`Hausanschlusskasten, 3 × NH ${d.nh?d.nh+' A':'… A (Netzbetreiber)'} gG`,'Netzbetreiber'],hes:d=>['Erdung','Potentialausgleichsschiene (Haupterdungsschiene) mit Anschluss Fundamenterder'],ss5:d=>['Verteilung','Sammelschienensystem 5-polig mit Adapter für SLS'],hlak:d=>['Verteilung','Hauptleitungsabzweigklemme 5-polig'],spdss:d=>['Verteilung','Kombiableiter Typ 1+2 für 40-mm-Sammelschiene, TN-C 3+0'],
+const MAT={npek:d=>['Verteilung','N/PE-Klemmleiste'],hak:d=>['Hausanschluss',`Hausanschlusskasten, 3 × NH ${d.nh?d.nh+' A':'… A (Netzbetreiber)'} gG`,'Netzbetreiber'],hes:d=>['Erdung','Potentialausgleichsschiene (Haupterdungsschiene) mit Anschluss Fundamenterder'],ss5:d=>['Verteilung','Sammelschienensystem 5-polig mit Adapter für SLS'],hlak:d=>['Verteilung','Hauptleitungsabzweigklemme 5-polig'],spdss:d=>['Verteilung','Kombiableiter Typ 1+2 für 40-mm-Sammelschiene, TN-C 3+0'],
  zs:d=>['Verteilung','Zählerschrank mit Hutschienen (Zählerplatz eHZ)'],uv:d=>['Verteilung','Unterverteilung, 3 Reihen à 12 TE'],
  zaehler:d=>['Verteilung','Elektronischer Zähler (eHZ)','Messstellenbetreiber'],
  sls:d=>['Reiheneinbaugeräte',`SLS-Schalter E ${d.rating} A, 3-polig`],pen:d=>['Reiheneinbaugeräte','PEN-Klemme / Trennklemme N-PE'],
@@ -1286,7 +1494,7 @@ function bounds(){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
   return{x0:x0-14,y0:y0-70,x1:x1+14,y1:y1+64};}
 function planSVG(){const ks=S.sel,km=MEAS,kp=pend,kM=MARK,kv=VIEW;S.sel=null;pend=null;MEAS=false;MARK={};VIEW='schema';render();
-  const b=bounds();let all=svg.querySelector('defs').innerHTML+'§§'+Lenc.innerHTML+Ldev.innerHTML+Lwire.innerHTML+Lterm.innerHTML;
+  const b=bounds();let all=svg.querySelector('defs').innerHTML+'§§'+Lenc.innerHTML+Ldev.innerHTML+Lwire.innerHTML+Lterm.innerHTML+$('#lCov').innerHTML;
   S.sel=ks;MEAS=km;pend=kp;MARK=kM;VIEW=kv;render();
   for(const i of ['grid','rail','pestripe','bulb','hot','sh'])all=all.split(`id="${i}"`).join(`id="d_${i}"`).split(`url(#${i})`).join(`url(#d_${i})`);
   const [dd,ii]=all.split('§§');
@@ -1446,7 +1654,7 @@ function planStr(doc,fl=FL()){const P=S.plan,sel=doc?null:S.sel;const X=v=>v*PXM
   for(const [id,p] of Object.entries(P.pos)){if(p[2]!==fl)continue;const d=byId(id);if(!d)continue;const isSel=sel&&sel.kind==='item'&&sel.id===id;
     devs+=`<g transform="translate(${X(p[0])},${X(p[1])})"${doc?'':` data-kind="pdev" data-id="${id}" style="cursor:move"`}><circle r="22" fill="transparent"/>${MARK[id]==='err'&&!doc?'<circle r="19" fill="none" stroke="#B4472C" stroke-width="3"/>':''}${isSel?'<circle r="21" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="4 4"/>':''}${sym(d)}${lblTxt(0,30,esc(nm(d)),10,'#3B362E',700)}</g>`;}
   return{rooms,lines,devs,top};}
-function renderPlan(){const o=planStr(false);Lenc.innerHTML=`<rect x="-30000" y="-30000" width="60000" height="60000" fill="url(#pgrid2)"/>`+o.rooms;Ldev.innerHTML=o.lines;Lwire.innerHTML=o.devs;Lterm.innerHTML=o.top;$('#empty').style.display='none';drawPreview();ptoolsUI();}
+function renderPlan(){$('#lCov').innerHTML='';const o=planStr(false);Lenc.innerHTML=`<rect x="-30000" y="-30000" width="60000" height="60000" fill="url(#pgrid2)"/>`+o.rooms;Ldev.innerHTML=o.lines;Lwire.innerHTML=o.devs;Lterm.innerHTML=o.top;$('#empty').style.display='none';drawPreview();ptoolsUI();}
 function planBounds(fl=FL()){const P=S.plan;const ps=[...P.rooms.filter(r=>r.fl===fl).flatMap(r=>r.pts),...P.ducts.filter(k=>k.fl===fl).flatMap(k=>k.pts),...P.routes.filter(k=>k.fl===fl).flatMap(k=>k.pts),...Object.values(P.pos).filter(p=>p[2]===fl),...P.risers.filter(r=>riserOn(r,fl)).map(r=>[r.x,r.y])];if(!ps.length)return null;const b=bbox(ps);return{x0:b.x0*PXM-50,y0:b.y0*PXM-50,x1:b.x1*PXM+50,y1:b.y1*PXM+60};}
 function fitPlan(){const r=svg.getBoundingClientRect();let b=planBounds();if(!b){const i=flIdx(FL());b=i>0?planBounds(S.plan.floors[i-1].id):null;}if(!b){V.k=1;V.tx=r.width/2-5*PXM;V.ty=120;applyView();return;}
   const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0,ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;const W=r.width-pw-30,H=r.height-ph-160;
@@ -1934,7 +2142,7 @@ function animYaw(to){const from=R3.yaw,t0=performance.now();const step=t=>{const
 function snap3(){const n=Math.round(R3.yaw/45)*45;if(Math.abs(n-R3.yaw)<10)animYaw(n);}
 
 function fls3(){const F=S.plan.floors;if(!R3.all)return[FL()];return F.map(f=>f.id).filter(id=>flHasContent(id));}
-function render3d(){const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
+function render3d(){$('#lCov').innerHTML='';const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
   const mi=$('#mini3');if(mi){const m=VIEW==='3d'?scene3v2.mini(S.plan,FL(),R3.yaw,84):'';mi.innerHTML=m;mi.style.display=m?'block':'none';}
   if(!sc)Ldev.innerHTML=lblTxt(0,0,'Diese Etage ist noch leer – im Grundriss Räume anlegen.',16,'#6B655C',700);}
 function fit3d(){R3.ui=1;const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});const r=svg.getBoundingClientRect();if(!sc){V.k=1;V.tx=r.width/2;V.ty=r.height/2;applyView();render3d();return;}const b=sc.b;const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const W=r.width-pw-20,H=r.height-170;

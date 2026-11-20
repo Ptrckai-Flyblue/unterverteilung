@@ -18,6 +18,9 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 - Aufbau von unten nach oben: HAK unten, Zählerschrank (unten Sammelschienen 5-polig + SLS, Mitte Zählerplatz mit BKE-Adapter, oben Abzweigklemme + Überspannungsschutz), darüber Unterverteilung und Verbraucher
 - Abzweigdose: offene Dose mit Hebel- oder Lüsterklemmen, Klemmenplan, passende Dosengröße (Spelsberg Abox), Aderzuordnung nach Farbregeln, Anleitung Schritt für Schritt, Prüfungen, Material, Doku
 - Phasenschiene, Abzweigkasten, Abzweigdose, Lichtleiste, Doppel- und Kombisteckdose, Schutzart IP
+- Menü unten wie in iPad-Apps: Schaltplan, Grundriss, 3D, Lernen, Doku
+- Lernspiel: sechs Kundenaufträge in Stufen (Licht, Küche, zwei Lampen, Herd, zwei FI, Pferdestall), automatische Prüfung mit Erklärung und Sternen
+- Verteiler frei einstellen (Reihen, TE), Abdeckung mit Beschriftung, N/PE-Klemmleiste, Leitungen hinter den Geräten (durchscheinend)
 - Räume, Kabel je Stromkreis, Dokumentation mit Installationsplan als PDF, Materialliste als CSV
 
 Gespeichert wird im Browser des jeweiligen Geräts. Zum Weitergeben: Projekt → Exportieren / Importieren.
