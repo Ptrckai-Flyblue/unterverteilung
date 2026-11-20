@@ -14,7 +14,8 @@ Hausanschlusskasten → Zählerschrank → Unterverteilung → Verbraucher.
 - Grundriss: Räume beliebiger Form, Raumarten mit Regeln (Bad, Stall, Außen …), Geräte mit Normsymbolen, Kabelkanal, Leitungswege mit Länge
 - Räume aus Vorlagen (Rechteck, L, U, T) mit Maßen, Wände am Griff verschieben, Wand teilen, Türen und Fenster
 - Wandansicht von innen mit Installationszonen nach DIN 18015-3, Geräte auf Höhe ziehen
-- 3D-Schrägansicht (eine oder alle Etagen, 90° drehen), 3D-Bild und Wandansichten in der Doku
+- 3D als Schnitt-Isometrie (Puppenhaus): Wände mit Dicke, echte Türen und Fenster, mit einem Finger drehen und neigen, Etagen gestapelt, Mini-Grundriss; zwei Blickrichtungen in der Doku
+- Abzweigdose: offene Dose mit Hebel- oder Lüsterklemmen, Klemmenplan, passende Dosengröße (Spelsberg Abox), Aderzuordnung nach Farbregeln, Anleitung Schritt für Schritt, Prüfungen, Material, Doku
 - Phasenschiene, Abzweigkasten, Abzweigdose, Lichtleiste, Doppel- und Kombisteckdose, Schutzart IP
 - Räume, Kabel je Stromkreis, Dokumentation mit Installationsplan als PDF, Materialliste als CSV
 
