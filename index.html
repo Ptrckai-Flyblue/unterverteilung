@@ -355,7 +355,7 @@ table.m{width:100%;border-collapse:collapse;font-size:14px}
     </defs>
     <g id="world">
       <rect id="gridbg" x="-30000" y="-30000" width="60000" height="60000" fill="url(#grid)"/>
-      <g id="lEnc"></g><g id="lDev"></g><g id="lWire"></g><g id="lTerm"></g><g id="lCov"></g>
+      <g id="lHouse"></g><g id="lEnc"></g><g id="lDev"></g><g id="lWire"></g><g id="lTerm"></g><g id="lCov"></g>
       <path id="temp" fill="none" stroke="#1A1A1A" stroke-width="3" stroke-dasharray="6 6" pointer-events="none"/>
     </g>
   </svg>
@@ -419,7 +419,7 @@ const TYPES={
   terms:[T('L1','L1','L1','top',.2),T('L2','L2','L2','top',.4),T('L3','L3','L3','top',.6),T('PEN','PEN','PEN','top',.8)],
   draw(d,{w,h}){let s=`<path d="M110 200 L110 248" stroke="#1c1c1e" stroke-width="12" stroke-linecap="round"/><text x="110" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#3a3a3c">Netz 400/230 V (Erdkabel)</text>
    <rect x="0" y="0" width="${w}" height="${h}" rx="10" fill="#3a3a3c" filter="url(#sh)"/><rect x="2" y="2" width="${w-4}" height="22" rx="8" fill="#5a5a5e"/>`;
-   s+=['L1','L2','L3'].map((p,i)=>{const x=24+i*62, ok=d.fuses[i];return `<rect x="${x}" y="46" width="48" height="84" rx="6" fill="${ok?'#ece5d6':'#d9cfc0'}" stroke="#9e937d"/><rect x="${x+14}" y="40" width="20" height="8" rx="2" fill="#b0b0b5"/><rect x="${x+14}" y="128" width="20" height="8" rx="2" fill="#b0b0b5"/><text x="${x+24}" y="84" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4f3a">63 A</text><text x="${x+24}" y="99" text-anchor="middle" font-size="9" font-weight="700" fill="#7d725c">gG · ${p}</text>${ok?'':`<path d="M${x+6} 54 L${x+42} 122 M${x+42} 54 L${x+6} 122" stroke="#B4472C" stroke-width="4" stroke-linecap="round"/>`}`;}).join('');
+   s+=['L1','L2','L3'].map((p,i)=>{const x=24+i*62, ok=d.fuses[i];if(d.fusesOut&&!ok)return `<rect x="${x}" y="46" width="48" height="84" rx="6" fill="#3a3a3c" stroke="#8e8e93" stroke-dasharray="4 3"/><rect x="${x+14}" y="40" width="20" height="8" rx="2" fill="#b0b0b5"/><rect x="${x+14}" y="128" width="20" height="8" rx="2" fill="#b0b0b5"/><text x="${x+24}" y="84" text-anchor="middle" font-size="10" font-weight="800" fill="#c7c7cc">leer</text><text x="${x+24}" y="98" text-anchor="middle" font-size="9" fill="#c7c7cc">${p}</text>`;return `<rect x="${x}" y="46" width="48" height="84" rx="6" fill="${ok?'#ece5d6':'#d9cfc0'}" stroke="#9e937d"/><rect x="${x+14}" y="40" width="20" height="8" rx="2" fill="#b0b0b5"/><rect x="${x+14}" y="128" width="20" height="8" rx="2" fill="#b0b0b5"/><text x="${x+24}" y="84" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4f3a">63 A</text><text x="${x+24}" y="99" text-anchor="middle" font-size="9" font-weight="700" fill="#7d725c">gG · ${p}</text>${ok?'':`<path d="M${x+6} 54 L${x+42} 122 M${x+42} 54 L${x+6} 122" stroke="#B4472C" stroke-width="4" stroke-linecap="round"/>`}`;}).join('');
    s+=`<text x="${w/2}" y="164" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">HAK</text><text x="${w/2}" y="182" text-anchor="middle" font-size="10" fill="#c7c7cc">Netzbetreiber · verplombt</text>`;
    return s+tLabels(d,w,h,'#fff');}},
  zs:{cat:0,name:'Zählerschrank',sub:'Für Hauptschalter und Zähler',enclosure:true,
@@ -787,10 +787,10 @@ function render(){
     if(RT.flow.has(w.id))sw+=`<path class="flow" d="${p}"/>`;
     sw+=`<path d="${p}" fill="none" stroke="transparent" stroke-width="18" data-kind="wire" data-id="${w.id}"/></g>`;}
   if(gt.keys.length===2){const A=termAbs(gt.keys[0]),B=termAbs(gt.keys[1]);if(A&&B)sw+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="3 7" stroke-linecap="round" opacity=".55" pointer-events="none"/>`;}
-  sw+=stepLabels();
+  if(!S.house)sw+=stepLabels();
   for(const d of S.items){const ty=TYPES[d.type];if(!ty.terms)continue;for(const t of ty.terms){const k=d.id+':'+t.id;const a=termAbs(k);const live=RT.n&&RT.n.get(k).phases.size>0;
     st+=`<g data-kind="term" data-key="${k}" transform="translate(${a.x},${a.y})"><circle r="13" fill="transparent"/>${gt.keys.includes(k)?`<circle class="gpulse" r="9"/><circle r="11" fill="none" stroke="#1A1A1A" stroke-width="3"/><g transform="translate(0,${termAbs(k).side==='top'?-26:26})"><circle r="10" fill="#1A1A1A"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="800" fill="#F6F1E9">${gt.keys.indexOf(k)+1}</text></g>`:''}<circle class="dot${live?' live':''}${pend===k?' pend':''}" r="${pend===k?7:5.5}"/>${MEAS&&(MA===k||MB===k)?`<circle r="10" fill="none" stroke="#1A1A1A" stroke-width="3"/><text y="-14" text-anchor="middle" font-size="11" font-weight="800" fill="#1A1A1A">${MA===k?'A':'B'}</text>`:''}</g>`;}}
-  Lenc.innerHTML=se+swb;Ldev.innerHTML=sd;Lwire.innerHTML=sw;Lterm.innerHTML=st;$('#lCov').innerHTML=S.items.filter(e=>TYPES[e.type].enclosure&&e.cover).map(coverDraw).join('');
+  $('#lHouse').innerHTML=S.house?houseSVG(S.house):'';Lenc.innerHTML=se+swb;Ldev.innerHTML=sd;Lwire.innerHTML=sw;Lterm.innerHTML=st;$('#lCov').innerHTML=S.items.filter(e=>TYPES[e.type].enclosure&&e.cover).map(coverDraw).join('');
   $('#empty').style.display=S.items.length||FREE||G?'none':'block';
 }
 let raf=0;const req=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;render();});};
@@ -863,6 +863,7 @@ function zoomAt(mx,my,f){const wx=(mx-V.tx)/V.k,wy=(my-V.ty)/V.k;V.k=clamp(V.k*f
 function fit(){if(VIEW==='plan'){fitPlan();return;}if(VIEW==='3d'){fit3d();return;}if(!S.items.length){V.k=1;V.tx=40;V.ty=30;applyView();return;}let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
   for(const d of S.items){const p=getPos(d),s=sz(d);x0=Math.min(x0,p.x);y0=Math.min(y0,p.y-20);x1=Math.max(x1,p.x+s.w);y1=Math.max(y1,p.y+s.h+(d.type==='hak'?75:24));}
   for(const w of S.wires){const A=termAbs(w.a),B=termAbs(w.b);if(!A||!B)continue;const c=Math.min(160,Math.max(34,Math.hypot(A.x-B.x,A.y-B.y)*.35))*.75;for(const P of [A,B]){y0=Math.min(y0,P.side==='top'?P.y-c:P.y);y1=Math.max(y1,P.side==='bot'?P.y+c:P.y);}}
+  if(S.house){x0=Math.min(x0,-90);x1=Math.max(x1,HOUSE.W+90);y0=Math.min(y0,-330);y1=Math.max(y1,HOUSE.F[2].y1+60);}
   y0-=56;y1+=50;const r=svg.getBoundingClientRect();const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;
   const gl=G&&innerWidth>=900?450:0,gtp=G&&innerWidth<900?($('#guide').offsetHeight||0)+16:0;const W=r.width-pw-gl-40,H=r.height-ph-gtp-40;V.k=clamp(Math.min(W/(x1-x0),H/(y1-y0)),.2,1.6);V.tx=gl+20+(W-(x1-x0)*V.k)/2-x0*V.k;V.ty=gtp+20+(H-(y1-y0)*V.k)/2-y0*V.k;applyView();}
 function centerOn(d){const p=getPos(d),s=sz(d);const r=svg.getBoundingClientRect();const sx=V.tx+(p.x+s.w/2)*V.k,sy=V.ty+(p.y+s.h/2)*V.k;
@@ -880,7 +881,7 @@ function onTap(a){
 }
 function connect(a,b){if(a===b){render();return;}if(S.wires.some(w=>(w.a===a&&w.b===b)||(w.a===b&&w.b===a))){render();return;}
   const ra=termOf(a).t.role,rb=termOf(b).t.role;let color='braun';for(const r of ROLEPRIO)if(ra===r||rb===r){color=RC[r];break;}
-  const nw={id:'w'+(S.nid++),a,b,color};S.wires.push(nw);if(G){const st=GSTEPS[G.i];G.note=st&&st.a&&!wireFits(nw,st)?'Diese Verbindung gehört nicht zu diesem Schritt. Mit „↶ Zurück“ nimmst du sie wieder weg.':'';}changed();}
+  const nw={id:'w'+(S.nid++),a,b,color};S.wires.push(nw);if(G){const st=GSTEPS[G.i];G.note=st&&pairsOf(st).length&&!pairsOf(st).some(pr=>wireFits(nw,pr))?'Diese Verbindung gehört nicht zu diesem Schritt. Mit „↶ Zurück“ nimmst du sie wieder weg.':'';}changed();}
 function toggleDev(d){if(d.type==='herd'){d.on=!d.on;changed();return;}d.on=!d.on;if(d.on)d.tripped=null;changed();}
 function fiTest(d){if(!d.on){toast(`${esc(nm(d))} ist bereits aus. Erst wieder einschalten.`,'info');renderPanel();return;}
   const n=buildNets();const k=d.id+':'+(d.type==='fi4'?'i1':'iL');
@@ -910,7 +911,7 @@ function addType(type){const ty=TYPES[type];const d=newItem(type);let where='';
 
 /* ---------- Panel ---------- */
 function statusOf(d){const ty=TYPES[d.type];
-  if(d.type==='hak'){const b=d.fuses.map((f,i)=>f?null:['L1','L2','L3'][i]).filter(Boolean);return b.length?{c:'red',t:`Sicherung ${b.join(', ')} durchgebrannt`}:{c:'ok',t:'Alle drei NH-Sicherungen intakt'};}
+  if(d.type==='hak'){if(d.fusesOut&&d.fuses.some(f=>!f))return{c:'warn',t:'NH-Sicherungen noch nicht eingesetzt'};const b=d.fuses.map((f,i)=>f?null:['L1','L2','L3'][i]).filter(Boolean);return b.length?{c:'red',t:`Sicherung ${b.join(', ')} durchgebrannt`}:{c:'ok',t:'Alle drei NH-Sicherungen intakt'};}
   if(ty.enclosure)return{c:'sub',t:`${railsOf(d).length} Hutschienen · ${S.items.filter(i=>i.mount?.enc===d.id).length} Geräte`};
   if(d.type==='zaehler')return{c:'sub',t:`Aktuelle Leistung: ${fmt(RT.P/1000,2)} kW`};
   if(ty.unit&&ty.unit!=='sw'){if(d.tripped)return{c:'red',t:`Ausgelöst: ${d.tripped}`};if(!d.on)return{c:'sub',t:'Ausgeschaltet'};
@@ -958,7 +959,8 @@ function renderPanel(){const P=$('#panel');const s=S.sel;
     if(d.ip!==undefined)h+=`<div class="col"><div>Schutzart</div>${seg('ip',IPS.map(x=>[x,x]),d.ip)}</div>`;
     if(d.type==='kombi')h+=tg('on',d.on,'Schalter ein');
     if(['steckdose','dsteck','kombi'].includes(d.type))h+=`<div class="sec">Was ist eingesteckt?</div><div style="margin-top:8px">${seg('load',LOADS.map(([v,l])=>[v,l]),d.load)}</div>`;
-    if(d.type==='hak'&&d.fuses.some(f=>!f))h+=`<div class="alert">Eine NH-Sicherung ist durchgebrannt. Den Fehler erst beheben, dann ersetzen.</div><div class="actions"><button class="btn" data-act="fuses">Sicherungen ersetzen (Netzbetreiber)</button></div>`;
+    if(d.type==='hak'&&d.fusesOut&&d.fuses.some(f=>!f))h+=`<div class="alert">Die NH-Sicherungen sind noch nicht eingesetzt. Das macht der Netzbetreiber mit NH-Aufsteckgriff und Schutzausrüstung.</div><div class="actions"><button class="btn pri" data-act="fuses">NH-Sicherungen einsetzen</button></div>`;
+    else if(d.type==='hak'&&d.fuses.some(f=>!f))h+=`<div class="alert">Eine NH-Sicherung ist durchgebrannt. Den Fehler erst beheben, dann ersetzen.</div><div class="actions"><button class="btn" data-act="fuses">Sicherungen ersetzen (Netzbetreiber)</button></div>`;
     if(ty.loads){pathCheck();h+=`<div class="sec">Weg des Stroms</div>`+(PATH&&PATH.for===d.id?`<div class="expl" style="font-size:14.5px;line-height:1.5">${PATH.txt.map(([k,v])=>`<div style="margin:6px 0"><b>${k}</b> ${esc(v)}</div>`).join('')}<div style="font-size:13px;color:var(--sub)">Auf der Fläche hervorgehoben, der Rest ist blass. „Schließen“ blendet alles wieder ein.</div></div>`:`<div style="font-size:14px;color:var(--sub);margin-top:6px">Noch kein vollständiger Weg – schließe L, N und PE an.</div>`);}
     if(ty.faulty){h+=`<div class="sec">Fehler simulieren</div>`+tg('kurz',d.fault.kurz,'Kurzschluss',`${ty.lTerm} berührt N im Gerät`,true)+tg('koerper',d.fault.koerper,'Körperschluss',`${ty.lTerm} berührt das Metallgehäuse`,true);
       if(RT.housing.has(d.id))h+=`<div class="alert">Das Gehäuse führt Spannung, weil kein Schutzleiter angeschlossen ist. Bisher merkt das niemand. Was passiert, wenn jemand es anfasst?</div><div class="actions"><button class="btn red" data-act="touch">Gehäuse berühren</button></div>`;}
@@ -984,7 +986,7 @@ function openCheck(){const R=check();const c=l=>R.filter(r=>r.lvl===l).length;co
     h+=`<p style="font-size:12.5px;color:var(--sub);margin-top:14px">Die Prüfung deckt die wichtigsten Regeln ab, ersetzt aber keine Abnahmeprüfung (VDE 0100-600) durch eine Elektrofachkraft.</p>`;}
   modal(h);}
 function openHelp(){modal(`<div class="mh"><h2>Hilfe</h2><button class="btn" data-act="mclose">Schließen</button></div><div class="help">
-<h3>Menü</h3><ul><li>Unten wechselst du zwischen <b>Schaltplan</b>, <b>Grundriss</b>, <b>3D</b>, <b>Lernen</b> und <b>Doku</b>. Oben: Prüfen, Zurück, Bauteil hinzufügen, „•••“ für alles Weitere.</li></ul><h3>Lernen</h3><ul><li>Unten auf <b>Lernen</b>: Kundenaufträge in sechs Stufen – vom Lichtkreis bis zum Pferdestall. Auftrag lesen, verdrahten, <b>Abgeben</b>. Die App schaltet alles ein, prüft, ob es funktioniert und sicher ist, und erklärt jeden Fehler.</li><li>Sterne: drei beim ersten Versuch ohne Tipp und ohne offene Hinweise. Die nächste Stufe öffnet sich, sobald du eine schaffst.</li></ul><h3>Verteiler nachbauen</h3><ul><li>Gehäuse antippen: Reihen (1–6) und Breite (TE) einstellen, <b>Abdeckung</b> zu – mit Beschriftungsfeld je Gerät für den Kunden.</li><li>Leitungen innerhalb eines Schranks laufen automatisch <b>hinter den Geräten</b> und schimmern nur durch. Leitung antippen: Automatisch, Vorne oder Hinten. Gerät antippen: Seine Leitungen leuchten auf.</li><li>Mehr → <b>Vorlage: Verteiler wie auf dem Foto</b>.</li></ul><h3>Einstieg</h3><ul><li><b>Geführt aufbauen</b> (unter „Mehr“): Schritt für Schritt einen Lichtkreis verdrahten. Die zwei Anschlüsse jedes Schritts leuchten auf.</li><li><b>Weg des Stroms</b>: Lampe, Steckdose oder Herd antippen – der Weg vom Hausanschluss bis zum Verbraucher wird hervorgehoben.</li><li>Die großen Zahlen 1–4 auf der Fläche zeigen die Reihenfolge: Hausanschluss → Zählerschrank → Unterverteilung → Verbraucher.</li></ul>
+<h3>Menü</h3><ul><li>Unten wechselst du zwischen <b>Schaltplan</b>, <b>Grundriss</b>, <b>3D</b>, <b>Lernen</b> und <b>Doku</b>. Oben: Prüfen, Zurück, Bauteil hinzufügen, „•••“ für alles Weitere.</li></ul><h3>Lernen</h3><ul><li>Unten auf <b>Lernen</b>: Kundenaufträge in sechs Stufen – vom Lichtkreis bis zum Pferdestall. Auftrag lesen, verdrahten, <b>Abgeben</b>. Die App schaltet alles ein, prüft, ob es funktioniert und sicher ist, und erklärt jeden Fehler.</li><li>Sterne: drei beim ersten Versuch ohne Tipp und ohne offene Hinweise. Die nächste Stufe öffnet sich, sobald du eine schaffst.</li></ul><h3>Verteiler nachbauen</h3><ul><li>Gehäuse antippen: Reihen (1–6) und Breite (TE) einstellen, <b>Abdeckung</b> zu – mit Beschriftungsfeld je Gerät für den Kunden.</li><li>Leitungen innerhalb eines Schranks laufen automatisch <b>hinter den Geräten</b> und schimmern nur durch. Leitung antippen: Automatisch, Vorne oder Hinten. Gerät antippen: Seine Leitungen leuchten auf.</li><li>Mehr → <b>Vorlage: Verteiler wie auf dem Foto</b>.</li></ul><h3>Einstieg</h3><ul><li><b>Geführt aufbauen</b> (unter „Mehr“): von null an im Demo-Haus – NH-Sicherungen einsetzen, Hauptleitung Ader für Ader (L1, L2, L3, PEN), Zählerschrank im Keller, Zuleitung zur Unterverteilung im Erdgeschoss, Lichtkreis im Flur. Die zwei Anschlüsse jedes Schritts leuchten auf.</li><li><b>Weg des Stroms</b>: Lampe, Steckdose oder Herd antippen – der Weg vom Hausanschluss bis zum Verbraucher wird hervorgehoben.</li><li>Die großen Zahlen 1–4 auf der Fläche zeigen die Reihenfolge: Hausanschluss → Zählerschrank → Unterverteilung → Verbraucher.</li></ul>
 <h3>Grundriss</h3><ul><li>Oben auf <b>Grundriss</b> umschalten. Unten wählst du das Werkzeug.</li><li>Raum antippen: Name, Raumart und Maße ändern. Ecken ziehen ändert die Form.</li><li><b>Geräte</b> zeigt alles, was noch nicht im Grundriss steht. Ein Gerät, das du in einen Raum ziehst, bekommt diesen Raum automatisch.</li><li><b>Kabelkanal</b> und <b>Leitung</b> zeichnest du Punkt für Punkt. Eine Leitung ordnest du einer Sicherung zu, ihre Länge geht in die Doku.</li><li><b>Raum</b>: Form wählen (Rechteck, L, U, T) und Maße eintragen. Griff in der Wandmitte ziehen verschiebt eine Wand. Eine Wand antippen: Wandansicht, Tür, Fenster, Wand teilen.</li><li><b>Abzweigdose</b>: Dose antippen, dann „Dose öffnen“ (oder Mehr → Abzweigdose planen). Eintragen, was an der Dose hängt. Die App zeigt die offene Dose mit Klemmen, passender Größe und einer Anleitung Schritt für Schritt.</li><li><b>Wandansicht</b>: Blick von innen auf die Wand mit Installationszonen. Geräte auf Höhe und Abstand ziehen oder Maße eintippen.</li><li><b>3D</b>: oben umschalten. Ein Finger dreht und neigt, zwei Finger zoomen. Puppenhaus, Wände hoch oder flach; eine oder alle Etagen.</li><li><b>Etagen</b>: Oben links wechselst du zwischen Keller, EG, OG … Unter „Etagen“ legst du weitere an und stellst die Geschosshöhe ein. Die Etage darunter scheint blass durch.</li><li><b>Steigleitung</b>: Stelle antippen, an der die Leitung durch die Decke geht, dann Ziel-Etage wählen. Zeichnest du eine Leitung auf beiden Etagen bis zu diesem Symbol, zählt die Höhe automatisch zur Länge.</li><li><b>Gebäude</b> zeigt alle Etagen von der Seite – mit Hausanschluss, Verteilungen und Steigleitungen.</li><li>Die Raumart bringt Regeln mit, z. B. Bad oder Stall. „Prüfen“ meldet fehlende FI oder zu niedrige Schutzart.</li></ul>
 <h3>Aufbauen</h3><ul><li><b>Bauteile</b> antippen und Gerät wählen. Hutschienengeräte rasten automatisch ein: SLS, Zähler und PEN-Aufteilung im Zählerschrank, der Rest in der Unterverteilung.</li><li>Bauteil ziehen zum Verschieben. Über einer Hutschiene zeigt ein blauer Rahmen, wo es einrastet. Ziehst du einen Schrank, wandert alles darin mit.</li></ul>
 <h3>Verbinden</h3><ul><li>Vom Anschluss (Punkt) zum anderen Anschluss ziehen – oder ersten Punkt antippen, dann den zweiten.</li><li>Die Aderfarbe wird passend gewählt. Leitung antippen zum Ändern oder Löschen.</li><li>Gelb leuchtende Punkte und Leitungen führen Spannung. Weiße laufende Striche zeigen, wo Strom fließt. Nicht leuchtend heißt nur: in diesem Modell spannungsfrei. In echt können auch N, PE und PEN bei einem Fehler Spannung führen – Spannungsfreiheit nur mit einem zweipoligen Spannungsprüfer feststellen.</li></ul>
@@ -1092,7 +1094,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
    case'delwire':S.wires=S.wires.filter(x=>x.id!==S.sel.id);S.sel=null;changed();break;
    case'del':if(d)delItem(d);break;case'rating':d.rating=+v;changed();break;case'idn':d.idn=+v;changed();break;case'spdt':d.spdt=v;changed();break;case'nh':d.nh=v;changed(false);break;case'cover':d.cover=v==='1';changed(false);break;case'rows':case'encte':{if(a==='rows')d.rows=+v;else d.te=+v;if(!d.rows)d.rows=3;if(!d.te)d.te=12;const rs=railsOf(d);for(const o of S.items)if(o.mount&&o.mount.enc===d.id){const r=rs[o.mount.rail];if(!r||o.mount.slot+teOf(o)>r.len){const ff=firstFree(d,teOf(o));if(ff)o.mount=ff;else{const p=getPos(d);o.mount=null;o.x=p.x+sz(d).w+40;o.y=p.y+40;}}}changed();break;}
    case'wback':{const w=S.wires.find(x=>x.id===S.sel?.id);if(w){if(v==='auto')delete w.back;else w.back=v==='back';changed(false);}break;}case'load':d.load=+v;changed();break;
-   case'test':fiTest(d);break;case'touch':touch(d);break;case'fuses':d.fuses=[true,true,true];changed();break;
+   case'test':fiTest(d);break;case'touch':touch(d);break;case'fuses':d.fuses=[true,true,true];d.fusesOut=false;changed();break;
    case'goto':{closeModal();if(!v)break;if(v.startsWith('w:')){S.sel={kind:'wire',id:v.slice(2)};}else{S.sel={kind:'item',id:v};const it=byId(v);if(it)centerOn(it);}render();renderPanel();break;}
    case'savepage':savePage();break;case'export':exportFile();break;case'import':$('#file').click();break;
    case'clear':S={items:[],wires:[],nid:1,sel:null,rooms:[],doc:{},extras:[],plan:emptyPlan()};OL={};closeModal();changed();fit();break;
@@ -1176,39 +1178,63 @@ function openMore(){const row=(v,t,d)=>`<div class="mrow" data-act="mx" data-v="
   ${row('project','Projekt','Exportieren, importieren, neu beginnen.')}
   ${row('help','Hilfe','So funktioniert der Baukasten.')}`);}
 
+/* ---------- Demo-Haus (Schnitt) ---------- */
+const HOUSE={W:1900,split:950,F:[{k:'OG',name:'Obergeschoss',y0:0,y1:640},{k:'EG',name:'Erdgeschoss',y0:640,y1:1280},{k:'KG',name:'Keller',y0:1280,y1:2120}]};
+const HP={hak:{x:40,y:1880},zs:{x:330,y:1360},hes:{x:660,y:1960},uv:{x:200,y:680},lampY:676,swY:925,sockY:1130};
+function houseOf(right){return{rooms:{OG:['Schlafen','Bad'],EG:['Flur',right||'Wohnen'],KG:['Hausanschlussraum','Keller']}};}
+function houseSVG(H){const W=HOUSE.W,T=24,F=HOUSE.F,sp=HOUSE.split,ink='#4A443B';let s='';
+  const gy=F[1].y1+T;
+  s+=`<rect x="-400" y="${gy}" width="${W+800}" height="${F[2].y1-gy+260}" fill="#E6DCC8"/><path d="M-400 ${gy}H${W+400}" stroke="#7a6a4d" stroke-width="3"/>`;
+  s+=`<text x="${W+40}" y="${gy-10}" font-size="20" font-weight="700" fill="#7a6a4d">Gelände</text>`;
+  s+=`<polygon points="${-70},0 ${W/2},-300 ${W+70},0" fill="#B9A58A" stroke="${ink}" stroke-width="4" stroke-linejoin="round"/>`;
+  s+=`<rect x="0" y="0" width="${W}" height="${F[2].y1}" fill="#FCFAF5"/>`;
+  F.forEach((f,i)=>{const names=(H.rooms||{})[f.k]||[];
+    s+=`<text x="-26" y="${(f.y0+f.y1)/2}" transform="rotate(-90 -26 ${(f.y0+f.y1)/2})" text-anchor="middle" font-size="22" font-weight="800" fill="#8a8070" letter-spacing="3">${f.name.toUpperCase()}</text>`;
+    names.forEach((n,j)=>{const x=j?sp+T+18:T+18;s+=`<text x="${x}" y="${f.y0+T+44}" font-size="34" font-weight="800" fill="#B3A894">${esc(n)}</text>`;});
+    const dh=Math.min(230,f.y1-f.y0-60);s+=`<rect x="${sp}" y="${f.y0}" width="${T}" height="${f.y1-f.y0-dh}" fill="${ink}"/>`;});
+  [0,F[0].y1,F[1].y1].forEach(y=>s+=`<rect x="${-T}" y="${y}" width="${W+2*T}" height="${T}" fill="${ink}"/>`);
+  s+=`<rect x="${-T}" y="${F[2].y1}" width="${W+2*T}" height="${T*1.5}" fill="#6b6255"/>`;
+  s+=`<rect x="${-T}" y="0" width="${T}" height="${F[2].y1+T}" fill="${ink}"/><rect x="${W}" y="0" width="${T}" height="${F[2].y1+T}" fill="${ink}"/>`;
+  s+=`<text x="${HP.hak.x}" y="${F[2].y1+T*1.5+34}" font-size="18" font-weight="700" fill="#7a6a4d">↑ Hauseinführung: Netzkabel vom Netzbetreiber</text>`;
+  return `<g pointer-events="none">${s}</g>`;}
+
 /* ---------- Lichtkreis: Beispiel und geführter Aufbau ---------- */
 const GSTEPS=[
  {act:'ack',k:'start',t:'Erst die Sicherheit: In echt nie unter Spannung arbeiten.',e:'Vor jeder Arbeit gelten die 5 Sicherheitsregeln: 1. Freischalten. 2. Gegen Wiedereinschalten sichern. 3. Spannungsfreiheit feststellen – allpolig, mit zweipoligem Spannungsprüfer. 4. Erden und kurzschließen (in der Hausinstallation meist nicht nötig). 5. Benachbarte Teile unter Spannung abdecken. Auch PV-Anlage, Speicher oder Notstrom freischalten. In dieser Übung sind Hauptschalter, FI und Sicherung aus. Nur der Hausanschluss hat Spannung – den schaltet nur der Netzbetreiber ab.'},
- {a:['hak','L1'],b:['ss','L1'],t:'Verbinde L1 vom Hausanschluss mit der Sammelschiene L1 (unten im Zählerschrank).',e:'Der Hausanschluss sitzt meist im Keller oder Hausanschlussraum. Die Hauptleitung geht von unten in den Zählerschrank zu den Sammelschienen. In echt werden alle drei Außenleiter und der PEN angeschlossen; hier nur L1, damit es übersichtlich bleibt.',eb:1},
- {a:['hak','PEN'],b:['pen','PEN'],t:'Verbinde PEN vom Hausanschluss mit der Aufteilung (unten, PEN).',e:'Aus dem Netz kommt PEN: Neutralleiter und Schutzleiter in einem Draht – grün-gelb mit blauer Markierung. In echt kommt er auf die PE-Schiene, von dort führt eine Brücke zur N-Schiene. Der PEN wird nie geschaltet.',eb:1},
- {a:['ss','PE'],b:['hes','PE'],t:'Verbinde die Sammelschiene PE mit der Haupterdungsschiene.',e:'An der Haupterdungsschiene treffen sich PE, Fundamenterder und alle Metallrohre im Haus (Wasser, Gas, Heizung). Dieser Schutzpotentialausgleich ist Pflicht: So entstehen zwischen Metallteilen keine gefährlichen Spannungen.',eb:1},
- {a:['sls','o1'],b:['z','i1'],t:'Verbinde den Hauptschalter (oben, L1) mit dem Zähler (unten, L1).',e:'Hauptschalter und Überspannungsschutz werden unten einfach auf die Sammelschienen geklickt – ohne Kabel. Der Hauptschalter schaltet alles hinter ihm ab; die Sammelschienen davor bleiben unter Spannung. Der Überspannungsschutz leitet Spannungsspitzen von L1, L2 und L3 auf PE ab.',eb:1},
- {a:['ss','N'],b:['z','iN'],t:'Verbinde die Sammelschiene N mit dem Zähler (unten, N).',e:'Ab der Aufteilung sind N (blau) und PE (grün-gelb) getrennt – und werden nie wieder verbunden.',eb:1},
- {a:['z','o1'],b:['fi','iL'],t:'Verbinde den Zähler (oben, L1) mit dem FI-Schalter (unten, L).',e:'In echt geht es oben über die Abzweigklemme mit einer 5-adrigen Leitung zur Unterverteilung; ihr Querschnitt muss zum Hauptschalter passen. Der FI sitzt in der untersten Reihe und vergleicht, ob genauso viel Strom zurückkommt, wie hinfließt.'},
- {a:['z','oN'],b:['fi','iN'],t:'Verbinde den Zähler (oben, N) mit dem FI-Schalter (unten, N).',e:'Auch N muss durch den FI. Sonst kann er Hin- und Rückstrom nicht vergleichen.'},
- {a:['fi','oL'],b:['ls','i'],t:'Verbinde den FI (oben, L) mit der Sicherung (unten).',e:'Die Sicherung (Leitungsschutzschalter, LS) schützt die Leitung vor Überlast und Kurzschluss. Zusammen mit dem Schutzleiter schaltet sie auch ab, wenn ein Metallgehäuse Spannung bekommt.'},
+ {act:'fuse',t:'Setze die drei NH-Sicherungen in den Hausanschlusskasten im Keller ein.',e:'Die NH-Sicherungen (hier 63 A gG) schützen die Hauptleitung bis zum Zählerschrank. Einsetzen darf sie nur der Netzbetreiber – mit NH-Aufsteckgriff, Gesichtsschutz und isolierenden Handschuhen. In echt passiert das bei einem Neubau erst ganz am Schluss, nach Prüfung und Anmeldung durch den Elektrobetrieb. Ab jetzt stehen die Abgänge des HAK unter Spannung; in echt wird nie unter Spannung angeschlossen.'},
+ {a:['hak','L1'],b:['ss','L1'],t:'Hauptleitung, Ader 1: Verbinde L1 (braun) vom Hausanschluss mit der Sammelschiene L1.',e:'Die Hauptleitung (z. B. NYY-J 4 × 16 mm², Querschnitt nach TAB des Netzbetreibers) führt vom HAK zum unteren Anschlussraum des Zählerschranks. Angeschlossen werden immer alle vier Leiter: L1, L2, L3 und PEN.',eb:1},
+ {a:['hak','L2'],b:['ss','L2'],t:'Hauptleitung, Ader 2: Verbinde L2 (schwarz) mit der Sammelschiene L2.',e:'Zwischen zwei Außenleitern liegen 400 V, zwischen einem Außenleiter und N 230 V.',eb:1},
+ {a:['hak','L3'],b:['ss','L3'],t:'Hauptleitung, Ader 3: Verbinde L3 (grau) mit der Sammelschiene L3.',e:'L1, L2, L3 in dieser Reihenfolge ergeben das Rechtsdrehfeld. Das ist wichtig für Drehstrommotoren, z. B. Wärmepumpe.',eb:1},
+ {a:['hak','PEN'],b:['pen','PEN'],t:'Hauptleitung, Ader 4: Verbinde PEN (grün-gelb, blau markiert) mit der PEN-Aufteilung.',e:'PEN ist Neutralleiter und Schutzleiter in einem Draht. In der Aufteilung kommt er auf die PE-Schiene, eine Brücke führt zur N-Schiene. Ab hier sind N und PE getrennt – für immer. Der PEN wird nie geschaltet.',eb:1},
+ {a:['ss','PE'],b:['hes','PE'],t:'Verbinde die Sammelschiene PE mit der Haupterdungsschiene.',e:'An der Haupterdungsschiene treffen sich PE, Fundamenterder und alle Metallrohre im Haus (Wasser, Gas, Heizung). Dieser Schutzpotentialausgleich ist Pflicht: Zwischen Metallteilen entstehen so keine gefährlichen Spannungen.',eb:1},
+ {p:[{a:['sls','o1'],b:['z','i1']},{a:['sls','o2'],b:['z','i2']},{a:['sls','o3'],b:['z','i3']}],t:'Verbinde den Hauptschalter oben (L1, L2, L3) mit dem Zählerplatz unten.',e:'Hauptschalter und Überspannungsschutz sind unten auf die Sammelschienen geklickt – ohne Kabel. Der Hauptschalter schaltet alles hinter ihm ab, die Schienen davor bleiben unter Spannung. Drei Adern, jede einzeln.',eb:1},
+ {a:['ss','N'],b:['z','iN'],t:'Verbinde die Sammelschiene N mit dem Zählerplatz unten (N).',e:'N wird nicht geschaltet, läuft aber durch den Zähler – der braucht ihn zum Messen.',eb:1},
+ {p:[{a:['z','o1'],b:['kl','i1']},{a:['z','o2'],b:['kl','i2']},{a:['z','o3'],b:['kl','i3']},{a:['z','oN'],b:['kl','iN']}],t:'Verbinde den Zählerplatz oben (L1, L2, L3, N) mit der Abzweigklemme.',e:'Den Zähler selbst setzt der Messstellenbetreiber. Die Kontaktierung (BKE) ist schon vorbereitet. Von der Abzweigklemme oben im Zählerschrank geht die Zuleitung zur Unterverteilung ab.',eb:1},
+ {a:['ss','PE'],b:['kl','iPE'],t:'Verbinde die Sammelschiene PE mit der Abzweigklemme (PE).',e:'PE läuft ungeschaltet mit – vorbei an Hauptschalter und Zähler.',eb:1},
+ {p:[{a:['kl','o1'],b:['fi','i1']},{a:['kl','o2'],b:['fi','i2']},{a:['kl','o3'],b:['fi','i3']},{a:['kl','oN'],b:['fi','iN']}],t:'Zuleitung zur Unterverteilung: Verbinde die Abzweigklemme (L1, L2, L3, N) mit dem FI unten in der Unterverteilung.',e:'Die Zuleitung ist 5-adrig, z. B. NYM-J 5 × 10 mm², passend zum Hauptschalter. Sie führt vom Keller ins Erdgeschoss. Der 4-polige FI in der untersten Reihe vergleicht, ob genauso viel Strom zurückkommt, wie hinfließt.'},
+ {a:['kl','oPE'],b:['pk',null],t:'Verbinde die Abzweigklemme (PE) mit der grün-gelben PE-Schiene in der Unterverteilung.',e:'Die fünfte Ader der Zuleitung ist der Schutzleiter. Er läuft am FI vorbei und wird nie geschaltet.'},
+ {a:['fi','o1'],b:['ls','i'],t:'Verbinde den FI (oben, L1) mit der Sicherung (unten).',e:'Die Sicherung (Leitungsschutzschalter, LS) schützt die Leitung vor Überlast und Kurzschluss. Zusammen mit dem Schutzleiter schaltet sie auch ab, wenn ein Metallgehäuse Spannung bekommt. Für den Lichtkreis reicht ein Außenleiter.'},
  {a:['fi','oN'],b:['nk',null],t:'Verbinde den FI (oben, N) mit der blauen N-Schiene.',e:'Alle Rückleiter hinter diesem FI sammeln sich auf seiner eigenen N-Schiene.'},
- {a:['ss','PE'],b:['pk',null],t:'Verbinde die Sammelschiene PE mit der grün-gelben PE-Schiene.',e:'Der Schutzleiter läuft an FI und Sicherung vorbei. Er wird nie geschaltet.'},
- {a:['ls','o'],b:['sch','L'],t:'Verbinde die Sicherung (oben) mit dem Lichtschalter (L).',e:'Der Schalter unterbricht immer L, nie N.'},
- {a:['pk',null],b:['lam','PE'],t:'Verbinde die PE-Schiene mit der Lampe (PE).',e:'Am Verbraucher kommt PE immer zuerst dran und zuletzt ab. PE schützt das Metallgehäuse: Bei einem Defekt fließt der Strom hierüber ab und die Sicherung oder der FI schaltet ab.'},
- {a:['nk',null],b:['lam','N'],t:'Verbinde die N-Schiene mit der Lampe (N).',e:'Über N fließt der Strom von der Lampe zurück. Achtung: Ist N unterbrochen, liegt an ihm über die Lampe trotzdem Spannung an.'},
- {a:['sch','LS'],b:['lam','L'],t:'Verbinde den Lichtschalter (L↑) mit der Lampe (L).',e:'Das ist der geschaltete Außenleiter. Schalter AUS heißt trotzdem nicht spannungsfrei: Im Schalter und in der Dose liegen weiter 230 V.'},
+ {a:['ls','o'],b:['sch','L'],t:'Verbinde die Sicherung (oben) mit dem Lichtschalter im Flur (L).',e:'Der Schalter unterbricht immer L, nie N.'},
+ {a:['pk',null],b:['lam','PE'],t:'Verbinde die PE-Schiene mit der Flurlampe (PE).',e:'Am Verbraucher kommt PE immer zuerst dran und zuletzt ab. PE schützt das Metallgehäuse: Bei einem Defekt fließt der Strom hierüber ab und die Sicherung oder der FI schaltet ab.'},
+ {a:['nk',null],b:['lam','N'],t:'Verbinde die N-Schiene mit der Flurlampe (N).',e:'Über N fließt der Strom von der Lampe zurück. Achtung: Ist N unterbrochen, liegt an ihm über die Lampe trotzdem Spannung an.'},
+ {a:['sch','LS'],b:['lam','L'],t:'Verbinde den Lichtschalter (L↑) mit der Flurlampe (L).',e:'Das ist der geschaltete Außenleiter. Schalter AUS heißt trotzdem nicht spannungsfrei: Im Schalter und in der Dose liegen weiter 230 V.'},
  {act:'ack',k:'pruef',t:'Vor dem ersten Einschalten: prüfen.',e:'Das macht die Elektrofachkraft nach DIN VDE 0100-600: Sichtprüfung, Durchgang des Schutzleiters, Isolationswiderstand – erst dann einschalten. Danach Schleifenimpedanz (schaltet die Sicherung schnell genug ab?), FI-Auslösung und Drehfeld messen und alles im Prüfprotokoll festhalten.'},
  {act:'on',k:'sls',t:'Schalte den Hauptschalter ein.',e:'Jetzt haben Zähler und Unterverteilung Spannung.'},
  {act:'on',k:'fi',t:'Schalte den FI-Schalter ein.',e:'Danach die Prüftaste drücken: Sie prüft die Mechanik des FI.'},
  {act:'on',k:'ls',t:'Schalte die Sicherung ein.',e:'Jetzt hat der Stromkreis bis zum Lichtschalter Spannung.'},
  {act:'switch',t:'Schalte den Lichtschalter ein.',e:'Tippe auf die Wippe des Schalters. Jetzt ist der Stromkreis geschlossen – die Lampe leuchtet.'}];
 var M=null,QUIET=false;let G=null,LKIDS=null;
-function lichtkreis(withWires){M=null;S={items:[],wires:[],nid:1,rooms:['Flur'],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;MA=MB=null;FREE=false;
+function lichtkreis(withWires){M=null;S={items:[],wires:[],nid:1,rooms:['Flur'],doc:S.doc||{},extras:[],plan:emptyPlan(),house:houseOf('Wohnen')};VSET('schema');OL={};pend=null;LIVEQ=true;MA=MB=null;FREE=false;
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};
-  const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:80});
-  const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0},len:6}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}}),spd=A('spdss',{mount:{enc:zs.id,rail:0,slot:3}});
-  const fi=A('fi2',{mount:{enc:uv.id,rail:2,slot:0},label:'FI 1'}),ls=A('ls1',{mount:{enc:uv.id,rail:1,slot:0},rating:10,label:'Licht',len:9});const hes=A('hes',{x:330,y:1010});
-  if(!withWires){sls.on=false;fi.on=false;ls.on=false;}
-  const nk=A('nk',{mount:{enc:uv.id,rail:0,slot:0}}),pk=A('pek',{mount:{enc:uv.id,rail:0,slot:6}});
-  const sch=A('schalter',{x:1080,y:120,label:'Schalter Flur',room:'Flur',on:withWires}),lam=A('lampe',{x:1230,y:120,label:'Lampe Flur',room:'Flur'});
-  LKIDS={hak:hak.id,hes:hes.id,ss:ss.id,sls:sls.id,pen:pen.id,z:z.id,spd:spd.id,fi:fi.id,ls:ls.id,nk:nk.id,pk:pk.id,sch:sch.id,lam:lam.id};
-  if(withWires)for(const st of GSTEPS)if(st.a){const ka=stepKey(st.a,st.b),kb=stepKey(st.b,st.a);const ra=termOf(ka).t.role,rb=termOf(kb).t.role;let c='braun';for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}if(st.b[0]==='lam'&&st.b[1]==='L')c='schwarz';S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c});}}
+  const hak=A('hak',{...HP.hak}),zs=A('zs',{...HP.zs}),uv=A('uv',{...HP.uv,rows:3,te:12});
+  const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0},len:6}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}}),spd=A('spdss',{mount:{enc:zs.id,rail:0,slot:3}}),kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:3}});
+  const fi=A('fi4',{mount:{enc:uv.id,rail:2,slot:0},label:'FI 1'}),ls=A('ls1',{mount:{enc:uv.id,rail:1,slot:0},rating:10,label:'Licht Flur',len:9});const hes=A('hes',{...HP.hes});
+  if(!withWires){sls.on=false;fi.on=false;ls.on=false;hak.fuses=[false,false,false];hak.fusesOut=true;}
+  const nk=A('nk',{mount:{enc:uv.id,rail:0,slot:0}}),pk=A('pek',{mount:{enc:uv.id,rail:0,slot:8}});
+  const sch=A('schalter',{x:640,y:HP.swY,label:'Schalter Flur',room:'Flur',on:withWires}),lam=A('lampe',{x:790,y:HP.lampY,label:'Lampe Flur',room:'Flur'});
+  LKIDS={hak:hak.id,hes:hes.id,ss:ss.id,sls:sls.id,pen:pen.id,z:z.id,spd:spd.id,kl:kl.id,fi:fi.id,ls:ls.id,nk:nk.id,pk:pk.id,sch:sch.id,lam:lam.id};
+  if(withWires)for(const st of GSTEPS)for(const pr of pairsOf(st)){const ka=stepKey(pr.a,pr.b),kb=stepKey(pr.b,pr.a);const ra=termOf(ka).t.role,rb=termOf(kb).t.role;let c='braun';for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}if(pr.b[0]==='lam'&&pr.b[1]==='L')c='schwarz';S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c});}}
 function stepKey(x,other){const id=(G?G.ids:LKIDS)[x[0]];if(x[1])return id+':'+x[1];const d=byId(id);const used=new Set(S.wires.flatMap(w=>[w.a,w.b]));
   const pref=other&&['sch','lam'].includes(other[0])?'b':'t';const ts=TYPES[d.type].terms.map(t=>t.id).sort((p,q)=>(p[0]===pref?0:1)-(q[0]===pref?0:1));
   return id+':'+(ts.find(t=>!used.has(id+':'+t))||ts[0]);}
@@ -1216,11 +1242,12 @@ function exampleSimple(){G=null;lichtkreis(true);S.sel=null;closeModal();fillRoo
   toast('<b>Beispiel: Lichtkreis</b>Vom Hausanschluss bis zur Lampe. Tippe die Lampe an – der Weg des Stroms leuchtet auf.','ok',6000);}
 function startGuide(){G=null;lichtkreis(false);G={ids:{...LKIDS},i:0,note:'',last:-1};S.sel=null;closeModal();fillRooms();document.body.classList.add('guiding');changed();fit();}
 function endGuide(){G=null;document.body.classList.remove('guiding');$('#guide').style.display='none';render();}
+const pairsOf=st=>st.p||(st.a?[{a:st.a,b:st.b}]:[]);
 const keyMatch=(k,x)=>{if(!G)return false;const [id,t]=k.split(':');return id===G.ids[x[0]]&&(!x[1]||t===x[1]);};
 function wireFits(w,st){return(keyMatch(w.a,st.a)&&keyMatch(w.b,st.b))||(keyMatch(w.b,st.a)&&keyMatch(w.a,st.b));}
-function stepDone(st){if(st.act==='ack')return !!(G.ack&&G.ack[st.k]);if(st.act==='on'){const d=byId(G.ids[st.k]);return !!(d&&d.on);}if(st.act==='switch'){const sc=byId(G.ids.sch);return !!(sc&&sc.on&&RT.powered.has(G.ids.lam));}return S.wires.some(w=>wireFits(w,st));}
+function stepDone(st){if(st.act==='ack')return !!(G.ack&&G.ack[st.k]);if(st.act==='fuse'){const h=byId(G.ids.hak);return !!(h&&h.fuses.every(Boolean));}if(st.act==='on'){const d=byId(G.ids[st.k]);return !!(d&&d.on);}if(st.act==='switch'){const sc=byId(G.ids.sch);return !!(sc&&sc.on&&RT.powered.has(G.ids.lam));}return pairsOf(st).every(pr=>S.wires.some(w=>wireFits(w,pr)));}
 function guideTargets(){const r={keys:[],box:null};if(!G||G.i>=GSTEPS.length)return r;const st=GSTEPS[G.i];
-  if(st.act==='ack')return r;if(st.act==='on'){r.box=G.ids[st.k];return r;}if(st.act){r.box=G.ids.sch;return r;}const ka=st.a[1]?G.ids[st.a[0]]+':'+st.a[1]:stepKey(st.a,st.b),kb=st.b[1]?G.ids[st.b[0]]+':'+st.b[1]:stepKey(st.b,st.a);
+  if(st.act==='ack')return r;if(st.act==='fuse'){r.box=G.ids.hak;return r;}if(st.act==='on'){r.box=G.ids[st.k];return r;}if(st.act){r.box=G.ids.sch;return r;}const pr=pairsOf(st).find(q=>!S.wires.some(w=>wireFits(w,q)))||pairsOf(st)[0];const ka=pr.a[1]?G.ids[pr.a[0]]+':'+pr.a[1]:stepKey(pr.a,pr.b),kb=pr.b[1]?G.ids[pr.b[0]]+':'+pr.b[1]:stepKey(pr.b,pr.a);
   if(termOf(ka)&&termOf(kb))r.keys=[ka,kb];return r;}
 function guideUpdate(){const box=$('#guide');box.classList.remove('min');if(!G){if(M)missionUpdate();else box.style.display='none';return;}
   if(!Object.values(G.ids).every(id=>byId(id))){toast('Für die Anleitung fehlt ein Bauteil. Die Anleitung wurde beendet.','info');endGuide();return;}
@@ -1229,15 +1256,16 @@ function guideUpdate(){const box=$('#guide');box.classList.remove('min');if(!G){
   const n=GSTEPS.length;box.style.display='block';
   if(i>=n){box.innerHTML=`<div class="st">Geschafft</div><div class="gt">Die Lampe leuchtet!</div><div class="ge">Du hast einen kompletten Lichtkreis verdrahtet. Tippe die Lampe an: Dort siehst du den Weg des Stroms und kannst Fehler auslösen – etwa einen Körperschluss. Dann siehst du, warum es FI und PE gibt.</div><div class="bar2"><i style="width:100%"></i></div><div class="actions"><button class="btn pri" data-act="gend">Fertig</button></div>`;return;}
   const st=GSTEPS[i];box.innerHTML=`<div class="st">Schritt ${i+1} von ${n}</div><div class="bar2"><i style="width:${Math.round(i/n*100)}%"></i></div><div class="gt">${esc(st.t)}</div>${st.eb?'<div class="gn" style="background:#EEE7DA;color:#5a4a2a">In echt: macht der beim Netzbetreiber eingetragene Elektrobetrieb (§ 13 NAV).</div>':''}<div class="ge">${esc(st.e)}</div>${G.note?`<div class="gn">${esc(G.note)}</div>`:''}
-  <div class="actions"><button class="btn${st.act==='ack'?' pri':''}" data-act="gdo">${st.act==='ack'?'Verstanden':st.act?'Für mich schalten':'Für mich verbinden'}</button><button class="btn" data-act="gend">Beenden</button></div>`;
+  <div class="actions"><button class="btn${st.act==='ack'?' pri':''}" data-act="gdo">${st.act==='ack'?'Verstanden':st.act==='fuse'?'Für mich einsetzen':st.act?'Für mich schalten':'Für mich verbinden'}</button><button class="btn" data-act="gend">Beenden</button></div>`;
   if(G.last!==i){G.last=i;setTimeout(()=>showTargets(),30);}}
 function showTargets(){const gt=guideTargets();const pts=gt.keys.map(termAbs).filter(Boolean);if(gt.box){const d=byId(gt.box);if(d){const p=getPos(d),s=sz(d);pts.push({x:p.x+s.w/2,y:p.y+s.h/2});}}
   if(!pts.length)return;const r=svg.getBoundingClientRect();const wide=innerWidth>=900;const top=wide?20:($('#guide').offsetHeight||0)+24,left=wide?450:20,bottom=r.height-20;
   const vis=pt=>{const x=V.tx+pt.x*V.k,y=V.ty+pt.y*V.k;return x>left&&x<r.width-20&&y>top&&y<bottom;};
-  if(pts.every(vis))return;const mx=pts.reduce((a,p)=>a+p.x,0)/pts.length,my=pts.reduce((a,p)=>a+p.y,0)/pts.length;
+  if(V.k<.5){const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);const bw=Math.max(...xs)-Math.min(...xs)+260,bh=Math.max(...ys)-Math.min(...ys)+260;V.k=Math.max(V.k,Math.min(.8,(r.width-left-20)/bw,(bottom-top)/bh));}
+  else if(pts.every(vis))return;const mx=pts.reduce((a,p)=>a+p.x,0)/pts.length,my=pts.reduce((a,p)=>a+p.y,0)/pts.length;
   V.tx=left+(r.width-left)/2-mx*V.k;V.ty=top+(bottom-top)/2-my*V.k;applyView();}
 function guideDo(){if(!G||G.i>=GSTEPS.length)return;const st=GSTEPS[G.i];
-  if(st.act==='ack'){G.ack=G.ack||{};G.ack[st.k]=true;changed(false);guideUpdate();return;}if(st.act==='on'){const d=byId(G.ids[st.k]);if(d){d.on=true;d.tripped=null;changed();}return;}
+  if(st.act==='ack'){G.ack=G.ack||{};G.ack[st.k]=true;changed(false);guideUpdate();return;}if(st.act==='fuse'){const h=byId(G.ids.hak);if(h){h.fuses=[true,true,true];h.fusesOut=false;changed();}return;}if(st.act==='on'){const d=byId(G.ids[st.k]);if(d){d.on=true;d.tripped=null;changed();}return;}
   if(st.act){const sc=byId(G.ids.sch);if(sc){sc.on=true;changed();}return;}
   const gt=guideTargets();if(gt.keys.length===2){G.note='';connect(gt.keys[0],gt.keys[1]);}}
 
@@ -1258,7 +1286,7 @@ const LEVELS=[
   req:['Lampe geht mit dem Schalter an und aus','Der Schalter unterbricht L','Schutzleiter an der Lampe','Über FI 30 mA und Sicherung B10'],
   tip:'FI oben (L) → Sicherung unten. Sicherung oben → Schalter L. Schalter L↑ → Lampe L. FI oben (N) → N-Schiene → Lampe N. PE-Schiene → Lampe PE.',
   fis:[{t:'fi2',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:10,label:'Licht Flur'}],
-  loads:[{k:'sch',t:'schalter',x:1080,y:150,label:'Schalter Flur'},{k:'lam',t:'lampe',x:1230,y:150,label:'Lampe Flur'}],
+  loads:[{k:'sch',t:'schalter',x:640,y:'sw',label:'Schalter Flur'},{k:'lam',t:'lampe',x:790,y:'lamp',label:'Lampe Flur'}],
   goals:(A,B)=>[G_SW(A,B,'lam','die Lampe'),G_L(A,B,'lam','der Lampe'),G_PE(A,B,'lam','der Lampe'),G_FI(A,B,'lam','Die Lampe'),G_LS(A,B,'lam','Die Lampe',10)],
   win:'Ein vollständiger Lichtkreis: L über FI, Sicherung und Schalter, N zurück über denselben FI, PE direkt.'},
  {id:'kueche',title:'Steckdosen Küche',room:'Küche',short:'Doppelsteckdose und Kühlschrank',
@@ -1266,7 +1294,7 @@ const LEVELS=[
   req:['Beide Steckdosen haben Spannung','Höchstens B16','Über FI 30 mA','Schutzleiter an beiden'],
   tip:'Im Verteiler liegen eine B16 und eine B20. Eine Schutzkontaktsteckdose verträgt 16 A – nimm die B16. Beide Steckdosen können an derselben Sicherung hängen: L von der Sicherung, N von der N-Schiene, PE von der PE-Schiene.',
   fis:[{t:'fi2',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:20,label:'B20',cable:'NYM-J 3×2,5'},{t:'ls1',r:16,label:'B16'}],
-  loads:[{k:'ds',t:'dsteck',x:1080,y:150,label:'Arbeitsplatte'},{k:'kue',t:'steckdose',x:1270,y:150,label:'Kühlschrank'}],
+  loads:[{k:'ds',t:'dsteck',x:1150,y:'sw',label:'Arbeitsplatte'},{k:'kue',t:'steckdose',x:1620,y:'sock',label:'Kühlschrank'}],
   goals:(A,B)=>[G_ON(A,B,'ds','Die Doppelsteckdose'),G_ON(A,B,'kue','Die Kühlschrank-Steckdose'),G_LS(A,B,'ds','Die Doppelsteckdose',16),G_LS(A,B,'kue','Die Kühlschrank-Steckdose',16),G_FI(A,B,'ds','Die Doppelsteckdose'),G_FI(A,B,'kue','Die Kühlschrank-Steckdose'),G_PE(A,B,'ds','der Doppelsteckdose'),G_PE(A,B,'kue','der Kühlschrank-Steckdose')],
   win:'Die B20 war die Falle: Die Leitung hielte vielleicht 20 A aus, die Steckdose nicht.'},
  {id:'wohnen',title:'Zwei Lampen, ein Schalter',room:'Wohnen',short:'Parallel anschließen',
@@ -1274,7 +1302,7 @@ const LEVELS=[
   req:['Beide Lampen gehen mit dem einen Schalter an und aus','Der Schalter unterbricht L','Schutzleiter an beiden Lampen'],
   tip:'Lampen parallel, nicht in Reihe: Vom Schalter (L↑) zu beiden Lampen L. Beide Lampen N an die N-Schiene, beide PE an die PE-Schiene. In echt verbindet man das in einer Abzweigdose.',
   fis:[{t:'fi2',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:10,label:'Licht Wohnen'}],
-  loads:[{k:'sch',t:'schalter',x:1080,y:150,label:'Schalter Wohnen'},{k:'l1',t:'lampe',x:1230,y:60,label:'Lampe links'},{k:'l2',t:'lampe',x:1230,y:260,label:'Lampe rechts'}],
+  loads:[{k:'sch',t:'schalter',x:1010,y:'sw',label:'Schalter Wohnen'},{k:'l1',t:'lampe',x:1250,y:'lamp',label:'Lampe links'},{k:'l2',t:'lampe',x:1600,y:'lamp',label:'Lampe rechts'}],
   goals:(A,B)=>[G_SW(A,B,'l1','die linke Lampe'),G_SW(A,B,'l2','die rechte Lampe'),G_L(A,B,'l1','der linken Lampe'),G_L(A,B,'l2','der rechten Lampe'),G_PE(A,B,'l1','der linken Lampe'),G_PE(A,B,'l2','der rechten Lampe'),G_FI(A,B,'l1','Das Licht'),G_LS(A,B,'l1','Das Licht',10)],
   win:'Parallel bekommt jede Lampe die vollen 230 V. In Reihe würden beide nur die halbe Spannung bekommen.'},
  {id:'herd',title:'Herd mit Drehstrom',room:'Küche',short:'3-polige Sicherung, 5 Adern',
@@ -1282,7 +1310,7 @@ const LEVELS=[
   req:['Alle drei Kochplatten haben Spannung','Jede Platte an einem anderen Außenleiter','N und PE angeschlossen','Über die 3-polige Sicherung'],
   tip:'Die 3-polige B16 nehmen, nicht die einpolige. FI oben L1, L2, L3 → Sicherung unten 1, 2, 3. Sicherung oben 1, 2, 3 → Herd L1, L2, L3. FI oben N → N-Schiene → Herd N. PE-Schiene → Herd PE. Leitung 5 × 2,5 mm².',
   fis:[{t:'fi4',label:'FI 1'}],nk:1,ls:[{t:'ls1',r:16,label:'B16'},{t:'ls3',r:16,label:'Herd'}],
-  loads:[{k:'herd',t:'herd',x:1080,y:150,label:'Herd'}],
+  loads:[{k:'herd',t:'herd',x:1350,y:'sock',label:'Herd'}],
   goals:(A,B)=>{const ph=A.phases('herd');return[G_ON(A,B,'herd','Der Herd'),{ok:A.on('herd')&&new Set(ph).size===3,t:'Jede Platte an einem anderen Außenleiter',why:'Die drei Platten hängen nicht an L1, L2 und L3. Dann ist die Last ungleich verteilt und ein Außenleiter trägt alles.'},
    {ok:A.nOk('herd'),t:'N angeschlossen',why:'Am Herd fehlt N. Bei ungleicher Last bekommen einzelne Platten bis zu 400 V.'},G_PE(A,B,'herd','dem Herd'),
    {ok:A.lsTypes('herd').includes('ls3'),t:'Über die 3-polige Sicherung',why:'Der Herd hängt nicht an der 3-poligen Sicherung. Sie schaltet bei einem Fehler alle drei Außenleiter gleichzeitig ab.'}];},
@@ -1292,7 +1320,7 @@ const LEVELS=[
   req:['Lampe mit Schalter und Steckdose funktionieren','Licht und Steckdose an verschiedenen FI','Jeder FI hat seine eigene N-Schiene','Schutzleiter an allen Geräten'],
   tip:'Licht über FI 1 und B10, Steckdose über FI 2 und B16. Jeder FI bekommt seine eigene N-Schiene: N vom Licht nur auf die N-Schiene von FI 1, N der Steckdose nur auf die von FI 2. Sonst löst der FI aus.',
   fis:[{t:'fi2',label:'FI 1',ph:1},{t:'fi2',label:'FI 2',ph:2}],nk:2,ls:[{t:'ls1',r:10,label:'Licht'},{t:'ls1',r:16,label:'Steckdose'}],
-  loads:[{k:'sch',t:'schalter',x:1080,y:60,label:'Schalter Wohnen'},{k:'lam',t:'lampe',x:1230,y:60,label:'Lampe Wohnen'},{k:'st',t:'steckdose',x:1150,y:290,label:'Steckdose Wohnen'}],
+  loads:[{k:'sch',t:'schalter',x:1010,y:'sw',label:'Schalter Wohnen'},{k:'lam',t:'lampe',x:1350,y:'lamp',label:'Lampe Wohnen'},{k:'st',t:'steckdose',x:1650,y:'sock',label:'Steckdose Wohnen'}],
   goals:(A,B)=>{const a=A.fiIds('lam'),b=A.fiIds('st');return[G_SW(A,B,'lam','die Lampe'),G_ON(A,B,'st','Die Steckdose'),
    {ok:a.length>0&&b.length>0&&!a.some(x=>b.includes(x)),t:'Licht und Steckdose an verschiedenen FI',why:a.length&&b.length?'Licht und Steckdose hängen am selben FI. Löst ein Gerät an der Steckdose ihn aus, ist es dunkel.':'Beide Kreise müssen über einen FI laufen.'},
    G_PE(A,B,'lam','der Lampe'),G_PE(A,B,'st','der Steckdose'),G_LS(A,B,'st','Die Steckdose',16)];},
@@ -1302,17 +1330,17 @@ const LEVELS=[
   req:['Lampe mit Schalter und Steckdose funktionieren','Steckdose über FI 30 mA','Alle Kreise über einen FI (höchstens 300 mA)','Schalter, Lampe und Steckdose mindestens IP44','Schutzleiter an Lampe und Steckdose'],
   tip:'Steckdose über den 30-mA-FI (Personenschutz). Das Licht darf über den 300-mA-FI (Brandschutz nach VDE 0100-705). Jeder FI mit eigener N-Schiene. Dann jedes Gerät antippen und die Schutzart auf IP44 oder höher stellen – bei viel Staub besser IP54.',
   fis:[{t:'fi2',label:'FI 30 mA',ph:1},{t:'fi2',label:'FI 300 mA',ph:2,idn:300}],nk:2,ls:[{t:'ls1',r:10,label:'Licht Stall'},{t:'ls1',r:16,label:'Steckdose Stall'}],
-  loads:[{k:'sch',t:'schalter',x:1080,y:60,label:'Schalter Stall'},{k:'lam',t:'lampe',x:1230,y:60,label:'Stalllampe'},{k:'st',t:'steckdose',x:1150,y:290,label:'Steckdose Stall'}],
+  loads:[{k:'sch',t:'schalter',x:1010,y:'sw',label:'Schalter Stall'},{k:'lam',t:'lampe',x:1350,y:'lamp',label:'Stalllampe'},{k:'st',t:'steckdose',x:1650,y:'sock',label:'Steckdose Stall'}],
   ignore:(r,ids)=>/kein 30-mA-FI/.test(r.txt)&&r.ids.every(x=>x===ids.lam),
   goals:(A,B)=>{const ip=k=>{const d=A.item(k);return d&&ipOk(d.ip||'IP20','IP44');};const bad=['sch','lam','st'].filter(k=>!ip(k)).map(k=>nm(A.item(k)));return[G_SW(A,B,'lam','die Stalllampe'),G_ON(A,B,'st','Die Steckdose'),G_FI(A,B,'st','Die Steckdose'),
    {ok:A.fiMax('lam')!==null&&A.fiMax('lam')<=300,t:'Licht über FI höchstens 300 mA',why:'Im Stall müssen alle Kreise über einen FI laufen – höchstens 300 mA, als Brandschutz gegen Staub und Heu (VDE 0100-705).'},
    {ok:!bad.length,t:'Mindestens IP44',why:`Schutzart reicht nicht bei: ${bad.join(', ')}. Gerät antippen und IP44 oder höher wählen.`},G_PE(A,B,'lam','der Lampe'),G_PE(A,B,'st','der Steckdose')];},
   win:'Stall heißt: Feuchtigkeit, Staub und Tiere. Darum höhere Schutzart, FI überall und ein zusätzlicher Schutzpotentialausgleich.'}];
-function lvBuild(L){S={items:[],wires:[],nid:1,rooms:[L.room],doc:S.doc||{},extras:[],plan:emptyPlan()};VSET('schema');OL={};pend=null;LIVEQ=true;G=null;FREE=false;MA=MB=null;
+function lvBuild(L){S={items:[],wires:[],nid:1,rooms:[L.room],doc:S.doc||{},extras:[],plan:emptyPlan(),house:houseOf(L.room==='Flur'?'Wohnen':L.room)};VSET('schema');OL={};pend=null;LIVEQ=true;G=null;FREE=false;MA=MB=null;
   const A=(t,p)=>{const d=newItem(t,p);S.items.push(d);return d;};const W=(a,ta,b,tb)=>{const ka=a.id+':'+ta,kb=b.id+':'+tb;let c;const ra=termOf(ka).t.role,rb=termOf(kb).t.role;for(const r of ROLEPRIO)if(ra===r||rb===r){c=RC[r];break;}S.wires.push({id:'w'+(S.nid++),a:ka,b:kb,color:c||'braun'});};
-  const hak=A('hak',{x:40,y:700}),zs=A('zs',{x:320,y:300}),uv=A('uv',{x:680,y:40,rows:3,te:12,label:'Unterverteilung'});
+  const hak=A('hak',{...HP.hak}),zs=A('zs',{...HP.zs}),uv=A('uv',{...HP.uv,rows:3,te:12,label:'Unterverteilung'});
   const ss=A('ss5',{mount:{enc:zs.id,rail:0,slot:0}}),sls=A('sls',{mount:{enc:zs.id,rail:0,slot:0}}),pen=A('pen',{mount:{enc:zs.id,rail:0,slot:7}}),z=A('zaehler',{mount:{enc:zs.id,rail:1,slot:3}});
-  const kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:3}});A('spdss',{mount:{enc:zs.id,rail:0,slot:3}});const hes=A('hes',{x:330,y:1010});
+  const kl=A('hlak',{mount:{enc:zs.id,rail:2,slot:3}});A('spdss',{mount:{enc:zs.id,rail:0,slot:3}});const hes=A('hes',{...HP.hes});
   W(hak,'L1',ss,'L1');W(hak,'L2',ss,'L2');W(hak,'L3',ss,'L3');W(hak,'PEN',pen,'PEN');
   ['1','2','3'].forEach(n=>W(sls,'o'+n,z,'i'+n));W(ss,'N',z,'iN');['1','2','3','N'].forEach(n=>W(z,'o'+n,kl,'i'+n));W(ss,'PE',kl,'iPE');W(ss,'PE',hes,'PE');
   const ids={};const pk=A('pek',{mount:{enc:uv.id,rail:0,slot:8}});W(kl,'oPE',pk,'t0');ids.pk=pk.id;
@@ -1320,7 +1348,7 @@ function lvBuild(L){S={items:[],wires:[],nid:1,rooms:[L.room],doc:S.doc||{},extr
     if(f.t==='fi4')['1','2','3','N'].forEach(n=>W(kl,'o'+n,d,'i'+n));else{W(kl,'o'+(f.ph||1),d,'iL');W(kl,'oN',d,'iN');}});
   for(let i=0;i<L.nk;i++)ids['nk'+i]=A('nk',{mount:{enc:uv.id,rail:0,slot:i*4}}).id;
   let sl=0;L.ls.forEach((l,i)=>{const d=A(l.t,{mount:{enc:uv.id,rail:1,slot:sl},rating:l.r,label:l.label,...(l.cable?{cable:l.cable}:{})});sl+=TYPES[l.t].te;ids['ls'+i]=d.id;});
-  for(const o of L.loads)ids[o.k]=A(o.t,{x:o.x,y:o.y,label:o.label,room:L.room,...(o.t==='schalter'?{on:true}:{})}).id;
+  for(const o of L.loads)ids[o.k]=A(o.t,{x:o.x,y:typeof o.y==='number'?o.y:{sw:HP.swY,lamp:HP.lampY,sock:HP.sockY}[o.y],label:o.label,room:L.room,...(o.t==='schalter'?{on:true}:{})}).id;
   return ids;}
 function lvStart(i){const L=LEVELS[i];if(!L)return;G=null;const ids=lvBuild(L);M={i,ids,tries:0,tip:false,res:null,min:false};
   S.sel=null;closeModal();fillRooms();document.body.classList.add('guiding');changed();fit();}
@@ -1654,7 +1682,7 @@ function planStr(doc,fl=FL()){const P=S.plan,sel=doc?null:S.sel;const X=v=>v*PXM
   for(const [id,p] of Object.entries(P.pos)){if(p[2]!==fl)continue;const d=byId(id);if(!d)continue;const isSel=sel&&sel.kind==='item'&&sel.id===id;
     devs+=`<g transform="translate(${X(p[0])},${X(p[1])})"${doc?'':` data-kind="pdev" data-id="${id}" style="cursor:move"`}><circle r="22" fill="transparent"/>${MARK[id]==='err'&&!doc?'<circle r="19" fill="none" stroke="#B4472C" stroke-width="3"/>':''}${isSel?'<circle r="21" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="4 4"/>':''}${sym(d)}${lblTxt(0,30,esc(nm(d)),10,'#3B362E',700)}</g>`;}
   return{rooms,lines,devs,top};}
-function renderPlan(){$('#lCov').innerHTML='';const o=planStr(false);Lenc.innerHTML=`<rect x="-30000" y="-30000" width="60000" height="60000" fill="url(#pgrid2)"/>`+o.rooms;Ldev.innerHTML=o.lines;Lwire.innerHTML=o.devs;Lterm.innerHTML=o.top;$('#empty').style.display='none';drawPreview();ptoolsUI();}
+function renderPlan(){$('#lCov').innerHTML='';$('#lHouse').innerHTML='';const o=planStr(false);Lenc.innerHTML=`<rect x="-30000" y="-30000" width="60000" height="60000" fill="url(#pgrid2)"/>`+o.rooms;Ldev.innerHTML=o.lines;Lwire.innerHTML=o.devs;Lterm.innerHTML=o.top;$('#empty').style.display='none';drawPreview();ptoolsUI();}
 function planBounds(fl=FL()){const P=S.plan;const ps=[...P.rooms.filter(r=>r.fl===fl).flatMap(r=>r.pts),...P.ducts.filter(k=>k.fl===fl).flatMap(k=>k.pts),...P.routes.filter(k=>k.fl===fl).flatMap(k=>k.pts),...Object.values(P.pos).filter(p=>p[2]===fl),...P.risers.filter(r=>riserOn(r,fl)).map(r=>[r.x,r.y])];if(!ps.length)return null;const b=bbox(ps);return{x0:b.x0*PXM-50,y0:b.y0*PXM-50,x1:b.x1*PXM+50,y1:b.y1*PXM+60};}
 function fitPlan(){const r=svg.getBoundingClientRect();let b=planBounds();if(!b){const i=flIdx(FL());b=i>0?planBounds(S.plan.floors[i-1].id):null;}if(!b){V.k=1;V.tx=r.width/2-5*PXM;V.ty=120;applyView();return;}
   const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0,ph=$('#panel').style.display==='block'&&innerWidth<900?r.height*.47:0;const W=r.width-pw-30,H=r.height-ph-160;
@@ -2142,7 +2170,7 @@ function animYaw(to){const from=R3.yaw,t0=performance.now();const step=t=>{const
 function snap3(){const n=Math.round(R3.yaw/45)*45;if(Math.abs(n-R3.yaw)<10)animYaw(n);}
 
 function fls3(){const F=S.plan.floors;if(!R3.all)return[FL()];return F.map(f=>f.id).filter(id=>flHasContent(id));}
-function render3d(){$('#lCov').innerHTML='';const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
+function render3d(){$('#lCov').innerHTML='';$('#lHouse').innerHTML='';const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});Lenc.innerHTML='';Ldev.innerHTML=sc?sc.svg:'';Lwire.innerHTML='';Lterm.innerHTML='';$('#empty').style.display='none';temp.setAttribute('d','');ptoolsUI();
   const mi=$('#mini3');if(mi){const m=VIEW==='3d'?scene3v2.mini(S.plan,FL(),R3.yaw,84):'';mi.innerHTML=m;mi.style.display=m?'block':'none';}
   if(!sc)Ldev.innerHTML=lblTxt(0,0,'Diese Etage ist noch leer – im Grundriss Räume anlegen.',16,'#6B655C',700);}
 function fit3d(){R3.ui=1;const sc=scene3v2(S.plan,{...opts3(false),floors:fls3()});const r=svg.getBoundingClientRect();if(!sc){V.k=1;V.tx=r.width/2;V.ty=r.height/2;applyView();render3d();return;}const b=sc.b;const pw=$('#panel').style.display==='block'&&innerWidth>=900?380:0;const W=r.width-pw-20,H=r.height-170;
